@@ -243,3 +243,36 @@ Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tr
 ---
 
 Las ramas son una parte fundamental de Git. A diferencia de otros sistemas de control de versiones, como CVS, el proceso de creación de ramas en Git es rápido, pues implica tan sólo cambiar una referencia de 160 bits. **Las ramas son el mecanismo principal por el cual se organiza la colaboración en proyectos**.
+
+## Comandos básicos para ramas
+
+Muestra todas las ramas del repositorio local (1). Muestra todas las ramas del repositorio local y los remotos asociados (2). La bandera `-a` es breve para denotar all. La distinción entre ramas locales y remotas es examinada en otra sección del manual.
+
+```bnf
+git branch     (1)
+git branch -a  (2)
+```
+
+Muestra una descripción completa por rama del repositorio local (utilizar también `-a` para describir todas las ramas). La bandera `-vv` es breve para denotar verbose; puede utilizarse `--verbose` en su lugar. La descripción por rama incluye su nombre, hash SHA-1 que las identifica, el encabezado del mensaje del commit al que apuntan y, en caso de existir, la rama upstream asociada.
+
+```bnf
+git branch -vv
+```
+
+Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la misma, vea el siguiente comando para cambiarse a una rama existente.
+
+```bnf
+git branch <rama>
+```
+
+Cambiar a una rama existente.
+
+```bnf
+git checkout <rama>
+```
+
+Crear una rama y cambirase a ella con un sólo comando.
+
+```bnf
+git checkout -b <rama>
+```
