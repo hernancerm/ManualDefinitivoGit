@@ -340,3 +340,23 @@ Merge made by the 'recursive' strategy.
 **En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y genera un nuevo commit (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3**. Los commits y sus relaciones están mostrados por la siguiente figura.
 
 ![Recursive merge feature into master](/images/merge_6.png)
+
+### Comandos básicos para merges
+
+Si `HEAD` apunta a la rama A, incorpora los cambios de la rama B en la rama A mediante un merge (la estrategia es seleccionada por Git).
+
+```bnf
+git merge B
+```
+
+Elimina la rama especificada si todos los cambios de la rama son accesibles por `HEAD` o por algún ancestro de la rama. Simplemente, si la rama ha sido fusionada con una no derivada de ella, entonces este comando puede utilizarse efectivamente.
+
+```bnf
+git branch -d <rama>
+```
+
+Forzosamente borra la rama seleccionada, incluso si tiene cambios no fusionados. Al utilizar la bandera `-D` es posible que se pierdan commits.
+
+```bnf
+git branch -D <rama>
+```
