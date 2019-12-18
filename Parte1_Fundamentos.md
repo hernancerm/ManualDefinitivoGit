@@ -185,3 +185,61 @@ Retira al archivo del repositorio, pero lo mantiene en el working tree. Esto es 
 ```bnf
 git rm --cached <archivo>
 ```
+
+## Concepto de rama
+
+> Resumen de <https://git-scm.com/book/en/v1/Git-Branching-What-a-Branch-Is>
+
+Para poder tener un sólido entendimiento de las ramas de Git, es necesario explorar con más detalle el funcionamiento de bajo nivel de Git en cuanto a cómo almacena las distintas versiones de un proyecto. Entendido esto, el concepto de rama es tan sólo una extensión del sistema. Esta sección acaso sea una de las más difíciles de entender del manual, mas su compresión lo vale en absoluto.
+
+---
+
+### Objetos de Git
+
+![Commit desglosado](/images/branches_1.png)
+
+Imagínese el inicio de un repositorio simple en el que se guardarán archivos batch (`.bat`). En este repositorio, actualmente sólo existe un archivo batch, `user.bat`, y otro archivo, `README.md`, describiendo el contenido general del repositorio.
+
+Durante esta sección, la carpeta objects hace referencia a los contenidos de `.git/objects`. Recuérdese que .git está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
+
+Comencemos el análisis desde la ejecución del comando `git init`. Tras correr este comando, un nuevo repositorio de Git es creado. Examinando el directorio objects, podemos comprobar que sólo las carpetas pack e info existen; para esta sección, no resulta relevante conocer su propósito. Ahora, imaginemos que el desarrollador codifica su primer archivo batch: `user.bat`. Luego, redacta una breve descripción del repositorio: `README.md`. Hasta ahora, esos archivos sólo existen en el working tree.
+
+El desarrollador desea realizar un commit con su progreso. Para lograr esto, añade ambos archivos al staging area. Si en este momento se inspecciona objects, puede comprobarse que dos directorios han aparecido: 5b y 91 (los nombres de estos directorios concuerdan con la figura del inicio de esta sección, mas si usted realiza el experimento muy probablemente los nombres sean distintos, pero es seguro que serán dos directorios). ¿Qué significa esto? Significa que Git ha registrado el estado de los archivos `README.md` y `user.bat` en objetos blob.
+
+Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo cual se genera un objeto tree, el cual apunta a los blobs, y un objeto commit, el cual apunta al tree. Esto se ilustra en la figura del inicio de la sección presente. En este punto, si se revisa objects, dos objetos más habrán aparecido; hasta ahora Git ha registrado cuatro objetos: dos blobs, un tree y un commit.
+
+| Objeto | Función |
+|--------|---------|
+|blob    | Representa los contenidos de un archivo que no es directorio. |
+|tree    | Almacena los nombres de los archivos de un directorio, al igual que un apuntador al blob o tree correspondiente que guarda el contenido de los archivos. |
+|commit  | Apunta a un tree que representa el staging area en un momento determinado; almacena el nombre del autor, el commiter y el mensaje del commit. |
+
+**Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores incompletos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referenciarlos. A continuación, se presenta un término más del vocabulario de Git.
+
+> **Snapshot**. Tree que representa el staging area asociado a un commit.
+
+Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía oredenada de objetos commit, tree y blob. Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots (trees que representan el staging area al momento del commit) correspondientes.
+
+![Commits y sus snapshots](/images/branches_2.png)
+
+Entendido este sistema, podemos ahora comprender con formalidad qué es una rama en Git.
+
+> **Rama**. Referencia a un objeto commit.
+
+Al igual que todas las referencias en Git, esta referencia es un hash SHA-1 que identifica a un commit. Al crearse nuevos commits, la referencia avanza al último commit realizado, por lo que se dice que éstas referencias pueden moverse (son movable). También son ligeras (lightweight) pues se requiere de poco más de 160 bits para ser almacenadas. **Los programadores suelen usar la palabra rama; Git se refiere a estos apuntadores con el término `head`**. Esto puede comprobarse al inspeccionar `.git/refs/heads`.
+
+Por defecto, Git proporciona la rama `master` como inicial. Completando la figura anterior y omitiendo el contenido de los commits por brevedad, tenemos que la imagen completa de los objetos es la mostrada próximamente.
+
+![Commit desglosado](/images/branches_3.png)
+
+**Al crear una nueva rama, la nueva rama apunta al commit que es apuntado durante su creación**. Luego, en el ejemplo, si el desarrollador crea una rama `buf-fix`, ésta apunta al commit identificado por el hash SHA-1 iniciando con f30ab. Si el desarrollador se cambia a esta rama, arregla el bug, añade los archivos relevantes al staging area y realiza un commit, podemos notar algo muy interesante.
+
+![Commit desglosado con rama buf-fix](/images/branches_4.png)
+
+Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tras ser realizado, mas el commit al que master apunta es el mismo. Ahora cabe preguntar, ¿cómo Git sabe en qué rama un usuario está? La respuesta yace en otro apuntador, también de la forma de un hash SHA-1 al que Git denomina `HEAD` (almacenado en `.git/HEAD`). Completando la figura anterior, puede verse que Git conoce que el usuario está trabajando en la rama `buf-fix` pues `HEAD` apunta a `buf-fix`, que a su vez apunta al último commit realizado por el usuario.
+
+![Commit desglosado con rama buf-fix y HEAD](/images/branches_5.png)
+
+---
+
+Las ramas son una parte fundamental de Git. A diferencia de otros sistemas de control de versiones, como CVS, el proceso de creación de ramas en Git es rápido, pues implica tan sólo cambiar una referencia de 160 bits. **Las ramas son el mecanismo principal por el cual se organiza la colaboración en proyectos**.
