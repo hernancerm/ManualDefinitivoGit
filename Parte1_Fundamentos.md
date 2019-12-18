@@ -1,5 +1,27 @@
 # Fundamentos
 
+- [¿Qué es Git?](#¿qué-es-git)
+  - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
+  - [¿Por qué Gity no otro VCS?](#¿por-qué-gity-no-otro-vcs)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Ambiente de desarrollo](#ambiente-de-desarrollo)
+- [Comandos básicos para la gestión de un repositorio](#comandos-básicos-para-la-gestión-de-un-repositorio)
+- [Correcciones básicas](#correcciones-básicas)
+- [Concepto de rama](#concepto-de-rama)
+  - [Objetos de Git](#objetos-de-git)
+- [Comandos básicos para ramas](#comandos-básicos-para-ramas)
+- [Fusión de ramas](#fusión-de-ramas)
+  - [Fast-formard merge](#fast-formard-merge)
+  - [Recursive merge](#recursive-merge)
+  - [Comandos básicos para merges](#comandos-básicos-para-merges)
+- [Conflictos al realizar un merge](#conflictos-al-realizar-un-merge)
+- [Repositorios remotos](#repositorios-remotos)
+  - [Acceso a repositorios remotos](#acceso-a-repositorios-remotos)
+  - [Operaciones de lectura y escritura (fetch, pull y push)](#operaciones-de-lectura-y-escritura-fetch-pull-y-push)
+  - [Obtener información detallada de un repositorio remoto](#obtener-información-detallada-de-un-repositorio-remoto)
+  - [Configurar upstreams](#configurar-upstreams)
+
 ## ¿Qué es Git?
 
 > Resumen de <https://www.atlassian.com/git/tutorials/what-is-git>
