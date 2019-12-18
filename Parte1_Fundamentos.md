@@ -418,3 +418,216 @@ All conflicts fixed but you are still merging.
 ```
 
 Ahora sólo resta realizar un commit que representará el commit de merge que, como se ha estudiado, cuando no existe un conflicto y la estrategia de merge es recursivo, Git lo crea automáticamente. En este caso, lo realiza el programador.
+
+## Repositorios remotos
+
+> Resumen de <https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes>
+
+Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositorios locales. Es decir, el directorio `.git` únicamente existe en la máquina del desarrollador. Una de las más grandes ventajas de un VCS es la facilidad para orquestar colaboraciones sobre un proyecto. **Para poder colaborar sobre un proyecto gestionado por Git es necesario administrar repositorios remotos**. A pesar que no existe definición formal de repositorio remoto, aquí menciono mi entendimiento del concepto.
+
+> **Repositorio remoto**. Sea R un respositorio, cualquier otro repositorio (`.git`) que represente el mismo proyecto que R y sea accesible por R (ya sea mediante una red o acceso a memoria local) se considera remoto a R.
+
+Nótese que el término *repositorio remoto* es popularmente asociado con repositorios almacenados en GitHub, GitLab u otro servicio de cloud storage para repos de Git. Sin embargo, el repo remoto puede incluso residir en el mismo host, aunque esto es muy raro en la práctica. El servicio de cloud storage más popular para repositorios de Git es GitHub.
+
+!["Remote" no implica necesariamente que se encuentra en una red](/images/remote_repos.png)
+
+### Acceso a repositorios remotos
+
+Para crear un repositorio local que represente el mismo proyecto que un repositorio remoto se utiliza el comando `git clone` que efectivamente clona el `.git` de la fuente especificada.
+
+```bnf
+git clone <dirección-repo-Git>
+```
+
+En GitHub existen muchos repositorios, todos los cuales pueden ser clonados. Un ejemplo de dirección legal para el comando es <https://github.com/HerCerM/BatchScripts>.
+
+```shell
+$ git clone https://github.com/HerCerM/BatchScripts
+Cloning into 'BatchScripts'...
+remote: Enumerating objects: 81, done.
+remote: Counting objects: 100% (81/81), done.
+remote: Compressing objects: 100% (59/59), done.
+remote: Total 81 (delta 31), reused 57 (delta 18), pack-reused 0
+Unpacking objects: 100% (81/81), done.
+```
+
+Tras ejecutar el comando un directorio con el nombre del repositorio (en este caso “BatchScripts”) aparece en el directorio en el que ejecutamos el comando. En esta carpeta se encuentra el `.git` que contiene la historia completa del proyecto.
+
+Iniciar un repositorio utilizando `git clone` en lugar de `git init` tiene una consecuencia interesante. Al realizar git clone, ahora existen al menos dos repositorios que representan el mismo proyecto. Por lo tanto, ahora puede hablarse de repositorios remotos. Al clonar un repositorio, Git almacena información de la fuente (en `.git\logs\refs\remotes`) permitiendo establecer ya sea una relación de sólo lectura o lectura/escritura respecto a la fuente.
+
+Listar aliases de repositorios remotos (1). Los aliases abrevian la dirección de un repositorio remoto, el cual puede ser un URL o dirección del sistema de archivos local. Para ver la dirección asociada a cada alias, utilizar la bandera `-v` ó `--verbose` (2).
+
+```bnf
+git remote     (1)
+git remote -v  (2)
+```
+
+Por defecto, el alias creado al clonar un repositorio es `origin`. Por cada alias, dos direcciones son mostradas, una de lectura (fetch) y otra de escritura (push). **Para todo repositorio remoto se tiene acceso al menos de lectura (es posible que privilegios de escritura estén deshabilitados para ciertos usuario. Por ejemplo, si clona un repositorio de GitHub que no sea de usted y no está registrado como colaborador, sólo tendrá permisos de lectura - fetch)**.
+
+```shell
+$ git remote
+origin
+$ git remote -v
+origin  https://github.com/HerCerM/BatchScripts (fetch)
+origin  https://github.com/HerCerM/BatchScripts (push)
+```
+
+Es posible añadir (1), renombrar (2) y eliminar (3) aliases de repositorior remotos de forma manual.
+
+```bnf
+git remote add <alias> <dirección-repo-Git>      (1)
+git remote rename <alias-antiguo> <alias-nuevo>  (2)
+git remote remove <alias>                        (3)
+```
+
+Utilizando el comando para añadir (1) podemos ver una forma alterna equivalente al ejemplo del comando `git clone`.
+
+```shell
+$ mkdir BatchScripts && cd BatchScripts
+$ git init
+Initialized empty Git repository in C:/Users/hjcer/Documents/temp/BatchScripts/.git/
+$ git remote add origin https://github.com/HerCerM/BatchScripts
+$ git pull origin master
+remote: Enumerating objects: 81, done.
+remote: Counting objects: 100% (81/81), done.
+remote: Compressing objects: 100% (59/59), done.
+remote: Total 81 (delta 31), reused 57 (delta 18), pack-reused 0
+Unpacking objects: 100% (81/81), done.
+From https://github.com/HerCerM/BatchScripts
+ * branch            master     -> FETCH_HEAD
+ * [new branch]      master     -> origin/master
+```
+
+### Operaciones de lectura y escritura (fetch, pull y push)
+
+Obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local (1). También puden solicitarse sólo los cambios de una rama (2).
+
+```bnf
+git fetch <alias>         (1)
+git fetch <alias> <rama>  (2)
+```
+
+Es importante destacar que este comando solamente trae los cambios, mas no los integra a las ramas respectivas mediante un merge. Entonces, para incorporar las modificaciones hace falta un merge manual. Podemos ver que los cambios han sido traídos, pero no incorporados.
+
+```shell
+$ git fetch origin
+$ git branch -a
+* master
+  remotes/origin/master
+```
+
+En la práctia, la mayoría de las veces se desea realizar un merge inmediatamente después de un fetch. `git pull` es un comando pensado para esto. **Es decir, `git pull` ejecuta dos comandos: primero un `git fetch`, seguido de `git merge`**.
+
+```bnf
+git pull <alias> <rama>
+```
+
+Observación acerca de la distinción entre `git fetch` y `git pull`.
+
+![git fetch vs git pull](/images/fetch_vs_pull.png)
+
+Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los cambios de la rama actual.
+
+```bnf
+git push <alias> <rama>
+```
+
+### Obtener información detallada de un repositorio remoto
+
+Inspecciona el repositorio remoto bajo el alias `<alias>` y muestra información de relación respecto al repo local: ramas en el remoto que existen en el local (al igual que las que aún no han sido recuperadas) y la configuración de push y pull predeterminada por rama.
+
+```bnf
+git remote show <alias>
+```
+
+Continuando con el ejemplo del repositorio de scripts de Batch (iniciado por `git clone` en lugar de la forma alterna mostrada), el comando anteriormente mencionado muestra lo siguiente.
+
+```shell
+$ git remote show origin
+* remote origin
+  Fetch URL: https://github.com/HerCerM/BatchScripts
+  Push  URL: https://github.com/HerCerM/BatchScripts
+  HEAD branch: master
+  Remote branch:
+    master tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+```
+
+Podemos ver que en el repositorio remoto sólo existe una rama: `master`. En adición, vemos que en el repo local tenemos la versión de `master` (tracked). También vemos la configuración predeterminada para push y pull ubicándonoes en la rama `master`. Desde esa rama, basta con realizar `git pull` o `git push` y Git resuelve el alias y la rama.
+
+```shell
+$ git pull
+Already up to date.
+$ git push
+Everything up-to-date
+```
+
+### Configurar upstreams
+
+Retomemos el ejemplo en el que se inicia el repositorio de scripts de Batch mediante la forma alterna a `git clone` (es decir, mediante `git init` seguido de `git remote add`). En este caso, veamos qué ocurre al intentar hacer pull o push sin especificar ni el alias ni la rama.
+
+```shell
+$ git pull
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull <remote> <branch>
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=origin/<branch> master
+$ git push
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin master
+```
+
+En ambos casos la operación no se realiza con éxito, reportando Git que no hay información de tracking para la rama actual (en este caso, para `master`) o, en otras palabras como lo reporta el error de `git push`, que la rama `master` no tiene una rama upstream. Para resolver este problema de configuración es necesario asignar una rama upstream a `master`.
+
+> **Rama upstream**. Rama de un repositorio remoto que es objeto de operaciones de lectura/escritura (fetch, pull y push) respecto a una rama en el repositorio local.
+
+Es decir, cuando se realiza por ejemplo, git pull origin `master` ubicándose en la rama `master` del repo local, se dice que la rama `master` del repositorio ubicado en origin es upstream de la rama `master` del repositorio local para esa operación de pull.
+
+```shell
+$ git pull origin master
+ From https://github.com/HerCerM/BatchScripts
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+```
+
+Continuando con el ejemplo en mano, pudimos verificar que `git pull` arroja un error, pero eso no sucede con `git pull origin master` (tampoco ocurriría el error con `git push origin master`). En el último comando, se establece de forma explícita la rama upstream de esa operación pull respecto a `master` (el comando es ejecutado ubicado en `master` del repositorio local). Sin embargo, resulta muy extenso escribir todo ese comando; **sería ideal poder configurar la rama `master` de `origin` como el objeto de todas las operacioes de lectura/escritura respecto a `master` local**.
+
+La configuración puede realizarse de dos formas. Sin realizar una operación de lectura/escritura (1) o bien al realizar un push (2). Tras ejecutar alguno de estos comandos, simplemente ejecutar `git pull` o `git push` ubicándose en la rama configurada basta para obtener el comportamiento deseado de Git.
+
+```bnf
+git branch -u <alias>/<rama-remota> <rama-local>  (1)
+git push -u <alias> <rama>                        (2)
+```
+
+Los upstreams configurados pueden mostrarse utilizando `git branch -vv`.
+
+```shell
+$ git branch -vv
+* master e1d8495 Update README.md
+$ git branch -u origin/master master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+$ git branch -vv
+* master e1d8495 [origin/master] Update README.md
+```
+
+Nótese el formato de la rama upstream configurada: `<alias>/<rama>`. Tras realizar al menos un fetch a esta rama, encontramos que `<alias>/<rama>` no sólo es notación para identificar la rama upstream, ¡sino también es una rama en el repositorio local!
+
+```shell
+$ git branch -a
+* master
+  remotes/origin/master
+```
+
+Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son integrados a alguna rama local, sino que sólo son traídos al repo local para inspección y, si se desea, para integración mediante `git merge`. ¿En dónde son esos cambios almacenados para inspección? Los cambios son almacenados en una rama de nombre `<alias>/<rama>` que sirve como rama de enlace entre una local y su upstream asociada (conocoda en inglés como tracking branch). **Entonces, en el proceso de enlace (objeto de operaciones fetch, pull y push) entre una rama local y una remota, intervienen tres ramas: la rama local, la rama remota y una intermediara local que permite traer cambios del repo remoto sin inmediatamente agregarlos al repositorio local**.
+
+![Ramas remote tracking](/images/remote_tracking.png)
