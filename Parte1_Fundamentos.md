@@ -360,3 +360,61 @@ Forzosamente borra la rama seleccionada, incluso si tiene cambios no fusionados.
 ```bnf
 git branch -D <rama>
 ```
+
+## Conflictos al realizar un merge
+
+En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos, cuando al intentar realizar un merge, Git no puede ejecutarlo de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró App.java, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
+
+![Checkout feature y hacer un commit](/images/merge_5.png)
+
+Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo App.java, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios particulares de este archivo.
+
+```shell
+$ git checkout master
+$ git merge feature
+Auto-merging App.java
+CONFLICT (content): Merge conflict in App.java
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Al ocurrir esto, el proceso de merge es pausado y Git espera que el desarrollador resuelva los conflictos antes de proseguir con el merge. En cualquier momento durante esta pausa, utilizar el comando `git status` informa cuáles archivos no han podido ser fusionados dado uno o más conflictos.
+
+```shell
+$ git status
+On branch master
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+
+        both modified:   App.java
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar los cambios de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones seleccionables en la parte superior del conflicto para una rápida resolución. Otros editores de texto e IDEs cuentan con estas facilidades.
+
+![Conflictos en Vim y VSCode](/images/editors_conflict.png)
+
+Aquí puede verse la estructura por la cual Git infroma de un conflicto, que se conforma por los siguientes marcadores.
+
+```shell
+<<<<<<< HEAD
+<cambios de la rama actual>
+=======
+<cambios de la rama especificada>
+>>>>>>> <rama especificada>
+```
+
+Tras eliminar los marcadores de conflicto (mediante las facilidades de un editor de texto o IDE integrado o simplemente eliminando los caracteres) y seleccionar los cambios deseados, se añade el archivo al staging area para señalar que el conflicto ha sido resuelto. Si se corre git status en este momento Git reporta lo siguiente.
+
+```shell
+$ git status
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+```
+
+Ahora sólo resta realizar un commit que representará el commit de merge que, como se ha estudiado, cuando no existe un conflicto y la estrategia de merge es recursivo, Git lo crea automáticamente. En este caso, lo realiza el programador.
