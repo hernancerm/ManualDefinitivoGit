@@ -49,7 +49,7 @@ Para visualizar la configuración global a un usuario de Git, se utiliza el sigu
 git config --global --list
 ```
 
-Para visualizar toda la configuración disponible (incluso en .git), ingresar:
+Para visualizar toda la configuración disponible (incluso en `.git`), ingresar:
 
 ```bnf
 git config --list
@@ -72,4 +72,116 @@ El editor de texto predeterminado suele ser Vi o Vim, pero puede utilizarse otro
 
 ```bnf
 git config --global core.editor nano
+```
+
+## Ambiente de desarrollo
+
+> Resumen de <https://git-scm.com/book/en/v1/Getting-Started-Git-Basics>
+
+Antes de abordar los comandos de Git, es muy importante conocer los fundamentos de Git. Puedo corroborar esto haciendo alusión a mis primeras experiencia con la herramienta, durante las cuales el desconocimiento de los fundamentos causaron más frustración de la necesaria. Al trabajar con Git es muy importante conocer el ambiente de desarrollo, el cual es componente central del flujo de trabajo con esta herramienta. Los archivos son visualizados por Git, en momentos distingos, en tres áreas: el working tree, staging area y local repository.
+
+---
+
+![Ambiente de desarrollo](/images/dev_env.png "Ambiente de desarrollo")
+
+- El **local repository**, también conocido como directorio de Git o repositorio, almacena metadatos y los estados de los archivos, actuando efectivamente como una base de datos para la gestión del proyecto. El nombre de directorio de Git está fundamentado en que este repositorio local efectivamente se almacena en un directorio, usualmente oculto, con el nombre `.git`.
+- El **working tree** abarca todos los archivos contenidos en el directorio que contiene a `.git` y sus subdirectorios. Representa todos los posibles archivos que Git puede versionar.
+- El **staging area** define qué archivos y en qué estado serán persistidos para la siguiente versión del proyecto. Físicamente, el staging area es el archivo `.git/index`.
+
+---
+
+El flujo de trabajo usual con Git es como sigue:
+
+1. El desarrollador modifica o crea archivos en el working tree.
+2. Al estar satisfecho con las modificaciones, se añaden archivos selectos al staging area, definiendo así el contenido que esos archivos del proyecto tendrán en la siguiente versión.
+3. Se realiza un commit, el cual toma lo añadido en el staging area y genera una versión actualizada del proyecto, la cual es mostrada en el working tree y almacenada en el repositorio local.
+
+En particular, un archivo se considera tracked si existe una versión registrada de éste en el repositorio local, lo cual ocurre al realizar un commit o añadirlo al staging area. Un archivo **tracked** podría ser marcado por Git como **modified** o **staged**. Si un archivo es añadido al staging area, entonces el archivo está staged. Si un archivo tracked ha sido modificado, pero no añadido al staging area, está modified. Los archivos que no han formado parte de algún commit y tampoco han sido añadidos al staging area se dice que están **untracked**. Todo archivo nuevo empieza con el status de untracked.
+
+## Comandos básicos para la gestión de un repositorio
+
+> Para algunos de estos comandos se presentan también banderas u argumentos que me han resultado útiles, mas cabe mencionar que existen muchas más opciones; algunas se pueden combiar, otras no. Git tiene integrado un sistema de ayuda; para cada comando se puede solicitar su documentación mediante las siguientes dos opciones de sintaxis.
+>
+>```bnf
+> git <comando> --help  (1)
+> git help <comando>    (2)
+>```
+
+Crear un respositorio local.
+
+```bnf
+git init
+```
+
+Muestra archivos modified y staged. Sólo cuando existen archivos en el staging area se puede realizar un commit. Para ver una versión resumida del estado, úsese la bandera `-s` o `--short` (2).
+
+```bnf
+git status     (1)
+git status -s  (2)
+```
+
+Agrega uno o varios archivos al staging area. Como muchos de los comandos de Git que seleccionan archivos, acepta [patrones glob](https://en.wikipedia.org/wiki/Glob_(programming)). Por ejemplo, el comando (1) añade un archivo específico al staging area; si como valor de `<archivo>` se utiliza un punto (`.`), que denota el directorio actual, todos los archivos modificados o untracked se añaden al index. Al utilizar glob, es preferible siempre ponerlo entre comillas simples para evitar la expasnsión del shell. En ocasiones se modifican archivos que ya habían sido añadidos al staging area, para actualizar el index con los cambios del working tree utilizar (2), el cual no añade archivos nuevos. Si desea agregar todos los archivos nuevos, eliminados o modificados utilice (3). Para retirar todos los archivos del staing area (pero preservar los cambios en el working tree), utilizar (4). En secciones avanzadas se disctue con detalle el comando git reset.
+
+```bnf
+git add <archivo>  (1)
+git add -u         (2)
+git add -a         (3)
+git reset          (4)
+```
+
+Realiza un commit. La redacción del mensaje puede hacer de Git una herramienta mucho más o menos útil. Guía para redactar mensajes relevantes: <https://chris.beams.io/posts/git-commit/>. En caso que se desee redactar el mensaje incluyendo un cuerpo, úsese el comando (2). Esto abrirá el editor de texto especificado en la configuración core.editor para redactar el mensaje. Al terminar, guardar y cerrar el editor.  ¿Cuándo realizar un commit? <https://jasonmccreary.me/articles/when-to-make-git-commit/>. La bandera `-a` incluye al staging area archivos modified (tracked modificados, ignora los untracked) e inicia el proceso de realizar un commit.
+
+```bnf
+git commit -m "<mensaje del commit>"  (1)
+git commit                            (2)
+git commit -a                         (3)
+```
+
+Recorre el árbol de commits desde la posición de `HEAD`. El comando sin banderas (1) muestra autor, fecha y hora de commit,  encabezado y cuerpo del mensaje, rama del commit y hash SHA-1 completo. El comando con la bandera `--oneline` (3) muestra una versión más compacta, sólo desplegando el encabezado del mensaje, los primeros 7 caracteres del hash del commit y la rama en la que fue realizado. Si se desean ver todos los commits del repositorio (todos los commits accesibles mediante alguna rama) en lugar a sólo los accesibles a través de `HEAD`, utilice la bandera `-a` (2).
+
+```bnf
+git log            (1)
+git log -a         (2)
+git log --oneline  (3)
+```
+
+Lista cronológica inversa (se muestra primero lo más reciente) de los objetos a los que `HEAD` ha apuntado. Este comando imprime un log de las referencias. A diferencia del comando log, reflog puede mostrar commits que no son accesibles mediante una rama, pues muestra un historial en lugar de recorrer el árbol.
+Véase: <https://stackoverflow.com/questions/17857723/whats-the-difference-between-git-reflog-and-log>
+
+```bnf
+git reflog
+```
+
+## Correcciones básicas
+
+Revierte los cambios de archivos especificados a su estado representado en el snapshot del commit al que apunta `HEAD`. Si el nombre del archivo inicia con un guión (`-`), usar el comando (2).
+
+```bnf
+git checkout <archivo>    (1)
+git checkout -- <archivo> (2)
+```
+
+Un error usual es olvidar añadir archivos a un commit o redactar mal el mensaje del commit. Si este comando (1) se ejecuta con el staging area vacío, entonces el editor de texto especificado en `core.editor` muestra el mensaje del commit pasado y permite modificarlo. Por otro lado, si el staging area contiene cambios, al commit pasado se le añaden estos cambios, al igual que resulta posible modificar el mensaje del commit. En caso que no se desea modificar el mensaje del commit, utilizar (2).
+
+```bnf
+git commit --amend                     (1)
+git commit --amend --no-edit           (2)
+```
+
+Retirar un archivo del staging area. Otro error usual es añadir al staging area algún archivo que no se desea agregar al siguiente commit.
+
+```bnf
+git reset `HEAD` <archivo>
+```
+
+Renombrar un archivo y comunicarle a Git de este tipo de cambio.
+
+```bnf
+git mv <nombre-antiguo> <nombre-nuevo>
+```
+
+Retira al archivo del repositorio, pero lo mantiene en el working tree. Esto es muy útil cuando se desea ignorar un archivo o directorio que tiene el estado commited.
+
+```bnf
+git rm --cached <archivo>
 ```
