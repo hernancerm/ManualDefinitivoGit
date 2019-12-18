@@ -276,3 +276,67 @@ Crear una rama y cambirase a ella con un sólo comando.
 ```bnf
 git checkout -b <rama>
 ```
+
+## Fusión de ramas
+
+> Resumen de <https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging>
+
+Si las ramas son el mecanismo principal por el cual se organiza la colaboración entre proyectos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto, reservado para secciones más avanzadas del manual.
+
+Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres comits.
+
+![Start of commit tree](/images/merge_1.png)
+
+Ahora Juan decide dedicarse a implementar una característica nueva, para lo cual crea la rama `feature`, se cambia a ésta y comienza a trabajar. Realiza un commit.
+
+![New commit on new branch feature](/images/merge_2.png)
+
+En este momento Juan es informado que existe un bug en `master` cuyo patch debe ser priorizado sobre la característica que está implementando. Para realizar la corrección del bug, Juan crea la nueva rama `bug-fix` a partir de `master`. Es decir, el desarrollador requirió ejecutar los siguientes comandos justo después de haber realizado su commit:
+
+```shell
+$ git checkout master
+$ git branch bug-fix
+$ git checkout bug-fix
+```
+
+En esta rama el desarrollador soluciona el bug con un único commit. Nótese que el progreso que Juan llevaba en la rama `feature` no existe en la rama `master`, pues se encuentra atrás en la historia. **Generalizando, al cambiar de rama, el working tree muestra sólo los contenidos del snapshot del commit de la rama**. Ahora la relación de los commits luce como lo indica la figura siguiente.
+
+![New commit on new branch bug-fix](/images/merge_3.png)
+
+### Fast-formard merge
+
+Juan ahora debe integrar su solución del bug a `master`. Es decir, `bug-fix` debe ser fusionada en `master`. Para incorporar los cambios de `bug-fix` a `master`, Juan usa los siguientes comandos:
+
+```shell
+$ git checkout master
+$ git merge bug-fix
+Updating f42c576..3a0874c
+Fast-forward
+ App.java | 1 -
+ 1 file changed, 1 deletion(-)
+```
+
+La estrategia utilizada para el merge es fast-forward pues basta con adelantar la referencia `master` al commit 5 para incorporar los cambios de la rama `bug-fix`. Se elimina la rama `bug-fix` utilizando el commando `git branch -d bug-fix` pues no se necesita más y ahora las ramas y commits tienen la siguiente estructura y estado.
+
+![Fast-forward merge buf-fix into master](/images/merge_4.png)
+
+Juan ya puede continuar trabajando en la característica que estaba implementando en `feature`, para lo cual se cambia a esta rama y logra terminar la implementación en un commit más, como se muestra a continuación.
+
+![Checkout feature and make one commit](/images/merge_5.png)
+
+### Recursive merge
+
+Puesto que la implementación de la nueva característica está terminada, Juan desea incorporar los cambios de `feature` en `master`. Puede notarse que el commit 6 no es descendiente directo del commit 5, por lo que un merge fast-forward no es posible. En estos casos Git utiliza la estrategia recursiva. Al fusionar `feature` en `master` con los siguientes comandos vemos el siguiente mensaje:
+
+```shell
+$ git checkout master
+$ git merge feature
+Merge made by the 'recursive' strategy.
+ Reader.java | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 Reader.java
+```
+
+**En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y genera un nuevo commit (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3**. Los commits y sus relaciones están mostrados por la siguiente figura.
+
+![Recursive merge feature into master](/images/merge_6.png)
