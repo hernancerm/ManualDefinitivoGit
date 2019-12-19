@@ -132,6 +132,8 @@ En particular, un archivo se considera tracked si existe una versión registrada
 > git <comando> --help  (1)
 > git help <comando>    (2)
 >```
+>
+> **La sintaxis mostrada a lo largo de las notas es expresada en [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
 
 Crear un respositorio local.
 
@@ -139,36 +141,34 @@ Crear un respositorio local.
 git init
 ```
 
-Muestra archivos modified y staged. Sólo cuando existen archivos en el staging area se puede realizar un commit. Para ver una versión resumida del estado, úsese la bandera `-s` o `--short` (2).
+Muestra archivos modified y staged. Sólo cuando existen archivos en el staging area se puede realizar un commit. Para ver una versión resumida del estado, úsese la bandera `-s` o `--short`.
 
 ```bnf
-git status     (1)
-git status -s  (2)
+git status [-s | --short]
 ```
 
-Agrega uno o varios archivos al staging area. Como muchos de los comandos de Git que seleccionan archivos, acepta [patrones glob](https://en.wikipedia.org/wiki/Glob_(programming)). Por ejemplo, el comando (1) añade un archivo específico al staging area; si como valor de `<archivo>` se utiliza un punto (`.`), que denota el directorio actual, todos los archivos modificados o untracked se añaden al index. Al utilizar glob, es preferible siempre ponerlo entre comillas simples para evitar la expasnsión del shell. En ocasiones se modifican archivos que ya habían sido añadidos al staging area, para actualizar el index con los cambios del working tree utilizar (2), el cual no añade archivos nuevos. Si desea agregar todos los archivos nuevos, eliminados o modificados utilice (3). Para retirar todos los archivos del staing area (pero preservar los cambios en el working tree), utilizar (4). En secciones avanzadas se disctue con detalle el comando git reset.
+Agrega uno o varios archivos al staging area. Al igual que el resto de los comandos de Git que seleccionan archivos, acepta [patrones glob](https://en.wikipedia.org/wiki/Glob_(programming)). Por ejemplo, si como valor de `<archivos>` se utiliza un punto (`.`), que denota el directorio actual, todos los archivos modificados y untracked se añaden al index. Al utilizar glob, es preferible siempre ponerlo entre comillas simples para evitar la expasnsión del shell. En ocasiones se modifican archivos que ya habían sido añadidos al staging area, para actualizar el index con los cambios del working tree utilizar la bandera `-u`, la cual no añade archivos nuevos. Si desea agregar todos los archivos nuevos, eliminados o modificados utilice la bandera `-A` o simplemente pase como valor de `<archivos>` un punto (`.`).
 
 ```bnf
-git add <archivo>  (1)
-git add -u         (2)
-git add -a         (3)
-git reset          (4)
+git add [-u | --update] [-A | --all] <archivos>
 ```
 
-Realiza un commit. La redacción del mensaje puede hacer de Git una herramienta mucho más o menos útil. Guía para redactar mensajes relevantes: <https://chris.beams.io/posts/git-commit/>. En caso que se desee redactar el mensaje incluyendo un cuerpo, úsese el comando (2). Esto abrirá el editor de texto especificado en la configuración core.editor para redactar el mensaje. Al terminar, guardar y cerrar el editor.  ¿Cuándo realizar un commit? <https://jasonmccreary.me/articles/when-to-make-git-commit/>. La bandera `-a` incluye al staging area archivos modified (tracked modificados, ignora los untracked) e inicia el proceso de realizar un commit.
+Para retirar todos los archivos del staing area (pero preservar los cambios en el working tree) no especifique ningún archivo. Para retirar sólo archivos específicos nómbrelos. En secciones avanzadas se disctue con detalle el comando `git reset`.
 
 ```bnf
-git commit -m "<mensaje del commit>"  (1)
-git commit                            (2)
-git commit -a                         (3)
+git reset <archivos>
 ```
 
-Recorre el árbol de commits desde la posición de `HEAD`. El comando sin banderas (1) muestra autor, fecha y hora de commit,  encabezado y cuerpo del mensaje, rama del commit y hash SHA-1 completo. El comando con la bandera `--oneline` (3) muestra una versión más compacta, sólo desplegando el encabezado del mensaje, los primeros 7 caracteres del hash del commit y la rama en la que fue realizado. Si se desean ver todos los commits del repositorio (todos los commits accesibles mediante alguna rama) en lugar a sólo los accesibles a través de `HEAD`, utilice la bandera `-a` (2).
+Realiza un commit.Para añadir un menaje breve de commit utilice la bandera `-m` seguido del mensaje entre comillas. En caso que se desee redactar el mensaje en el editor de texto especificado en `core.editor`, no incluya la bandera `-m`. Al terminar, guardar y cerrar el editor. La bandera `-a` incluye al staging area archivos modified (tracked modificados, no considera los untracked) e inicia el proceso de realizar un commit. La forma de redacción del mensaje puede hacer de Git una herramienta mucho más o menos útil. Guía para redactar mensajes relevantes: <https://chris.beams.io/posts/git-commit/>. ¿Cuándo realizar un commit? <https://jasonmccreary.me/articles/when-to-make-git-commit/>.
 
 ```bnf
-git log            (1)
-git log -a         (2)
-git log --oneline  (3)
+git commit [-a] [-m "<mensaje>"]
+```
+
+Recorre el árbol de commits desde la posición de `HEAD`. El comando sin banderas muestra autor, fecha y hora de commit,  encabezado y cuerpo del mensaje, rama del commit y hash SHA-1 completo. El comando con la bandera `--oneline` muestra una versión más compacta, sólo desplegando el encabezado del mensaje, los primeros 7 caracteres del hash del commit y la rama en la que fue realizado. Si se desean ver todos los commits del repositorio (todos los commits accesibles mediante alguna rama) en lugar a sólo los accesibles a través de `HEAD`, utilice la bandera `-a`.
+
+```bnf
+git log [-a] [--oneline]
 ```
 
 Lista cronológica inversa (se muestra primero lo más reciente) de los objetos a los que `HEAD` ha apuntado. Este comando imprime un log de las referencias. A diferencia del comando log, reflog puede mostrar commits que no son accesibles mediante una rama, pues muestra un historial en lugar de recorrer el árbol.
@@ -180,33 +180,13 @@ git reflog
 
 ## Correcciones básicas
 
-Revierte los cambios de archivos especificados a su estado representado en el snapshot del commit al que apunta `HEAD`. Si el nombre del archivo inicia con un guión (`-`), usar el comando (2).
+Un error usual es olvidar añadir archivos a un commit o redactar mal el mensaje del commit. Si este `--amend` se utiliza con el staging area vacío, entonces el editor de texto especificado en `core.editor` muestra el mensaje del commit pasado y permite modificarlo. Por otro lado, si el staging area contiene cambios, al commit pasado se le añaden estos cambios, al igual que resulta posible modificar el mensaje del commit. En caso que no se desea modificar el mensaje del commit, utilizar `--no-edit`. Aquí se muestra una sintaxis más completa del mismo comando `git commit`.
 
 ```bnf
-git checkout <archivo>    (1)
-git checkout -- <archivo> (2)
+git commit [--amend [--no-edit]] [-a] [-m "<mensaje>"]
 ```
 
-Un error usual es olvidar añadir archivos a un commit o redactar mal el mensaje del commit. Si este comando (1) se ejecuta con el staging area vacío, entonces el editor de texto especificado en `core.editor` muestra el mensaje del commit pasado y permite modificarlo. Por otro lado, si el staging area contiene cambios, al commit pasado se le añaden estos cambios, al igual que resulta posible modificar el mensaje del commit. En caso que no se desea modificar el mensaje del commit, utilizar (2).
-
-```bnf
-git commit --amend                     (1)
-git commit --amend --no-edit           (2)
-```
-
-Retirar un archivo del staging area. Otro error usual es añadir al staging area algún archivo que no se desea agregar al siguiente commit.
-
-```bnf
-git reset `HEAD` <archivo>
-```
-
-Renombrar un archivo y comunicarle a Git de este tipo de cambio.
-
-```bnf
-git mv <nombre-antiguo> <nombre-nuevo>
-```
-
-Retira al archivo del repositorio, pero lo mantiene en el working tree. Esto es muy útil cuando se desea ignorar un archivo o directorio que tiene el estado commited.
+Retira archivos del repositorio, pero los mantiene en el working tree. Esto es muy útil cuando se desea ignorar (.gitignore) un archivo o directorio que tiene el estado tracked.
 
 ```bnf
 git rm --cached <archivo>
@@ -272,35 +252,22 @@ Las ramas son parte fundamental de Git. A diferencia de otros sistemas de contro
 
 ## Comandos básicos para ramas
 
-Muestra todas las ramas del repositorio local (1). Muestra todas las ramas del repositorio local y los remotos asociados (2). La bandera `-a` es breve para denotar all. La distinción entre ramas locales y remotas es examinada en otra sección del manual.
+Muestra todas las ramas del repositorio local si ninguna bandera es usada. Muestra todas las ramas del repositorio local y los remotos asociados al usar `-a`. La distinción entre ramas locales y remotas es examinada en otra sección del manual. La bandera `-vv` muestra una descripción completa por rama. La descripción por rama incluye su nombre, hash SHA-1 que las identifica, el encabezado del mensaje del commit al que apuntan y, en caso de existir, la [rama upstream](#configurar-upstreams) asociada.
 
 ```bnf
-git branch     (1)
-git branch -a  (2)
+git branch [-a | --all] [-vv | --verbose]
 ```
 
-Muestra una descripción completa por rama del repositorio local (utilizar también `-a` para describir todas las ramas). La bandera `-vv` es breve para denotar verbose; puede utilizarse `--verbose` en su lugar. La descripción por rama incluye su nombre, hash SHA-1 que las identifica, el encabezado del mensaje del commit al que apuntan y, en caso de existir, la rama upstream asociada.
-
-```bnf
-git branch -vv
-```
-
-Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la misma, vea el siguiente comando para cambiarse a una rama existente.
+Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la misma.
 
 ```bnf
 git branch <rama>
 ```
 
-Cambiar a una rama existente.
+Cambiar a una rama existente. Utilizar `-b` para crear la rama (si no existe ya) y cambiarse a ella. Este comando también permite moverse a commits específicos.
 
 ```bnf
-git checkout <rama>
-```
-
-Crear una rama y cambirase a ella con un sólo comando.
-
-```bnf
-git checkout -b <rama>
+git checkout [-b] (<rama> | <commit>)
 ```
 
 ## Fusión de ramas
@@ -481,11 +448,10 @@ Tras ejecutar el comando un directorio con el nombre del repositorio (en este ca
 
 Iniciar un repositorio utilizando `git clone` en lugar de `git init` tiene una consecuencia interesante. Al realizar `git clone`, ahora existen al menos dos repositorios que representan el mismo proyecto. Por lo tanto, ahora puede hablarse de repositorios remotos. Al clonar un repositorio, Git almacena información de la fuente (en `.git\logs\refs\remotes`) permitiendo establecer ya sea una relación de sólo lectura o lectura/escritura respecto a la fuente.
 
-Listar aliases de repositorios remotos (1). Los aliases abrevian la dirección de un repositorio remoto, el cual puede ser un URL o dirección del sistema de archivos local. Para ver la dirección asociada a cada alias, utilizar la bandera `-v` ó `--verbose` (2).
+Listar aliases de repositorios remotos. Los aliases abrevian la dirección de un repositorio remoto, el cual puede ser un URL o dirección del sistema de archivos local. Para ver la dirección asociada a cada alias, utilizar la bandera `-v` ó `--verbose`.
 
 ```bnf
-git remote     (1)
-git remote -v  (2)
+git remote [-v | --verbose]
 ```
 
 Por defecto, el alias creado al clonar un repositorio es `origin`. Por cada alias, dos direcciones son mostradas, una de lectura (fetch) y otra de escritura (push). **Para todo repositorio remoto se tiene acceso al menos de lectura (es posible que privilegios de escritura estén deshabilitados para ciertos usuario. Por ejemplo, si clona un repositorio de GitHub que no sea de usted y no está registrado como colaborador, sólo tendrá permisos de lectura - fetch)**.
@@ -526,11 +492,10 @@ From https://github.com/HerCerM/BatchScripts
 
 ### Operaciones de lectura y escritura (fetch, pull y push)
 
-Obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local (1). También puden solicitarse sólo los cambios de una rama (2).
+Omitir `<rama>` para obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local. También puden solicitarse sólo los cambios de una rama.
 
 ```bnf
-git fetch <alias>         (1)
-git fetch <alias> <rama>  (2)
+git fetch <alias> [<rama>]
 ```
 
 Es importante destacar que este comando solamente trae los cambios, mas no los integra a las ramas respectivas mediante un merge. Entonces, para incorporar las modificaciones hace falta un merge manual. Podemos ver que los cambios han sido traídos (almacenados en la rama `origin/master`), pero no incorporados a `master`.
@@ -545,7 +510,7 @@ $ git branch -a
 En la práctia, la mayoría de las veces se desea realizar un merge inmediatamente después de un fetch. `git pull` es un comando pensado para esto. **Es decir, `git pull` ejecuta dos comandos: primero un `git fetch`, seguido de `git merge`**.
 
 ```bnf
-git pull <alias> <rama>
+git pull [<alias> <rama>]
 ```
 
 Observación acerca de la distinción entre `git fetch` y `git pull`.
@@ -555,7 +520,7 @@ Observación acerca de la distinción entre `git fetch` y `git pull`.
 Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los cambios de la rama actual.
 
 ```bnf
-git push <alias> <rama>
+git push [<alias> <rama>]
 ```
 
 ### Obtener información detallada de un repositorio remoto
