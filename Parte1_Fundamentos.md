@@ -24,9 +24,11 @@
 
 ## ¿Qué es Git?
 
+> Git is my second big project which is only created for me to maintain my first big project [, the Linux kernel] - *Linus Torvalds*. Recuperado de una [entrevista de TED](https://www.youtube.com/watch?v=o8NPllzkFhE&t=919s).
+>
 > Resumen de <https://www.atlassian.com/git/tutorials/what-is-git>
 
-Git es un VCS open source originalmente desarrollado en 2005 por Linus Torvalds, el creador del kernel de Linux, quien se encontraba muy insatisfecho con las herramientas de mantenimiento de código contemporáneas, entre las cuales CVS era la más popular. En particular, Git es un VCS distribuido (DVCS), lo cual significa que en lugar de destinar un lugar único para almacenar la historia de un proyecto, como sus antecesores CVS o Subversion (SVN), cada desarrollador tiene una copia de la historia completa de los cambios de cada archivo.
+Git es un sistema de control de versiones (VCS) open source originalmente desarrollado en 2005 por Linus Torvalds, el creador del kernel de Linux, quien se encontraba muy insatisfecho con las herramientas de mantenimiento de código contemporáneas, entre las cuales CVS era la más popular. En particular, **Git es un VCS distribuido (DVCS)**, lo cual significa que en lugar de destinar un lugar único para almacenar la historia de un proyecto, como sus antecesores CVS o Subversion (SVN), cada desarrollador tiene una copia de la historia completa de los cambios de cada archivo.
 
 ### Ventajas de los sistemas de control de versiones (VCS)
 
@@ -35,47 +37,35 @@ Git es un VCS open source originalmente desarrollado en 2005 por Linus Torvalds,
 Cabe destacar que Git no es la única herramienta para el control de versiones, mas Git supera a las demás opciones en integraciones y características. Sin importar qué VCS se utilice, siempre se pueden esperar las siguientes ventajas.
 
 - Prevención de cambios conflictivos sobre un conjunto de archivos.
-- Historial completo y detallado del proyecto. Esto abarca todos los cambios realizados por todos los contribuidores, incluyendo modificaciones, eliminación y creación de archivos, así como su movimiento y cambio de nombre. El beneficio más aparente de esto radica en su cualidad de respaldo, pues bajo el control de un VCS, ninguna modificación resulta fatal, siempre se puede regresar a alguna versión anterior. Más aún, la identificación de la causa raíz de algun bug puede ser rastreada con mucha más facilidad.
-- Ramas y su fusión. Un VCS provee ramificaciones del proyecto, es decir, versiones aisladas en las cuales algún desarrollador puede trabajar. Terminada su modificación, puede incorporar estos cambios a la rama principal, fusionando sus cambios y verificando si existen conflictos. El VCS informa de todos los conflictos y queda a responsabilidad de programador resolverlos para poder concluir el proceso de fusión.
+- Historial completo y detallado del proyecto. Esto abarca todos los cambios realizados por todos los contribuidores, incluyendo modificaciones, eliminación y creación de archivos, así como su movimiento y cambio de nombre. El beneficio más aparente de esto radica en su cualidad de respaldo, pues **bajo el control de un VCS, ninguna modificación resulta fatal, siempre se puede regresar a alguna versión anterior**. Más aún, la identificación de la causa raíz de algun bug puede ser rastreada con mucha más facilidad.
+- Ramas y su fusión. Un VCS provee ramificaciones del proyecto, es decir, versiones aisladas en las cuales algún desarrollador puede trabajar. Terminada su modificación, puede incorporar estos cambios a la rama principal, fusionando sus cambios y verificando si existen conflictos. El VCS informa de todos los conflictos y queda a responsabilidad de programador resolverlos para poder concluir el proceso de fusión. **La colaboración en equipos se vuelve simple, incluso en equipos muy grandes**.
 
 ### ¿Por qué Gity no otro VCS?
 
 > Resumen de <https://www.atlassian.com/git/tutorials/what-is-git>
 
-Git es un sistema maduro y open source al que activamente se le proporciona mantenimiento. El sistema está altamente opimizado para tener el mejor rendimiento, resultando en un programa con tiempos de espera muy cortos y, a menudo, nulos. Incluso en la naturaleza distribuida de Git pueden encontrarse beneficios en rendimiento. Cada programador tiene una copia entera de la historia del proyecto, almacenada en la memoria local de su máquina, evitando comunicaciones de red con cada acción a realizar respecto al VCS (en sistema de control de versiones CVS, por ejemplo, la mayoría de las operaciones sufren de latencia de red). Esto no significa que no pueda existir un lugar centralizado y remoto para almacenar el proyecto; es para esta común necesidad que GitHub y otros sistemas de almacenamiento remoto para Git fueron creado (véanse las últimas secciones de este manual para una explicación de GitHub). Entonces con Git, un desarrollador trabaja con el proyecto de forma local, al completar sus tareas y desear compartir su colaboración, realiza un push de sus cambios al repositorio remoto y es sólo en ese momento que requiere de conexión a una red.
+Git es un sistema maduro y open source al que activamente se le proporciona mantenimiento. El sistema está altamente opimizado para tener el mejor rendimiento, resultando en un programa con tiempos de espera muy cortos y, a menudo, nulos. Incluso en la naturaleza distribuida de Git pueden encontrarse beneficios en rendimiento. Cada programador tiene una copia entera de la historia del proyecto, almacenada en la memoria local de su máquina, evitando comunicaciones de red con cada acción a realizar respecto al VCS (en sistema de control de versiones CVS, por ejemplo, la mayoría de las operaciones sufren de latencia de red). Esto no significa que no pueda existir un lugar centralizado y remoto para almacenar el proyecto; es para esta común necesidad que GitHub y otros sistemas de almacenamiento en nube para Git fueron creado. Entonces con Git, un desarrollador trabaja con el proyecto de forma local, al completar sus tareas y desear compartir su colaboración, realiza un push de sus cambios al repositorio remoto y es sólo en ese momento que requiere de conexión a una red.
 
-Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede utilizarse en una gran variedad de SOs, incluyendo Windows, MacOS, Linux, FreeBSD y otros; y para gestionar proyectos de cualquier tipo, con cualquier tipo de archivo basados en caracteres. Más importante aún, Git no impone una modalidad específica de desarrollo, sino los desarrolladores establecen su propio estándar de cómo usar la herramienta y cómo acoplarla a su estilo de trabajo. Dado que la mayoría de las operaciones de Git son locales, merced su naturaleza distribuida, no existe una fuerte dependencia respecto a internet para poder trabajar.
+Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede utilizarse en una gran variedad de SOs, incluyendo Windows, MacOS, Linux, FreeBSD y otros; y para gestionar proyectos de cualquier tipo, con cualquier tipo de archivo (la herramienta funciona mejor con archivos basados en caracteres, aunque cualquier archivo puede ser incluido). Más importante aún, Git no impone una modalidad específica de desarrollo, sino los desarrolladores establecen su propio estándar de cómo usar la herramienta y cómo acoplarla a su estilo de trabajo. Dado que la mayoría de las operaciones de Git son locales, merced su naturaleza distribuida, no existe una fuerte dependencia respecto a internet para poder trabajar.
 
-Git es, por mucho, el sistema de control de versiones estándar. Git ha sido ampliamente adoptado, lo que implica que tiene soporte activo, existe mucho material para ser aprendido, tiene fuerte integración con muchas herramientas, como IDEs o editores de texto (p. ej.: NetBeans, IntelliJ, VSCode), sistemas de ticketing (p. ej.: Jira), etc.
+**Git es, por mucho, el sistema de control de versiones estándar**. Git ha sido ampliamente adoptado, lo que implica que tiene soporte activo, existe mucho material para ser aprendido, tiene fuerte integración con muchas herramientas, como IDEs o editores de texto (p. ej.: NetBeans, IntelliJ, VSCode), sistemas de ticketing (p. ej.: Jira), etc.
 
 ## Instalación
 
-| Sistema operativo                      | Proceso de instalación                                                                         |
-|----------------------------------------|------------------------------------------------------------------------------------------------|
-| (Linux) Fedora                         | `sudo dnf install git-all`                                                                     |
-| (Linux) Basados en Debian, como Ubuntu | `sudo apt install git-all`                                                                     |
+| Sistema operativo                      | Proceso de instalación |
+|----------------------------------------|------------------------|
+| (Linux) Fedora                         | `sudo dnf install git-all` |
+| (Linux) Basados en Debian, como Ubuntu | `sudo apt install git-all` |
 | MacOS                                  | Instalador: <https://git-scm.com/download/mac><br>Mavericks (10.9) o superior: `git --version` |
-| Windows                                | Instalador: <https://git-scm.com/download/win><br>Chocolatey: `choco install git`              |
+| Windows                                | Instalador: <https://git-scm.com/download/win><br>Chocolatey: `choco install git` |
 
 ## Configuración
 
 > Resumen de <https://git-scm.com/book/en/v1/Getting-Started-First-Time-Git-Setup>
 
-Git trae una herramienta llamada git config que permite cambiar variables de configuración acerca de cómo Git luce y funciona. La configuración sólo requiere realizarse una vez, mas en cualquier momento los valores pueden ser modificados si así se desea.
+Git trae una herramienta llamada `git config` que permite cambiar variables de configuración acerca de cómo Git luce y funciona. El email y nombre del usuario son necesarios configurar como primer paso al empezar a usar Git y sólo es requerido hacerlo una vez, mas en cualquier momento los valores pueden ser modificados si así se desea. Existen muchas más varibales de configuración que puede revisar aquí: <https://git-scm.com/docs/git-config>.
 
-La configuración global para un usuario es almacenada en `~/.gitconfig`, en Linux, y `%USERPROFILE%\.gitconfig`, en Windows. Alternativamente, mediante el archivo `.git/config` se puede ignorar la configuración global e imponer una para sólo el repositorio en cuestión.
-
-Para visualizar la configuración global a un usuario de Git, se utiliza el siguiente comando. Si acaba de instalar Git, es posible que este comando no reporte nada; realice las siguientes configuraciones antes.
-
-```bnf
-git config --global --list
-```
-
-Para visualizar toda la configuración disponible (incluso en `.git`), ingresar:
-
-```bnf
-git config --list
-```
+La configuración global para un usuario es almacenada en `~/.gitconfig`, en Linux, y `%USERPROFILE%\.gitconfig`, en Windows. Alternativamente, mediante el archivo `.git/config` se pueden sobreescribir o agregar configuraciones al repositorio en cuestión respecto al archivo global.
 
 Para cambiar el valor de cualquier variable global de configuración se usa la sintaxis siguiente. Nótese que si el valor contiene algún espacio en blanco, es necesario encerrarlo en comillas dobles.
 
@@ -96,19 +86,33 @@ El editor de texto predeterminado suele ser Vi o Vim, pero puede utilizarse otro
 git config --global core.editor nano
 ```
 
+Para visualizar la configuración global a un usuario de Git, se utiliza el siguiente comando.
+
+```bnf
+git config --global --list
+```
+
+Para visualizar toda la configuración disponible (incluso en `.git`), ingresar:
+
+```bnf
+git config --list
+```
+
 ## Ambiente de desarrollo
 
+> Now, pay attention. This is the main thing to remember about Git if you want the rest of your learning process to go smoothly.
+>
 > Resumen de <https://git-scm.com/book/en/v1/Getting-Started-Git-Basics>
 
-Antes de abordar los comandos de Git, es muy importante conocer los fundamentos de Git. Puedo corroborar esto haciendo alusión a mis primeras experiencia con la herramienta, durante las cuales el desconocimiento de los fundamentos causaron más frustración de la necesaria. Al trabajar con Git es muy importante conocer el ambiente de desarrollo, el cual es componente central del flujo de trabajo con esta herramienta. Los archivos son visualizados por Git, en momentos distingos, en tres áreas: el working tree, staging area y local repository.
+Antes de abordar los comandos de Git, es muy importante conocer los fundamentos de Git. Puedo corroborar esto haciendo alusión a mis primeras experiencia con la herramienta, durante las cuales el desconocimiento de los fundamentos causaron más frustración de la necesaria. Al trabajar con Git es muy importante conocer el ambiente de desarrollo, el cual es componente central del flujo de trabajo. Los archivos son apreciados por Git en tres áreas: el working tree, staging area y local repository.
 
 ---
 
 ![Ambiente de desarrollo](/images/dev_env.png "Ambiente de desarrollo")
 
-- El **local repository**, también conocido como directorio de Git o repositorio, almacena metadatos y los estados de los archivos, actuando efectivamente como una base de datos para la gestión del proyecto. El nombre de directorio de Git está fundamentado en que este repositorio local efectivamente se almacena en un directorio, usualmente oculto, con el nombre `.git`.
-- El **working tree** abarca todos los archivos contenidos en el directorio que contiene a `.git` y sus subdirectorios. Representa todos los posibles archivos que Git puede versionar.
-- El **staging area** define qué archivos y en qué estado serán persistidos para la siguiente versión del proyecto. Físicamente, el staging area es el archivo `.git/index`.
+- El **local repository**, o simplemente repositorio, almacena metadatos y los estados de los archivos, actuando efectivamente como una base de datos para la gestión del proyecto. El repositorio también se conoce como "directorio de Git", pues efectivamente se almacenan estos datos en un directorio; usualmente oculto, con el nombre `.git`.
+- El **working tree** abarca todos los archivos contenidos en el directorio que contiene a `.git`. Los subdirectorios también son considerados. Representa todos los posibles archivos que Git puede versionar.
+- El **staging area** define qué archivos y en qué estado serán persistidos para la siguiente versión del proyecto (siguiente commit). Físicamente, el staging area es el archivo `.git/index`.
 
 ---
 
@@ -116,13 +120,13 @@ El flujo de trabajo usual con Git es como sigue:
 
 1. El desarrollador modifica o crea archivos en el working tree.
 2. Al estar satisfecho con las modificaciones, se añaden archivos selectos al staging area, definiendo así el contenido que esos archivos del proyecto tendrán en la siguiente versión.
-3. Se realiza un commit, el cual toma lo añadido en el staging area y genera una versión actualizada del proyecto, la cual es mostrada en el working tree y almacenada en el repositorio local.
+3. Se realiza un commit, el cual toma lo añadido en el staging area (y no en el working tree) y genera una versión actualizada del proyecto, la cual es mostrada en el working tree y almacenada en el repositorio local.
 
-En particular, un archivo se considera tracked si existe una versión registrada de éste en el repositorio local, lo cual ocurre al realizar un commit o añadirlo al staging area. Un archivo **tracked** podría ser marcado por Git como **modified** o **staged**. Si un archivo es añadido al staging area, entonces el archivo está staged. Si un archivo tracked ha sido modificado, pero no añadido al staging area, está modified. Los archivos que no han formado parte de algún commit y tampoco han sido añadidos al staging area se dice que están **untracked**. Todo archivo nuevo empieza con el status de untracked.
+En particular, un archivo se considera tracked si existe una versión registrada de éste en el repositorio local, lo cual ocurre al añadirlo al staging area o al incorporarlo en un commit. Un archivo **tracked** podría ser marcado por Git como **modified** o **staged**. Si un archivo es añadido al staging area, entonces el archivo está staged. Si un archivo tracked ha sido modificado, pero no añadido al staging area, está modified. Los archivos que no han formado parte de algún commit y tampoco han sido añadidos al staging area se dice que están **untracked**. Todo archivo nuevo empieza con el status de untracked y Git no versiona estos archivos en ese estado.
 
 ## Comandos básicos para la gestión de un repositorio
 
-> Para algunos de estos comandos se presentan también banderas u argumentos que me han resultado útiles, mas cabe mencionar que existen muchas más opciones; algunas se pueden combiar, otras no. Git tiene integrado un sistema de ayuda; para cada comando se puede solicitar su documentación mediante las siguientes dos opciones de sintaxis.
+> Para algunos de estos comandos se presentan también banderas u argumentos que me han resultado útiles, mas cabe mencionar que existen muchas más opciones. Git tiene integrado un sistema de ayuda; para cada comando se puede solicitar su documentación mediante las siguientes dos opciones de sintaxis.
 >
 >```bnf
 > git <comando> --help  (1)
@@ -210,9 +214,11 @@ git rm --cached <archivo>
 
 ## Concepto de rama
 
+> A branch in Git is simply a lightweight movable pointer to a commit object.
+>
 > Resumen de <https://git-scm.com/book/en/v1/Git-Branching-What-a-Branch-Is>
 
-Para poder tener un sólido entendimiento de las ramas de Git, es necesario explorar con más detalle el funcionamiento de bajo nivel de Git en cuanto a cómo almacena las distintas versiones de un proyecto. Entendido esto, el concepto de rama es tan sólo una extensión del sistema. Esta sección acaso sea una de las más difíciles de entender del manual, mas su compresión lo vale en absoluto.
+Para poder tener un sólido entendimiento de las ramas de Git, es necesario explorar con más detalle el funcionamiento de bajo nivel de Git en cuanto a cómo almacena las distintas versiones de los archivos. Entendido esto, el concepto de rama es tan sólo una extensión del sistema. Esta sección acaso sea una de las más difíciles de entender, mas su compresión lo vale en absoluto.
 
 ---
 
@@ -220,27 +226,25 @@ Para poder tener un sólido entendimiento de las ramas de Git, es necesario expl
 
 ![Commit desglosado](/images/branches_1.png)
 
-Imagínese el inicio de un repositorio simple en el que se guardarán archivos batch (`.bat`). En este repositorio, actualmente sólo existe un archivo batch, `user.bat`, y otro archivo, `README.md`, describiendo el contenido general del repositorio.
+A lo largo de esta sección se denota a la carpeta `.git/objects` por el nombre "directorio objects". Recuérdese que `.git` está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
 
-Durante esta sección, la carpeta objects hace referencia a los contenidos de `.git/objects`. Recuérdese que .git está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
-
-Comencemos el análisis desde la ejecución del comando `git init`. Tras correr este comando, un nuevo repositorio de Git es creado. Examinando el directorio objects, podemos comprobar que sólo las carpetas pack e info existen; para esta sección, no resulta relevante conocer su propósito. Ahora, imaginemos que el desarrollador codifica su primer archivo batch: `user.bat`. Luego, redacta una breve descripción del repositorio: `README.md`. Hasta ahora, esos archivos sólo existen en el working tree.
+Imagínese el inicio de un repositorio simple en el que se guardarán archivos batch (`.bat`). Comencemos el análisis desde la ejecución del comando `git init`. Tras correr este comando, un nuevo repositorio es creado. Examinando el directorio objects, podemos comprobar que sólo las carpetas pack e info existen; para esta sección no resulta relevante conocer su propósito. Ahora, imaginemos que el desarrollador codifica su primer archivo batch: `user.bat`. Luego, redacta una breve descripción del repositorio: `README.md`. Hasta ahora, esos archivos sólo existen en el working tree (sistema de archivos del SO).
 
 El desarrollador desea realizar un commit con su progreso. Para lograr esto, añade ambos archivos al staging area. Si en este momento se inspecciona objects, puede comprobarse que dos directorios han aparecido: 5b y 91 (los nombres de estos directorios concuerdan con la figura del inicio de esta sección, mas si usted realiza el experimento muy probablemente los nombres sean distintos, pero es seguro que serán dos directorios). ¿Qué significa esto? Significa que Git ha registrado el estado de los archivos `README.md` y `user.bat` en objetos blob.
 
-Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo cual se genera un objeto tree, el cual apunta a los blobs, y un objeto commit, el cual apunta al tree. Esto se ilustra en la figura del inicio de la sección presente. En este punto, si se revisa objects, dos objetos más habrán aparecido; hasta ahora Git ha registrado cuatro objetos: dos blobs, un tree y un commit.
+Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo cual se genera un objeto tree, el cual apunta a los blobs; y un objeto commit, el cual apunta al tree. Esto se ilustra en la figura del inicio de la sección presente. En este punto, si se revisa el directorio objects, dos carpetas más habrán aparecido; hasta ahora Git ha registrado cuatro objetos: dos blobs, un tree y un commit.
 
 | Objeto | Función |
 |--------|---------|
 |blob    | Representa los contenidos de un archivo que no es directorio. |
-|tree    | Almacena los nombres de los archivos de un directorio, al igual que un apuntador al blob o tree correspondiente que guarda el contenido de los archivos. |
+|tree    | Afín a un directorio. Almacena los nombres de los archivos de un directorio, al igual que un apuntador al blob o tree correspondiente que guarda el contenido de los archivos. |
 |commit  | Apunta a un tree que representa el staging area en un momento determinado; almacena el nombre del autor, el commiter y el mensaje del commit. |
 
-**Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores incompletos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referenciarlos. A continuación, se presenta un término más del vocabulario de Git.
+**Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores con puntos suspensivos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referenciarlos. A continuación, se presenta un término más del vocabulario de Git.
 
 > **Snapshot**. Tree que representa el staging area asociado a un commit.
 
-Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía oredenada de objetos commit, tree y blob. Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots (trees que representan el staging area al momento del commit) correspondientes.
+Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía unidireccional de objetos commit, tree y blob, en la que cada commit apunta a su padre. Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots (trees que representan el staging area al momento del commit) correspondientes.
 
 ![Commits y sus snapshots](/images/branches_2.png)
 
@@ -248,7 +252,7 @@ Entendido este sistema, podemos ahora comprender con formalidad qué es una rama
 
 > **Rama**. Referencia a un objeto commit.
 
-Al igual que todas las referencias en Git, esta referencia es un hash SHA-1 que identifica a un commit. Al crearse nuevos commits, la referencia avanza al último commit realizado, por lo que se dice que éstas referencias pueden moverse (son movable). También son ligeras (lightweight) pues se requiere de poco más de 160 bits para ser almacenadas. **Los programadores suelen usar la palabra rama; Git se refiere a estos apuntadores con el término `head`**. Esto puede comprobarse al inspeccionar `.git/refs/heads`.
+Al igual que todas las referencias en Git, esta referencia es un hash SHA-1 que identifica a un commit. Al crearse nuevos commits, la referencia avanza al último commit realizado, por lo que se dice que estas referencias pueden moverse (son movable). También son ligeras (lightweight) pues se requiere de poco más de 160 bits para ser almacenadas. **Los programadores suelen usar la palabra rama; Git se refiere a estos apuntadores con el término `head`**. Esto puede comprobarse al inspeccionar `.git/refs/heads`.
 
 Por defecto, Git proporciona la rama `master` como inicial. Completando la figura anterior y omitiendo el contenido de los commits por brevedad, tenemos que la imagen completa de los objetos es la mostrada próximamente.
 
@@ -258,13 +262,13 @@ Por defecto, Git proporciona la rama `master` como inicial. Completando la figur
 
 ![Commit desglosado con rama buf-fix](/images/branches_4.png)
 
-Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tras ser realizado, mas el commit al que master apunta es el mismo. Ahora cabe preguntar, ¿cómo Git sabe en qué rama un usuario está? La respuesta yace en otro apuntador, también de la forma de un hash SHA-1 al que Git denomina `HEAD` (almacenado en `.git/HEAD`). Completando la figura anterior, puede verse que Git conoce que el usuario está trabajando en la rama `buf-fix` pues `HEAD` apunta a `buf-fix`, que a su vez apunta al último commit realizado por el usuario.
+Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tras ser realizado, mas el commit al que master apunta no fue actualizado. Ahora cabe preguntar, ¿cómo Git sabe en qué rama un usuario está? La respuesta yace en otro apuntador, también de la forma de un hash SHA-1 al que Git denomina `HEAD` (almacenado en `.git/HEAD`). Completando la figura anterior, puede verse que Git conoce que el usuario está trabajando en la rama `buf-fix` pues `HEAD` apunta a `buf-fix`, que a su vez apunta al último commit realizado por el usuario.
 
 ![Commit desglosado con rama buf-fix y HEAD](/images/branches_5.png)
 
 ---
 
-Las ramas son una parte fundamental de Git. A diferencia de otros sistemas de control de versiones, como CVS, el proceso de creación de ramas en Git es rápido, pues implica tan sólo cambiar una referencia de 160 bits. **Las ramas son el mecanismo principal por el cual se organiza la colaboración en proyectos**.
+Las ramas son parte fundamental de Git. A diferencia de otros sistemas de control de versiones, como CVS, el proceso de creación de ramas en Git es rápido, pues implica tan sólo cambiar una referencia de 160 bits. **Las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos**.
 
 ## Comandos básicos para ramas
 
@@ -303,15 +307,15 @@ git checkout -b <rama>
 
 > Resumen de <https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging>
 
-Si las ramas son el mecanismo principal por el cual se organiza la colaboración entre proyectos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto, reservado para secciones más avanzadas del manual.
+Si las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto no es discutido en esta parte de las notas.
 
 Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres comits.
 
-![Start of commit tree](/images/merge_1.png)
+![Estado inicial del árbol de commits](/images/merge_1.png)
 
 Ahora Juan decide dedicarse a implementar una característica nueva, para lo cual crea la rama `feature`, se cambia a ésta y comienza a trabajar. Realiza un commit.
 
-![New commit on new branch feature](/images/merge_2.png)
+![Nuevo commit en rama feature](/images/merge_2.png)
 
 En este momento Juan es informado que existe un bug en `master` cuyo patch debe ser priorizado sobre la característica que está implementando. Para realizar la corrección del bug, Juan crea la nueva rama `bug-fix` a partir de `master`. Es decir, el desarrollador requirió ejecutar los siguientes comandos justo después de haber realizado su commit:
 
@@ -321,9 +325,9 @@ $ git branch bug-fix
 $ git checkout bug-fix
 ```
 
-En esta rama el desarrollador soluciona el bug con un único commit. Nótese que el progreso que Juan llevaba en la rama `feature` no existe en la rama `master`, pues se encuentra atrás en la historia. **Generalizando, al cambiar de rama, el working tree muestra sólo los contenidos del snapshot del commit de la rama**. Ahora la relación de los commits luce como lo indica la figura siguiente.
+En esta rama el desarrollador soluciona el bug con un único commit. Nótese que el progreso que Juan llevaba en la rama `feature` no existe en la rama `master`, pues se encuentra atrás en la historia. **Generalizando, al cambiar de rama, el working tree *suele mostrar* sólo los contenidos del snapshot del commit de la rama**. Ahora la relación de los commits luce como lo indica la figura siguiente.
 
-![New commit on new branch bug-fix](/images/merge_3.png)
+![Nuevo commit en rama bug-fix](/images/merge_3.png)
 
 ### Fast-formard merge
 
@@ -338,13 +342,13 @@ Fast-forward
  1 file changed, 1 deletion(-)
 ```
 
-La estrategia utilizada para el merge es fast-forward pues basta con adelantar la referencia `master` al commit 5 para incorporar los cambios de la rama `bug-fix`. Se elimina la rama `bug-fix` utilizando el commando `git branch -d bug-fix` pues no se necesita más y ahora las ramas y commits tienen la siguiente estructura y estado.
+La estrategia utilizada para el merge es fast-forward pues basta con adelantar la referencia `master` al commit 5 para incorporar los cambios de la rama `bug-fix`. Se elimina la rama `bug-fix` utilizando el comando `git branch -d bug-fix` pues no se necesita más y ahora las ramas y commits tienen la siguiente estructura y estado.
 
-![Fast-forward merge buf-fix into master](/images/merge_4.png)
+![Merge fast-forward buf-fix en master](/images/merge_4.png)
 
 Juan ya puede continuar trabajando en la característica que estaba implementando en `feature`, para lo cual se cambia a esta rama y logra terminar la implementación en un commit más, como se muestra a continuación.
 
-![Checkout feature and make one commit](/images/merge_5.png)
+![Checkout feature y realizar un commit](/images/merge_5.png)
 
 ### Recursive merge
 
@@ -359,9 +363,9 @@ Merge made by the 'recursive' strategy.
  create mode 100644 Reader.java
 ```
 
-**En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y genera un nuevo commit (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3**. Los commits y sus relaciones están mostrados por la siguiente figura.
+En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y **genera un nuevo commit** (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3. Los commits y sus relaciones están mostrados por la siguiente figura.
 
-![Recursive merge feature into master](/images/merge_6.png)
+![Merge recursivo de feature en master](/images/merge_6.png)
 
 ### Comandos básicos para merges
 
@@ -385,11 +389,11 @@ git branch -D <rama>
 
 ## Conflictos al realizar un merge
 
-En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos, cuando al intentar realizar un merge, Git no puede ejecutarlo de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró App.java, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
+En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos Git no puede ejecutar un merge de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró App.java, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
 
 ![Checkout feature y hacer un commit](/images/merge_5.png)
 
-Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo App.java, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios particulares de este archivo.
+Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo App.java, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios en las mismas líneas de este archivo.
 
 ```shell
 $ git checkout master
@@ -416,7 +420,7 @@ Unmerged paths:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar los cambios de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones seleccionables en la parte superior del conflicto para una rápida resolución. Otros editores de texto e IDEs cuentan con estas facilidades.
+Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar las modificaciones de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones seleccionables en la parte superior del conflicto para una rápida resolución. Otros muchos editores de texto e IDEs también cuentan con estas facilidades.
 
 ![Conflictos en Vim y VSCode](/images/editors_conflict.png)
 
@@ -430,7 +434,7 @@ Aquí puede verse la estructura por la cual Git infroma de un conflicto, que se 
 >>>>>>> <rama especificada>
 ```
 
-Tras eliminar los marcadores de conflicto (mediante las facilidades de un editor de texto o IDE integrado o simplemente eliminando los caracteres) y seleccionar los cambios deseados, se añade el archivo al staging area para señalar que el conflicto ha sido resuelto. Si se corre git status en este momento Git reporta lo siguiente.
+Tras eliminar los marcadores de conflicto (mediante las facilidades de un editor de texto o IDE integrado o simplemente eliminando los caracteres) y seleccionar los cambios deseados, añada el archivo al staging area para señalar que el conflicto ha sido resuelto. Si se corre git status en este momento Git reporta lo siguiente.
 
 ```shell
 $ git status
@@ -439,13 +443,13 @@ All conflicts fixed but you are still merging.
   (use "git commit" to conclude merge)
 ```
 
-Ahora sólo resta realizar un commit que representará el commit de merge que, como se ha estudiado, cuando no existe un conflicto y la estrategia de merge es recursivo, Git lo crea automáticamente. En este caso, lo realiza el programador.
+Ahora sólo resta realizar un commit que representará el commit de merge que, como se ha estudiado, cuando no existe un conflicto y la estrategia de merge es recursivo, Git lo crea automáticamente. En este caso, lo realiza el programador. Ejecutar `git commit` o `git commit --continue` tienen el mismo resultado.
 
 ## Repositorios remotos
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes>
 
-Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositorios locales. Es decir, el directorio `.git` únicamente existe en la máquina del desarrollador. Una de las más grandes ventajas de un VCS es la facilidad para orquestar colaboraciones sobre un proyecto. **Para poder colaborar sobre un proyecto gestionado por Git es necesario administrar repositorios remotos**. A pesar que no existe definición formal de repositorio remoto, aquí menciono mi entendimiento del concepto.
+Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositorios locales. Es decir, el directorio `.git` únicamente existe en la máquina del desarrollador. Una de las más grandes ventajas de un VCS es la facilidad para orquestar colaboraciones en equipos. **Para poder colaborar sobre un proyecto gestionado por Git es necesario administrar repositorios remotos**. A pesar que no existe definición formal de repositorio remoto, aquí menciono mi entendimiento del concepto.
 
 > **Repositorio remoto**. Sea R un respositorio, cualquier otro repositorio (`.git`) que represente el mismo proyecto que R y sea accesible por R (ya sea mediante una red o acceso a memoria local) se considera remoto a R.
 
@@ -475,7 +479,7 @@ Unpacking objects: 100% (81/81), done.
 
 Tras ejecutar el comando un directorio con el nombre del repositorio (en este caso “BatchScripts”) aparece en el directorio en el que ejecutamos el comando. En esta carpeta se encuentra el `.git` que contiene la historia completa del proyecto.
 
-Iniciar un repositorio utilizando `git clone` en lugar de `git init` tiene una consecuencia interesante. Al realizar git clone, ahora existen al menos dos repositorios que representan el mismo proyecto. Por lo tanto, ahora puede hablarse de repositorios remotos. Al clonar un repositorio, Git almacena información de la fuente (en `.git\logs\refs\remotes`) permitiendo establecer ya sea una relación de sólo lectura o lectura/escritura respecto a la fuente.
+Iniciar un repositorio utilizando `git clone` en lugar de `git init` tiene una consecuencia interesante. Al realizar `git clone`, ahora existen al menos dos repositorios que representan el mismo proyecto. Por lo tanto, ahora puede hablarse de repositorios remotos. Al clonar un repositorio, Git almacena información de la fuente (en `.git\logs\refs\remotes`) permitiendo establecer ya sea una relación de sólo lectura o lectura/escritura respecto a la fuente.
 
 Listar aliases de repositorios remotos (1). Los aliases abrevian la dirección de un repositorio remoto, el cual puede ser un URL o dirección del sistema de archivos local. Para ver la dirección asociada a cada alias, utilizar la bandera `-v` ó `--verbose` (2).
 
@@ -502,7 +506,7 @@ git remote rename <alias-antiguo> <alias-nuevo>  (2)
 git remote remove <alias>                        (3)
 ```
 
-Utilizando el comando para añadir (1) podemos ver una forma alterna equivalente al ejemplo del comando `git clone`.
+Utilizando el comando para añadir (`git remote add`) podemos ver una forma alterna equivalente al ejemplo del comando `git clone`.
 
 ```shell
 $ mkdir BatchScripts && cd BatchScripts
@@ -529,7 +533,7 @@ git fetch <alias>         (1)
 git fetch <alias> <rama>  (2)
 ```
 
-Es importante destacar que este comando solamente trae los cambios, mas no los integra a las ramas respectivas mediante un merge. Entonces, para incorporar las modificaciones hace falta un merge manual. Podemos ver que los cambios han sido traídos, pero no incorporados.
+Es importante destacar que este comando solamente trae los cambios, mas no los integra a las ramas respectivas mediante un merge. Entonces, para incorporar las modificaciones hace falta un merge manual. Podemos ver que los cambios han sido traídos (almacenados en la rama `origin/master`), pero no incorporados a `master`.
 
 ```shell
 $ git fetch origin
@@ -613,7 +617,7 @@ En ambos casos la operación no se realiza con éxito, reportando Git que no hay
 
 > **Rama upstream**. Rama de un repositorio remoto que es objeto de operaciones de lectura/escritura (fetch, pull y push) respecto a una rama en el repositorio local.
 
-Es decir, cuando se realiza por ejemplo, git pull origin `master` ubicándose en la rama `master` del repo local, se dice que la rama `master` del repositorio ubicado en origin es upstream de la rama `master` del repositorio local para esa operación de pull.
+Es decir, cuando se realiza por ejemplo, `git pull origin master` ubicándose en la rama `master` del repo local, se dice que la rama `master` del repositorio ubicado en `origin` es upstream de la rama `master` del repositorio local para esa operación de pull.
 
 ```shell
 $ git pull origin master
@@ -622,7 +626,7 @@ $ git pull origin master
 Already up to date.
 ```
 
-Continuando con el ejemplo en mano, pudimos verificar que `git pull` arroja un error, pero eso no sucede con `git pull origin master` (tampoco ocurriría el error con `git push origin master`). En el último comando, se establece de forma explícita la rama upstream de esa operación pull respecto a `master` (el comando es ejecutado ubicado en `master` del repositorio local). Sin embargo, resulta muy extenso escribir todo ese comando; **sería ideal poder configurar la rama `master` de `origin` como el objeto de todas las operacioes de lectura/escritura respecto a `master` local**.
+Continuando con el ejemplo en mano, pudimos verificar que `git pull` arroja un error, pero eso no sucede con `git pull origin master` (tampoco ocurriría el error con `git push origin master`). En el último comando, se establece de forma explícita la rama upstream de esa operación pull respecto a `master` (el comando es ejecutado ubicado en `master` del repositorio local). Sin embargo, resulta muy extenso escribir todo ese comando; **sería ideal poder configurar la rama `master` de `origin` como el objeto de todas las operaciones de lectura/escritura respecto a `master` local**.
 
 La configuración puede realizarse de dos formas. Sin realizar una operación de lectura/escritura (1) o bien al realizar un push (2). Tras ejecutar alguno de estos comandos, simplemente ejecutar `git pull` o `git push` ubicándose en la rama configurada basta para obtener el comportamiento deseado de Git.
 
@@ -650,6 +654,6 @@ $ git branch -a
   remotes/origin/master
 ```
 
-Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son integrados a alguna rama local, sino que sólo son traídos al repo local para inspección y, si se desea, para integración mediante `git merge`. ¿En dónde son esos cambios almacenados para inspección? Los cambios son almacenados en una rama de nombre `<alias>/<rama>` que sirve como rama de enlace entre una local y su upstream asociada (conocoda en inglés como tracking branch). **Entonces, en el proceso de enlace (objeto de operaciones fetch, pull y push) entre una rama local y una remota, intervienen tres ramas: la rama local, la rama remota y una intermediara local que permite traer cambios del repo remoto sin inmediatamente agregarlos al repositorio local**.
+Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son integrados a alguna rama local, sino que sólo son traídos al repo local para inspección y, si se desea, para integración mediante `git merge`. ¿En dónde son esos cambios almacenados para inspección? Los cambios son almacenados en una rama de nombre `<alias>/<rama>` que sirve como rama de enlace entre una local y su upstream asociada (conocida en inglés como tracking branch). **Entonces, en el proceso de enlace entre una rama local y una remota intervienen tres ramas: la rama local, la rama remota y una intermediara local que permite traer cambios del repo remoto sin inmediatamente agregarlos al repositorio local**.
 
 ![Ramas remote tracking](/images/remote_tracking.png)
