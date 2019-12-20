@@ -1,0 +1,81 @@
+# Profundizando
+
+## Stashing para evitar commits parciales
+
+> Resumen de <https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning>
+
+Al trabajar en un proyecto podría surgir la necesidad de revisar una rama distinta en la que actualmente se trabaja. En ocasiones Git reporta un mensaje de error similar al siguiente cuando se intenta cambiar de rama sin haber primero hecho commit de los cambios del working tree.
+
+```shell
+error: Your local changes to the following files would be overwritten by checkout:
+        foo.txt
+Please commit your changes or stash them before you switch branches.
+Aborting
+```
+
+También ocurre que a la mitad de la implementación de algún patch o feature un repositorio remoto se actualiza y se desea traer los cambios al repositorio local. Si se tienen archivos modified y se realiza un pull un mensaje similar al siguiente se observa.
+
+```shell
+error: Your local changes to the following files would be overwritten by merge:
+        foo.txt
+Please commit your changes or stash them before you switch branches.
+Aborting
+```
+
+Aquí la solución más sencilla es realizar un commit, pero qué ocurre si el trabajo en la rama actual aún no está listo para ser persistido en un commit. La solución yace en el stashing. **Para crear un stash, existen los comandos `git stash`, `git stash push` y `git stash save`. Ya que el último no es recomendado (es sintaxis antigua, sustituido por `git stash push`) y el primero no provee más que lo esencial, me centraré en crear stashes mediante `git stash push`**.
+
+### ¿Qué es un stash?
+
+**Un stash es un commit** (creado mediante alguno de los comandos anteriormente mencionados) que tiene la particularidad de no estar asociado a alguna rama. Los stashes se almacenan en una pila indizada a partir del cero. Es decir, al crearse un nuevo stash, su índice en la pila es cero; el que era cero se vuelve uno, el que era uno se vuelve dos, etc. El hash SHA-1 del stash con índice cero puede hallarse en `.git/refs/stash`. **Al estar desacoplado de las ramas, los stashes pueden ser referenciados en cualquier rama**.
+
+### Comandos para administrar stashes
+
+Mostrar todos los stashes (commits desacoplados de ramas).
+
+```bnf
+git stash list
+```
+
+Crear un nuevo stash incluyendo sólo los archivos modificados (sin banderas `-u` ni `-a`); incluyendo archivos modificados y untracked (bandera `-u`); inluyendo archivos modificados, untracked e ignorados (bandera `-a`). Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. También es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
+
+```bnf
+git stash push [-u | -a | [-m "<mensaje>"]] [<archivos>]
+```
+
+Aplicar los cambios de un stash al working tree. El stash permanece en la pila (1); para aplicar los cambios y eliminar el stash de la pila úsese (2). Si un stash no es proporcionado, se utiliza el stash `stash@{0}` para ambos comandos. **Nótese que si el stash tuviera conflictos con los archivos existentes en el working tree, por ejemplo, si en el stash existe un archivo foo.txt y en el working tree también, ninguno de los dos comandos realizaría cambio alguno sobre el stash o working tree**, reportando en su lugar un error sobre las líneas de *foo.txt already exists, no checkout [\n] Could not restore untracked files from stash entry*. Para evitar este error y entrar en el modo de resolución de conflictos, añadir todas las modificaciones actuales al staging area y luego realizar un `git stash pop` o `git stash apply`.
+
+```bnf
+git stash apply [stash@{<índice>}]  (1)
+git stash pop [stash@{<índice>}]    (2)
+```
+
+Eliminar un stash, sin aplicar los cambios (1). Si ningún stash es proporcionado, se elimina stash@{0}. Eliminar todos los stashes de la pila (2). Los cambios de los stashes eliminados no pueden ser recuperados.
+
+```bnf
+git stash drop [stash@{<índice>}]  (1)
+git stash clear                    (2)
+```
+
+### ¿Cuándo puede cambiarse de rama sin hacer commit o stash de las modificaciones?
+
+> Simplificación de <https://stackoverflow.com/questions/22053757/checkout-another-branch-when-there-are-uncommitted-changes-on-the-current-branch>
+
+Al inicio de esta sección se mencionó que *en ocasiones* Git reporta un mensaje de error cuando se ejecuta un checkout a otra rama teniendo cambios uncommitted en el working tree. Esto implica que, en algunas situaciones, es posible cambiar de rama sin hacer commit de los cambios y sin perder los mismos. Puntualmente, sólo una condición debe satisfacerse para que la posibilidad exsita.
+
+> Es posible cambiar de rama teniendo modificaciones uncommitted en el working tree si el cambio **no requiere deshacer** dichas modificaciones.
+
+Un cambio de rama conlleva un posible cambio del working tree, pues el working tree muestra el contenido almacenado en el snapshot asociado al commit al que apunta la rama. Pensemos en un ejemplo. Al cambiar de la rama `X` a la rama `Y` las siguientes acciones ocurren, donde `Xs` y `Ys` son los snapshots correspondientes de los commits a los que apuntan las ramas.
+
+1. Para cada archivo en `Ys` y no en `Xs`, crearlo.
+2. Para cada archivo en `Xs` y no en `Ys`, eliminarlo.
+3. Para cada archivo en ambos snapshots, si la versión en `Ys` es distinta a la versión en `Xs`, actualizar el contenido.
+
+Si en el cambio de rama algunas de estas acciones requiere ocurrir **sobre alguno de los archivos modificados o creados**, entonces Git cancela el checkout y muestra el mensaje de error presente al inicio de la sección. De lo contrario, el checkout es legal. Obsérvese la condición en la tercera acción; si el archivo existe en ambos snapshots, sólo se muestra la versión del snapshot `Ys` si es distinta a la del snapshot `Xs`, no si es distinta a la versión del working tree. En los siguientes casos siempre es posible un cambio de rama con cambios uncommitted.
+
+- Se crea `rama-m` a partir de `rama-n`. Se trabaja en `rama-m`, modificando archivos y creando nuevos, pero no se realiza un commit. Es legal hacer checkout a `rama-n`. Esto se cumple siempre pues ambas ramas apuntan al mismo commit, que a su vez apunta al mismo snapshot. A pesar que la versión del working tree es distinta al snapshot, las versiones entre los snapshots son iguales, por lo que Git no intenta traer la versión del snapshot de la rama objeto del checkout.
+- Se crean archivos cuyos nombres y extensiones no existen en otras ramas, es legal cambiar de rama. Puesto que el archivo está untracked y no existen en otras ramas, un cambio de rama no requiere creación, eliminación ni modificación sobre este archivo.
+
+Ahora dirijamos nuestra atención a casos en los que no es posible un cambio de rama teniendo modificaciones uncommitted.
+
+- Se crea un archivo cuyo nombre y extensión existen en otra rama. En la rama actual el archivo está untracked, pero en la rama objeto del checkout el archivo está tracked. Al intentar el cambio, se requiere la acción 1 (creación) sobre el nuevo archivo; en el snapshot de la rama origen no existe el archivo, pero en el snapshot de la rama destino sí, entonces se crea, pero en el proceso colisiona con el archivo modificado.
+- Se modifica un archivo que en otra rama no existe. Es ilegal cambiarse a esa rama con la modificación uncommited pues se requiere la acción 2 (eliminación) sobre el archivo modificado.
