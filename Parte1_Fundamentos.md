@@ -336,10 +336,10 @@ En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos 
 
 ### Comandos básicos para merges
 
-Si `HEAD` apunta a la rama A, incorpora los cambios de la rama B en la rama A mediante un merge (la estrategia es seleccionada por Git).
+Si `HEAD` apunta a la rama A, incorpora los cambios de la rama B en la rama A mediante un merge (la estrategia es seleccionada por Git). En algunos workflows podría ser deseable siempre crear un commit de merge, para estos casos se evita la estrategia fast-forward utilizando `--no-ff`.
 
 ```bnf
-git merge B
+git merge [--no-ff] B
 ```
 
 Elimina la rama especificada si todos los cambios de la rama son accesibles por `HEAD` o por algún ancestro de la rama. Simplemente, si la rama ha sido fusionada con una no derivada de ella, entonces este comando puede utilizarse efectivamente.
