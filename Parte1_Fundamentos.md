@@ -133,7 +133,7 @@ En particular, un archivo se considera tracked si existe una versión registrada
 > git help <comando>    (2)
 >```
 >
-> **La sintaxis mostrada a lo largo de las notas es expresada en [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
+> **La sintaxis mostrada a lo largo del manual es expresada en [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
 
 Crear un repositorio local.
 
@@ -274,7 +274,7 @@ git checkout [-b] (<rama> | <commit>)
 
 > Resumen de <https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging>
 
-Si las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto no es discutido en esta parte de las notas.
+Si las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto no es discutido en esta parte del manual.
 
 Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres commits.
 
