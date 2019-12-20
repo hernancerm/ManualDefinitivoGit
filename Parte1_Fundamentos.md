@@ -2,7 +2,7 @@
 
 - [¿Qué es Git?](#¿qué-es-git)
   - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
-  - [¿Por qué Gity no otro VCS?](#¿por-qué-gity-no-otro-vcs)
+  - [¿Por qué Git y no otro VCS?](#¿por-qué-git-y-no-otro-vcs)
 - [Instalación](#instalación)
 - [Configuración](#configuración)
 - [Ambiente de desarrollo](#ambiente-de-desarrollo)
@@ -12,7 +12,7 @@
   - [Objetos de Git](#objetos-de-git)
 - [Comandos básicos para ramas](#comandos-básicos-para-ramas)
 - [Fusión de ramas](#fusión-de-ramas)
-  - [Fast-formard merge](#fast-formard-merge)
+  - [Fast-forward merge](#fast-forward-merge)
   - [Recursive merge](#recursive-merge)
   - [Comandos básicos para merges](#comandos-básicos-para-merges)
 - [Conflictos al realizar un merge](#conflictos-al-realizar-un-merge)
@@ -37,14 +37,14 @@ Git es un sistema de control de versiones (VCS) open source originalmente desarr
 Cabe destacar que Git no es la única herramienta para el control de versiones, mas Git supera a las demás opciones en integraciones y características. Sin importar qué VCS se utilice, siempre se pueden esperar las siguientes ventajas.
 
 - Prevención de cambios conflictivos sobre un conjunto de archivos.
-- Historial completo y detallado del proyecto. Esto abarca todos los cambios realizados por todos los contribuidores, incluyendo modificaciones, eliminación y creación de archivos, así como su movimiento y cambio de nombre. El beneficio más aparente de esto radica en su cualidad de respaldo, pues **bajo el control de un VCS, ninguna modificación resulta fatal, siempre se puede regresar a alguna versión anterior**. Más aún, la identificación de la causa raíz de algun bug puede ser rastreada con mucha más facilidad.
+- Historial completo y detallado del proyecto. Esto abarca todos los cambios realizados por todos los contribuidores, incluyendo modificaciones, eliminación y creación de archivos, así como su movimiento y cambio de nombre. El beneficio más aparente de esto radica en su cualidad de respaldo, pues **bajo el control de un VCS, ninguna modificación resulta fatal, siempre se puede regresar a alguna versión anterior**. Más aún, la identificación de la causa raíz de algún bug puede ser rastreada con mucha más facilidad.
 - Ramas y su fusión. Un VCS provee ramificaciones del proyecto, es decir, versiones aisladas en las cuales algún desarrollador puede trabajar. Terminada su modificación, puede incorporar estos cambios a la rama principal, fusionando sus cambios y verificando si existen conflictos. El VCS informa de todos los conflictos y queda a responsabilidad de programador resolverlos para poder concluir el proceso de fusión. **La colaboración en equipos se vuelve simple, incluso en equipos muy grandes**.
 
-### ¿Por qué Gity no otro VCS?
+### ¿Por qué Git y no otro VCS?
 
 > Resumen de <https://www.atlassian.com/git/tutorials/what-is-git>
 
-Git es un sistema maduro y open source al que activamente se le proporciona mantenimiento. El sistema está altamente opimizado para tener el mejor rendimiento, resultando en un programa con tiempos de espera muy cortos y, a menudo, nulos. Incluso en la naturaleza distribuida de Git pueden encontrarse beneficios en rendimiento. Cada programador tiene una copia entera de la historia del proyecto, almacenada en la memoria local de su máquina, evitando comunicaciones de red con cada acción a realizar respecto al VCS (en sistema de control de versiones CVS, por ejemplo, la mayoría de las operaciones sufren de latencia de red). Esto no significa que no pueda existir un lugar centralizado y remoto para almacenar el proyecto; es para esta común necesidad que GitHub y otros sistemas de almacenamiento en nube para Git fueron creado. Entonces con Git, un desarrollador trabaja con el proyecto de forma local, al completar sus tareas y desear compartir su colaboración, realiza un push de sus cambios al repositorio remoto y es sólo en ese momento que requiere de conexión a una red.
+Git es un sistema maduro y open source al que activamente se le proporciona mantenimiento. El sistema está altamente optimizado para tener el mejor rendimiento, resultando en un programa con tiempos de espera muy cortos y, a menudo, nulos. Incluso en la naturaleza distribuida de Git pueden encontrarse beneficios en rendimiento. Cada programador tiene una copia entera de la historia del proyecto, almacenada en la memoria local de su máquina, evitando comunicaciones de red con cada acción a realizar respecto al VCS (en sistema de control de versiones CVS, por ejemplo, la mayoría de las operaciones sufren de latencia de red). Esto no significa que no pueda existir un lugar centralizado y remoto para almacenar el proyecto; es para esta común necesidad que GitHub y otros sistemas de almacenamiento en nube para Git fueron creado. Entonces con Git, un desarrollador trabaja con el proyecto de forma local, al completar sus tareas y desear compartir su colaboración, realiza un push de sus cambios al repositorio remoto y es sólo en ese momento que requiere de conexión a una red.
 
 Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede utilizarse en una gran variedad de SOs, incluyendo Windows, MacOS, Linux, FreeBSD y otros; y para gestionar proyectos de cualquier tipo, con cualquier tipo de archivo (la herramienta funciona mejor con archivos basados en caracteres, aunque cualquier archivo puede ser incluido). Más importante aún, Git no impone una modalidad específica de desarrollo, sino los desarrolladores establecen su propio estándar de cómo usar la herramienta y cómo acoplarla a su estilo de trabajo. Dado que la mayoría de las operaciones de Git son locales, merced su naturaleza distribuida, no existe una fuerte dependencia respecto a internet para poder trabajar.
 
@@ -63,9 +63,9 @@ Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede
 
 > Resumen de <https://git-scm.com/book/en/v1/Getting-Started-First-Time-Git-Setup>
 
-Git trae una herramienta llamada `git config` que permite cambiar variables de configuración acerca de cómo Git luce y funciona. El email y nombre del usuario son necesarios configurar como primer paso al empezar a usar Git y sólo es requerido hacerlo una vez, mas en cualquier momento los valores pueden ser modificados si así se desea. Existen muchas más varibales de configuración que puede revisar aquí: <https://git-scm.com/docs/git-config>.
+Git trae una herramienta llamada `git config` que permite cambiar variables de configuración acerca de cómo Git luce y funciona. El email y nombre del usuario son necesarios configurar como primer paso al empezar a usar Git y sólo es requerido hacerlo una vez, mas en cualquier momento los valores pueden ser modificados si así se desea. Existen muchas más variables de configuración que puede revisar aquí: <https://git-scm.com/docs/git-config>.
 
-La configuración global para un usuario es almacenada en `~/.gitconfig`, en Linux, y `%USERPROFILE%\.gitconfig`, en Windows. Alternativamente, mediante el archivo `.git/config` se pueden sobreescribir o agregar configuraciones al repositorio en cuestión respecto al archivo global.
+La configuración global para un usuario es almacenada en `~/.gitconfig`, en Linux, y `%USERPROFILE%\.gitconfig`, en Windows. Alternativamente, mediante el archivo `.git/config` se pueden sobrescribir o agregar configuraciones al repositorio en cuestión respecto al archivo global.
 
 Para cambiar el valor de cualquier variable global de configuración se usa la sintaxis siguiente. Nótese que si el valor contiene algún espacio en blanco, es necesario encerrarlo en comillas dobles.
 
@@ -135,7 +135,7 @@ En particular, un archivo se considera tracked si existe una versión registrada
 >
 > **La sintaxis mostrada a lo largo de las notas es expresada en [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
 
-Crear un respositorio local.
+Crear un repositorio local.
 
 ```bnf
 git init
@@ -147,13 +147,13 @@ Muestra archivos modified y staged. Sólo cuando existen archivos en el staging 
 git status [-s | --short]
 ```
 
-Agrega uno o varios archivos al staging area. Al igual que el resto de los comandos de Git que seleccionan archivos, acepta [patrones glob](https://en.wikipedia.org/wiki/Glob_(programming)). Por ejemplo, si como valor de `<archivos>` se utiliza un punto (`.`), que denota el directorio actual, todos los archivos modificados y untracked se añaden al index. Al utilizar glob, es preferible siempre ponerlo entre comillas simples para evitar la expasnsión del shell. En ocasiones se modifican archivos que ya habían sido añadidos al staging area, para actualizar el index con los cambios del working tree utilizar la bandera `-u`, la cual no añade archivos nuevos. Si desea agregar todos los archivos nuevos, eliminados o modificados utilice la bandera `-A` o simplemente pase como valor de `<archivos>` un punto (`.`).
+Agrega uno o varios archivos al staging area. Al igual que el resto de los comandos de Git que seleccionan archivos, acepta [patrones glob](https://en.wikipedia.org/wiki/Glob_(programming)). Por ejemplo, si como valor de `<archivos>` se utiliza un punto (`.`), que denota el directorio actual, todos los archivos modificados y untracked se añaden al index. Al utilizar glob, es preferible siempre ponerlo entre comillas simples para evitar la expansión del shell. En ocasiones se modifican archivos que ya habían sido añadidos al staging area, para actualizar el index con los cambios del working tree utilizar la bandera `-u`, la cual no añade archivos nuevos. Si desea agregar todos los archivos nuevos, eliminados o modificados utilice la bandera `-A` o simplemente pase como valor de `<archivos>` un punto (`.`).
 
 ```bnf
 git add [-u | --update] [-A | --all] <archivos>
 ```
 
-Para retirar todos los archivos del staing area (pero preservar los cambios en el working tree) no especifique ningún archivo. Para retirar sólo archivos específicos nómbrelos. En secciones avanzadas se disctue con detalle el comando `git reset`.
+Para retirar todos los archivos del staging area (pero preservar los cambios en el working tree) no especifique ningún archivo. Alternativamente, puede retirar sólo archivos específicos. En la [Parte 2: Profundizando](/Parte2_Profundizando.md) se discute con detalle el comando `git reset`.
 
 ```bnf
 git reset <archivos>
@@ -220,7 +220,7 @@ Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo 
 |tree    | Afín a un directorio. Almacena los nombres de los archivos de un directorio, al igual que un apuntador al blob o tree correspondiente que guarda el contenido de los archivos. |
 |commit  | Apunta a un tree que representa el staging area en un momento determinado; almacena el nombre del autor, el commiter y el mensaje del commit. |
 
-**Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores con puntos suspensivos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referenciarlos. A continuación, se presenta un término más del vocabulario de Git.
+**Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores con puntos suspensivos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referirse a ellos. A continuación, se presenta un término más del vocabulario de Git.
 
 > **Snapshot**. Tree que representa el staging area asociado a un commit.
 
@@ -276,7 +276,7 @@ git checkout [-b] (<rama> | <commit>)
 
 Si las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto no es discutido en esta parte de las notas.
 
-Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres comits.
+Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres commits.
 
 ![Estado inicial del árbol de commits](/images/merge_1.png)
 
@@ -296,7 +296,7 @@ En esta rama el desarrollador soluciona el bug con un único commit. Nótese que
 
 ![Nuevo commit en rama bug-fix](/images/merge_3.png)
 
-### Fast-formard merge
+### Fast-forward merge
 
 Juan ahora debe integrar su solución del bug a `master`. Es decir, `bug-fix` debe ser fusionada en `master`. Para incorporar los cambios de `bug-fix` a `master`, Juan usa los siguientes comandos:
 
@@ -387,11 +387,11 @@ Unmerged paths:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar las modificaciones de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones seleccionables en la parte superior del conflicto para una rápida resolución. Otros muchos editores de texto e IDEs también cuentan con estas facilidades.
+Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar las modificaciones de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones en la parte superior del conflicto para una rápida resolución. Otros muchos editores de texto e IDEs también cuentan con estas facilidades.
 
 ![Conflictos en Vim y VSCode](/images/editors_conflict.png)
 
-Aquí puede verse la estructura por la cual Git infroma de un conflicto, que se conforma por los siguientes marcadores.
+Aquí puede verse la estructura por la cual Git informa de un conflicto, que se conforma por los siguientes marcadores.
 
 ```shell
 <<<<<<< HEAD
@@ -418,9 +418,9 @@ Ahora sólo resta realizar un commit que representará el commit de merge que, c
 
 Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositorios locales. Es decir, el directorio `.git` únicamente existe en la máquina del desarrollador. Una de las más grandes ventajas de un VCS es la facilidad para orquestar colaboraciones en equipos. **Para poder colaborar sobre un proyecto gestionado por Git es necesario administrar repositorios remotos**. A pesar que no existe definición formal de repositorio remoto, aquí menciono mi entendimiento del concepto.
 
-> **Repositorio remoto**. Sea R un respositorio, cualquier otro repositorio (`.git`) que represente el mismo proyecto que R y sea accesible por R (ya sea mediante una red o acceso a memoria local) se considera remoto a R.
+> **Repositorio remoto**. Sea R un repositorio, cualquier otro repositorio (`.git`) que represente el mismo proyecto que R y sea accesible por R (ya sea mediante una red o acceso a memoria local) se considera remoto a R.
 
-Nótese que el término *repositorio remoto* es popularmente asociado con repositorios almacenados en GitHub, GitLab u otro servicio de cloud storage para repos de Git. Sin embargo, el repo remoto puede incluso residir en el mismo host, aunque esto es muy raro en la práctica. El servicio de cloud storage más popular para repositorios de Git es GitHub.
+Nótese que el término *repositorio remoto* es popularmente asociado con repositorios almacenados en GitHub, GitLab u otro servicio de cloud storage para repositorios de Git. Sin embargo, el repo remoto puede incluso residir en el mismo host, aunque esto es muy raro en la práctica. El servicio de cloud storage más popular para repositorios de Git es GitHub.
 
 !["Remote" no implica necesariamente que se encuentra en una red](/images/remote_repos.png)
 
@@ -464,7 +464,7 @@ origin  https://github.com/HerCerM/BatchScripts (fetch)
 origin  https://github.com/HerCerM/BatchScripts (push)
 ```
 
-Es posible añadir (1), renombrar (2) y eliminar (3) aliases de repositorior remotos de forma manual.
+Es posible añadir (1), renombrar (2) y eliminar (3) aliases de repositorios remotos de forma manual.
 
 ```bnf
 git remote add <alias> <dirección-repo-Git>      (1)
@@ -492,7 +492,7 @@ From https://github.com/HerCerM/BatchScripts
 
 ### Operaciones de lectura y escritura (fetch, pull y push)
 
-Omitir `<rama>` para obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local. También puden solicitarse sólo los cambios de una rama.
+Omitir `<rama>` para obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local. También pueden solicitarse sólo los cambios de una rama.
 
 ```bnf
 git fetch <alias> [<rama>]
@@ -507,7 +507,7 @@ $ git branch -a
   remotes/origin/master
 ```
 
-En la práctia, la mayoría de las veces se desea realizar un merge inmediatamente después de un fetch. `git pull` es un comando pensado para esto. **Es decir, `git pull` ejecuta dos comandos: primero un `git fetch`, seguido de `git merge`**.
+En la práctica, la mayoría de las veces se desea realizar un merge inmediatamente después de un fetch. `git pull` es un comando pensado para esto. **Es decir, `git pull` ejecuta dos comandos: primero un `git fetch`, seguido de `git merge`**.
 
 ```bnf
 git pull [<alias> <rama>]
@@ -547,7 +547,7 @@ $ git remote show origin
     master pushes to master (up to date)
 ```
 
-Podemos ver que en el repositorio remoto sólo existe una rama: `master`. En adición, vemos que en el repo local tenemos la versión de `master` (tracked). También vemos la configuración predeterminada para push y pull ubicándonoes en la rama `master`. Desde esa rama, basta con realizar `git pull` o `git push` y Git resuelve el alias y la rama.
+Podemos ver que en el repositorio remoto sólo existe una rama: `master`. En adición, vemos que en el repo local tenemos la versión de `master` (tracked). También vemos la configuración predeterminada para push y pull ubicándonos en la rama `master`. Desde esa rama, basta con realizar `git pull` o `git push` y Git resuelve el alias y la rama.
 
 ```shell
 $ git pull

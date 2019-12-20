@@ -44,7 +44,7 @@ Aquí la solución más sencilla es realizar un commit, pero qué ocurre si el t
 
 ### ¿Qué es un stash?
 
-**Un stash es un commit** (creado mediante alguno de los comandos anteriormente mencionados) que tiene la particularidad de no estar asociado a alguna rama. Los stashes se almacenan en una pila indizada a partir del cero. Es decir, al crearse un nuevo stash, su índice en la pila es cero; el que era cero se vuelve uno, el que era uno se vuelve dos, etc. El hash SHA-1 del stash con índice cero puede hallarse en `.git/refs/stash`. **Al estar desacoplado de las ramas, los stashes pueden ser referenciados en cualquier rama**.
+**Un stash es un commit** (creado mediante alguno de los comandos anteriormente mencionados) que tiene la particularidad de no estar asociado a alguna rama. Los stashes se almacenan en una pila indizada a partir del cero. Es decir, al crearse un nuevo stash, su índice en la pila es cero; el que era cero se vuelve uno, el que era uno se vuelve dos, etc. El hash SHA-1 del stash con índice cero puede hallarse en `.git/refs/stash`. **Al estar desacoplado de las ramas, los stashes pueden ser referidos en cualquier rama**.
 
 ### Comandos para administrar stashes
 
@@ -54,7 +54,7 @@ Mostrar todos los stashes (commits desacoplados de ramas).
 git stash list
 ```
 
-Crear un nuevo stash incluyendo sólo los archivos modificados (sin banderas `-u` ni `-a`); incluyendo archivos modificados y untracked (bandera `-u`); inluyendo archivos modificados, untracked e ignorados (bandera `-a`). Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. También es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
+Crear un nuevo stash incluyendo sólo los archivos modificados (sin banderas `-u` ni `-a`); incluyendo archivos modificados y untracked (bandera `-u`); incluyendo archivos modificados, untracked e ignorados (bandera `-a`). Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. También es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
 
 ```bnf
 git stash push [-u | -a | [-m "<mensaje>"]] [<archivos>]
@@ -78,7 +78,7 @@ git stash clear                    (2)
 
 > Simplificación de <https://stackoverflow.com/questions/22053757/checkout-another-branch-when-there-are-uncommitted-changes-on-the-current-branch>
 
-Al inicio de esta sección se mencionó que *en ocasiones* Git reporta un mensaje de error cuando se ejecuta un checkout a otra rama teniendo cambios uncommitted en el working tree. Esto implica que, en algunas situaciones, es posible cambiar de rama sin hacer commit de los cambios y sin perder los mismos. Puntualmente, sólo una condición debe satisfacerse para que la posibilidad exsita.
+Al inicio de esta sección se mencionó que *en ocasiones* Git reporta un mensaje de error cuando se ejecuta un checkout a otra rama teniendo cambios uncommitted en el working tree. Esto implica que, en algunas situaciones, es posible cambiar de rama sin hacer commit de los cambios y sin perder los mismos. Puntualmente, sólo una condición debe satisfacerse para que la posibilidad exista.
 
 > Es posible cambiar de rama teniendo modificaciones uncommitted en el working tree si el cambio **no requiere deshacer** dichas modificaciones.
 
@@ -88,7 +88,7 @@ Un cambio de rama conlleva un posible cambio del working tree, pues el working t
 2. Para cada archivo en `Xs` y no en `Ys`, eliminarlo.
 3. Para cada archivo en ambos snapshots, si la versión en `Ys` es distinta a la versión en `Xs`, actualizar el contenido.
 
-Si en el cambio de rama algunas de estas acciones requiere ocurrir **sobre alguno de los archivos modificados o creados**, entonces Git cancela el checkout y muestra el mensaje de error presente al inicio de la sección. De lo contrario, el checkout es legal. Obsérvese la condición en la tercera acción; si el archivo existe en ambos snapshots, sólo se muestra la versión del snapshot `Ys` si es distinta a la del snapshot `Xs`, no si es distinta a la versión del working tree. En los siguientes casos siempre es posible un cambio de rama con cambios uncommitted.
+Si en el cambio de rama algunas de estas acciones requiere ocurrir **sobre alguno de los archivos modificados o creados**, entonces Git cancela el checkout y muestra el mensaje de error presente al inicio de la sección. De lo contrario, el checkout es legal. Nótese la condición en la tercera acción; si el archivo existe en ambos snapshots, sólo se muestra la versión del snapshot `Ys` si es distinta a la del snapshot `Xs`, no si es distinta a la versión del working tree. En los siguientes casos siempre es posible un cambio de rama con cambios uncommitted.
 
 - Se crea `rama-m` a partir de `rama-n`. Se trabaja en `rama-m`, modificando archivos y creando nuevos, pero no se realiza un commit. Es legal hacer checkout a `rama-n`. Esto se cumple siempre pues ambas ramas apuntan al mismo commit, que a su vez apunta al mismo snapshot. A pesar que la versión del working tree es distinta al snapshot, las versiones entre los snapshots son iguales, por lo que Git no intenta traer la versión del snapshot de la rama objeto del checkout.
 - Se crean archivos cuyos nombres y extensiones no existen en otras ramas, es legal cambiar de rama. Puesto que el archivo está untracked y no existen en otras ramas, un cambio de rama no requiere creación, eliminación ni modificación sobre este archivo.
@@ -96,13 +96,13 @@ Si en el cambio de rama algunas de estas acciones requiere ocurrir **sobre algun
 Ahora dirijamos nuestra atención a casos en los que no es posible un cambio de rama teniendo modificaciones uncommitted.
 
 - Se crea un archivo cuyo nombre y extensión existen en otra rama. En la rama actual el archivo está untracked, pero en la rama objeto del checkout el archivo está tracked. Al intentar el cambio, se requiere la acción 1 (creación) sobre el nuevo archivo; en el snapshot de la rama origen no existe el archivo, pero en el snapshot de la rama destino sí, entonces se crea, pero en el proceso colisiona con el archivo modificado.
-- Se modifica un archivo que en otra rama no existe. Es ilegal cambiarse a esa rama con la modificación uncommited pues se requiere la acción 2 (eliminación) sobre el archivo modificado.
+- Se modifica un archivo que en otra rama no existe. Es ilegal cambiarse a esa rama con la modificación uncommitted pues se requiere la acción 2 (eliminación) sobre el archivo modificado.
 
 ## Eliminar archivos untracked
 
 > Resumen de <https://git-scm.com/docs/git-clean>
 
-Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git. Aquí se presenta una sintaxis simplificada que muestra las banderas más comunes. Si la variablde configuración de Git `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando. Utilice `-d` para recursivamente eliminar directorios untracked. Utilice `-x` para eliminar también archivos ignorados.
+Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git. Aquí se presenta una sintaxis simplificada que muestra las banderas más comunes. Si la variable de configuración `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando. Utilice `-d` para recursivamente eliminar directorios untracked. Utilice `-x` para eliminar también archivos ignorados.
 
 ```bnf
 git clean [-d] [-f] [-x] [<path>]
@@ -114,7 +114,7 @@ git clean [-d] [-f] [-x] [<path>]
 
 En la sección dedicada al ambiente de desarrollo se mencionan los estados de los archivos de acuerdo a Git: tracked (posiblemente modified o staged) y untracked. En adición, **un archivo puede tener el estado *ignored***. Existen archivos de configuración de IDEs o editores de texto, como .vscode de VSCode o .idea/workspace.xml de IntelliJ IDEA, los cuales no se desean agregar al repositorio. De la misma intención son objeto los archivos resultantes de un build, como un directorio `target` o los `.class` de Java. En estos casos, dichos archivos se desean dejar permanentemente untracked.
 
-La solución es ignorar los archivos, volviéndolos no seleccionables para los comandos de Git (utilizar la bandera `-a` o `--all` en algunos comandos, como `git stash push`, pueden considerar archivos ingorados). Para ignorar archivos se requiere un archivo de configuración `.gitignore`, el cual puede tener impacto global o sólo respecto a un repositorio. Los archivos a ignorar se seleccionan utilizando [expresiones glob](https://en.wikipedia.org/wiki/Glob_(programming)).
+La solución es ignorar los archivos, volviéndolos no elegibles para los comandos de Git (utilizar la bandera `-a` o `--all` en algunos comandos, como `git stash push`, pueden considerar archivos ignorados). Para ignorar archivos se requiere un archivo de configuración `.gitignore`, el cual puede tener impacto global o sólo respecto a un repositorio. Los archivos a ignorar se seleccionan utilizando [expresiones glob](https://en.wikipedia.org/wiki/Glob_(programming)).
 
 ---
 
@@ -134,9 +134,9 @@ Varios comandos de Git requieren seleccionar archivos, como `git add` o `git sta
 |---|---|
 | * | Representa cualquier número de caracteres, incluido ninguno, pero no una diagonal. |
 | ** | Representa uno o más directorios, pero no el directorio actual (`.`) ni el padre (`..`). |
-| ? | Representa un caracter. |
-| [abc] | Representa cualquier caracter contenido en los corchetes. |
-| [a-z] | Representa cualquier caracter contenido en el intervalo definido por los corchetes. |
+| ? | Representa un carácter. |
+| [abc] | Representa cualquier carácter contenido en los corchetes. |
+| [a-z] | Representa cualquier carácter contenido en el intervalo definido por los corchetes. |
 
 ### .gitignore
 
@@ -166,7 +166,7 @@ Este comando es muy interesante, poderoso y, si ha comprendido la sección de am
 
 ![Checkout vs reset](/images/checkout_vs_reset.png)
 
-Existen tres modalidades de reseteos seleccionables por las banderas --soft, --mixed y --hard, de los cuales --mixed es utilizado por defecto si ninguno es seleccionado. Las tres tienen en común que mueven HEAD y la rama apuntada por HEAD al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working directory. Respecto al working directory, restaurar significa sustituir los actual por los registrado en el snapshot del commit seleccionado.
+Existen tres modalidades de reseteos elegibles por las banderas --soft, --mixed y --hard, de los cuales --mixed es utilizado por defecto si ninguno es seleccionado. Las tres tienen en común que mueven HEAD y la rama apuntada por HEAD al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working directory. Respecto al working directory, restaurar significa sustituir los actual por los registrado en el snapshot del commit seleccionado.
 
 | Modalidad | Objetivo de restauración |
 |---|---|
@@ -189,7 +189,7 @@ Al realizar un reseteo duro, los commits descendientes del seleccionado se vuelv
 
 ![Visualización de git reset --hard](/images/reset_hard.png)
 
-Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperse de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reseteo duro respecto al mismo. Para hallar el hash, se utliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Siguiendo el ejemplo, al hallar el hash 3, basta con realizar `git reset --hard 3`.
+Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperase de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reseteo duro respecto al mismo. Para hallar el hash, se utiliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Siguiendo el ejemplo, al hallar el hash 3, basta con realizar `git reset --hard 3`.
 
 ### Revert
 
@@ -201,13 +201,13 @@ Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por
 
 #### `git revert` vs `git reset`
 
-Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás. Revert siempre es seguro, pues no alterla la historia del repositorio, haciendo imposible romper la historia un repo remoto mediante revert. Por otra lado, reset sí puede romper la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
+Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás. Revert siempre es seguro, pues no altera la la historia del repositorio, haciendo imposible romper la historia un repo remoto mediante revert. Por otra lado, reset sí puede romper la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
 
 ![Cuándo usar revert o reset](/images/revert_or_reset.png)
 
 #### Uso del comando
 
-Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis compeleta refiérase a <https://git-scm.com/docs/git-revert>. Sin el uso de la bandera `-n`, este comando crea un nuevo commit con la corrección (sin las modificaciones incorporadas en los commits seleccionados), abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit. Utilizar `--no-edit` para no abrir el editor de texto y usar el mensaje predeterminado. Al utilizar la banedar `-n`, en lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
+Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis completa refiérase a <https://git-scm.com/docs/git-revert>. Sin el uso de la bandera `-n`, este comando crea un nuevo commit con la corrección (sin las modificaciones incorporadas en los commits seleccionados), abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit. Utilizar `--no-edit` para no abrir el editor de texto y usar el mensaje predeterminado. Al utilizar la bandera `-n`, en lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
 
 ```bnf
 git revert [--no-edit] [-n] <commit>
