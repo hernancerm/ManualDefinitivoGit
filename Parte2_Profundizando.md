@@ -137,3 +137,38 @@ Para ignorar archivos tracked (añadidos al staging environment o existentes en 
 ```bnf
 git rm --cached <archivo>
 ```
+
+## Correcciones avanzadas
+
+### Reset
+
+> Resumen de <https://www.atlassian.com/git/tutorials/undoing-changes/git-reset>
+
+Este comando es muy interesante, poderoso y, si ha comprendido la sección de ambiente de desarrollo, sencillo de entender. Similar a git checkout, este comando permite mover la referencia HEAD entre commits, mas difiere en tanto que no sólo actúa respecto a HEAD, sino que también respecto a una rama.
+
+![Checkout vs reset](images/checkout_vs_reset.png)
+
+Existen tres modalidades de reseteos seleccionables por las banderas --soft, --mixed y --hard, de los cuales --mixed es utilizado por defecto si ninguno es seleccionado. Las tres tienen en común que mueven HEAD y la rama apuntada por HEAD al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working directory. Respecto al working directory, restaurar significa sustituir los actual por los registrado en el snapshot del commit seleccionado.
+
+| Modalidad | Objetivo de restauración |
+|---|---|
+| `--soft` | (Ni el staging area ni el working tree son restaurados, sólo HEAD y la rama apuntada por HEAD son movidos.)<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el staging area** (evidentemente, son visibles también en el working tree).* |
+| `--mixed`<br>*modo predeterminado* | Staging area<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el working tree** (unstaged).* |
+|`--hard`| Staging area y working tree<br><br>***Las modificaciones de los commits descendientes del commit seleccionado son ELIMINADAS***. |
+
+#### Uso del comando
+
+Retira del staging area los archivos especificados (1). Si alguno de los archivos inicia con un guión alto (`-`), añadir dos guiones altos antes del nombre del archivo (esto evita que Git intente procesar el archivo como una bandera). Para el reset discutido anteriormente, utilice (2). La sintaxis completa puede encontrarla en <https://git-scm.com/docs/git-reset>.
+
+```bnf
+git reset [--] <archivos>                       (1)
+git reset [--soft | --mixed | --hard] <commit>  (2)
+```
+
+#### Recuperación de un `git reset --hard` equivocado
+
+Al realizar un reseteo duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reseteo duro.
+
+![Visualización de git reset --hard](images/reset_hard.png)
+
+Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperse de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reseteo duro respecto al mismo. Para hallar el hash, se utliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Siguiendo el ejemplo, al hallar el hash 3, basta con realizar `git reset --hard 3`.
