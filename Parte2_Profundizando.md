@@ -79,3 +79,13 @@ Ahora dirijamos nuestra atención a casos en los que no es posible un cambio de 
 
 - Se crea un archivo cuyo nombre y extensión existen en otra rama. En la rama actual el archivo está untracked, pero en la rama objeto del checkout el archivo está tracked. Al intentar el cambio, se requiere la acción 1 (creación) sobre el nuevo archivo; en el snapshot de la rama origen no existe el archivo, pero en el snapshot de la rama destino sí, entonces se crea, pero en el proceso colisiona con el archivo modificado.
 - Se modifica un archivo que en otra rama no existe. Es ilegal cambiarse a esa rama con la modificación uncommited pues se requiere la acción 2 (eliminación) sobre el archivo modificado.
+
+## Eliminar archivos untracked
+
+> Resumen de <https://git-scm.com/docs/git-clean>
+
+Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git. Aquí se presenta una sintaxis simplificada que muestra las banderas más comunes. Si la variablde configuración de Git `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando. Utilice `-d` para recursivamente eliminar directorios untracked. Utilice `-x` para eliminar también archivos ignorados.
+
+```bnf
+git clean [-d] [-f] [-x] [<path>]
+```
