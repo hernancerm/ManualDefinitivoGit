@@ -2,7 +2,7 @@
 
 Si está interesado en comprender no sólo la sintaxis de Git, pero también los conceptos, estas notas son para usted 🤟
 
-Pretendo mantener este repositorio actualizado con cada nuevo concepto o comando que aprendo respecto a Git. El énfasis respecto a los coneceptos por sobre los comandos es inspirado por [git_training](https://github.com/UnseenWizzard/git_training).
+Pretendo mantener este repositorio actualizado con cada nuevo concepto o comando que aprendo respecto a Git. El énfasis respecto a los conceptos por sobre los comandos es inspirado por [git_training](https://github.com/UnseenWizzard/git_training).
 
 He dividido las notas en dos partes:
 
