@@ -146,7 +146,7 @@ git rm --cached <archivo>
 
 Este comando es muy interesante, poderoso y, si ha comprendido la sección de ambiente de desarrollo, sencillo de entender. Similar a git checkout, este comando permite mover la referencia HEAD entre commits, mas difiere en tanto que no sólo actúa respecto a HEAD, sino que también respecto a una rama.
 
-![Checkout vs reset](images/checkout_vs_reset.png)
+![Checkout vs reset](/images/checkout_vs_reset.png)
 
 Existen tres modalidades de reseteos seleccionables por las banderas --soft, --mixed y --hard, de los cuales --mixed es utilizado por defecto si ninguno es seleccionado. Las tres tienen en común que mueven HEAD y la rama apuntada por HEAD al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working directory. Respecto al working directory, restaurar significa sustituir los actual por los registrado en el snapshot del commit seleccionado.
 
@@ -169,6 +169,133 @@ git reset [--soft | --mixed | --hard] <commit>  (2)
 
 Al realizar un reseteo duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reseteo duro.
 
-![Visualización de git reset --hard](images/reset_hard.png)
+![Visualización de git reset --hard](/images/reset_hard.png)
 
 Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperse de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reseteo duro respecto al mismo. Para hallar el hash, se utliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Siguiendo el ejemplo, al hallar el hash 3, basta con realizar `git reset --hard 3`.
+
+### Revert
+
+> Resumen de <https://www.atlassian.com/git/tutorials/undoing-changes/git-revert>
+
+Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por uno o más commits. La distinción más importante radica en que este comando no modifica la historia, realizando la corrección no al eliminar commits, pero al agregar uno con las correcciones.
+
+![Reset vs revert](/images/reset_vs_revert.png)
+
+---
+
+#### `git revert` vs `git reset`
+
+Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás. Revert siempre es seguro, pues no alterla la historia del repositorio, haciendo imposible romper la historia un repo remoto mediante revert. Por otra lado, reset sí puede romper la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
+
+![Cuándo usar revert o reset](/images/revert_or_reset.png)
+
+---
+
+#### Uso del comando
+
+Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis compeleta refiérase a <https://git-scm.com/docs/git-revert>. Sin el uso de la bandera `-n`, este comando crea un nuevo commit con la corrección (sin las modificaciones incorporadas en los commits seleccionados), abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit. Utilizar `--no-edit` para no abrir el editor de texto y usar el mensaje predeterminado. Al utilizar la banedar `-n`, en lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
+
+```bnf
+git revert [--no-edit] [-n] <commit>
+```
+
+Para demostrar distintas correcciones utilizando este comando, considere este repositorio.
+
+```shell
+$ git init
+Initialized empty Git repository in C:/Users/hjcer/temp/.git/
+
+$ touch file_1.txt
+
+$ git add file_1.txt
+
+$ git commit -m "Create file_1"
+[master (root-commit) 97017e3] Add file_1
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 file_1.txt
+
+$ echo "First line of file_1" > file_1.txt
+
+$ git commit -a -m "Add content to file_1"
+[master 9bb6e59] Add content to file_1
+ 1 file changed, 1 insertion(+)
+
+$ touch file_2.txt
+
+$ git add file_2.txt
+
+$ git commit -m "Create file_2"
+[master e935221] Add file_2
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 file_2.txt
+
+$ echo "First line of file_2" > file_2.txt
+
+$ git commit -a -m "Add content to file_2"
+[master 04a0106] Add content to file_2
+ 1 file changed, 1 insertion(+)
+
+$ git log --oneline
+dc01f42 (HEAD -> master) Add content to file_2
+386a54a Create file_2
+e3646e8 Add content to file_1
+98a0ead Create file_1
+```
+
+---
+
+**Ejemplo 1. Eliminar modificaciones del último commit**
+
+```shell
+$ git revert HEAD
+[master f5544d9] Revert "Add content to file_2"
+ 1 file changed, 1 deletion(-)
+
+$ git log --oneline
+f5544d9 (HEAD -> master) Revert "Add content to file_2"
+dc01f42 Add content to file_2
+386a54a Create file_2
+e3646e8 Add content to file_1
+98a0ead Create file_1
+```
+
+Este comando abre el editor de texto para pedir el mensaje del commit de corrección. (Si prefiere evitar el editor de texto y aceptar el menaje predeterminado, el comando sería `git revert --no-edit HEAD`.) Tras salir del editor, puede verificar que un nuevo commit ha sido creado. Esta corrección pudo haberse realizado mediante un reset duro, pero al emplear un revert se evita reescribir la historia, lo cual casi nunca no es recomendable hacer en una rama pública (los cambios han pasado a un repo remoto por `git push`).
+
+---
+
+---
+
+**Ejemplo 2. Eliminar modificaciones de commits no secuenciales**
+
+```shell
+$ git revert HEAD~3
+error: could not revert 98a0ead... Create file_1
+hint: after resolving the conflicts, mark the corrected paths
+hint: with 'git add <paths>' or 'git rm <paths>'
+hint: and commit the result with 'git commit'
+
+$ git rm file_1.txt
+rm 'file_1.txt'
+
+$ git revert --continue
+[master 98b6774] Revert "Create file_1"
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 file_1.txt
+
+$ git revert --no-edit HEAD~
+[master 90e5838] Revert "Add content to file_2"
+ Date: Mon Dec 16 19:43:05 2019 -0600
+ 1 file changed, 1 deletion(-)
+
+$ git log --oneline
+90e5838 (HEAD -> master) Revert "Add content to file_2"
+98b6774 Revert "Create file_1"
+dc01f42 Add content to file_2
+386a54a Create file_2
+e3646e8 Add content to file_1
+98a0ead Create file_1
+```
+
+Aquí se hace énfasis en la falta de secuencia de los commits pues esto no sería posible utilizando `git reset`. Evidentemente, si los commits fueran secuenciales, el mismo proceso puede utilizarse. Puede verse que si se intenta revertir algún commit que tenga conflicto con un descendiente ocurre un conflicto, el cual se resuelve manualmente, se añaden las resoluciones al staging area y se ejecuta `git revert --continue`.
+
+---
