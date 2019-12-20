@@ -1,5 +1,23 @@
 # Profundizando
 
+- [Stashing para evitar commits parciales](#stashing-para-evitar-commits-parciales)
+  - [¿Qué es un stash?](#¿qué-es-un-stash)
+  - [Comandos para administrar stashes](#comandos-para-administrar-stashes)
+  - [¿Cuándo puede cambiarse de rama sin hacer commit o stash de las modificaciones?](#¿cuándo-puede-cambiarse-de-rama-sin-hacer-commit-o-stash-de-las-modificaciones)
+- [Eliminar archivos untracked](#eliminar-archivos-untracked)
+- [Ignorar archivos (.gitignore)](#ignorar-archivos-gitignore)
+  - [Expresiones glob vs regulares](#expresiones-glob-vs-regulares)
+  - [Notación de expresiones glob](#notación-de-expresiones-glob)
+  - [.gitignore](#gitignore)
+  - [Ignorar archivos tracked](#ignorar-archivos-tracked)
+- [Correcciones avanzadas](#correcciones-avanzadas)
+  - [Reset](#reset)
+    - [Uso del comando](#uso-del-comando)
+    - [Recuperación de un `git reset --hard` equivocado](#recuperación-de-un-git-reset---hard-equivocado)
+  - [Revert](#revert)
+    - [`git revert` vs `git reset`](#git-revert-vs-git-reset)
+    - [Uso del comando](#uso-del-comando-1)
+
 ## Stashing para evitar commits parciales
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning>
@@ -181,15 +199,11 @@ Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por
 
 ![Reset vs revert](/images/reset_vs_revert.png)
 
----
-
 #### `git revert` vs `git reset`
 
 Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás. Revert siempre es seguro, pues no alterla la historia del repositorio, haciendo imposible romper la historia un repo remoto mediante revert. Por otra lado, reset sí puede romper la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
 
 ![Cuándo usar revert o reset](/images/revert_or_reset.png)
-
----
 
 #### Uso del comando
 
