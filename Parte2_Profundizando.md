@@ -89,3 +89,51 @@ Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los ar
 ```bnf
 git clean [-d] [-f] [-x] [<path>]
 ```
+
+## Ignorar archivos (.gitignore)
+
+> Resumen de <https://git-scm.com/docs/gitignore>
+
+En la sección dedicada al ambiente de desarrollo se mencionan los estados de los archivos de acuerdo a Git: tracked (posiblemente modified o staged) y untracked. En adición, **un archivo puede tener el estado *ignored***. Existen archivos de configuración de IDEs o editores de texto, como .vscode de VSCode o .idea/workspace.xml de IntelliJ IDEA, los cuales no se desean agregar al repositorio. De la misma intención son objeto los archivos resultantes de un build, como un directorio `target` o los `.class` de Java. En estos casos, dichos archivos se desean dejar permanentemente untracked.
+
+La solución es ignorar los archivos, volviéndolos no seleccionables para los comandos de Git (utilizar la bandera `-a` o `--all` en algunos comandos, como `git stash push`, pueden considerar archivos ingorados). Para ignorar archivos se requiere un archivo de configuración `.gitignore`, el cual puede tener impacto global o sólo respecto a un repositorio. Los archivos a ignorar se seleccionan utilizando [expresiones glob](https://en.wikipedia.org/wiki/Glob_(programming)).
+
+---
+
+### Expresiones glob vs regulares
+
+Varios comandos de Git requieren seleccionar archivos, como `git add` o `git stash push`. El archivo `.gitignore` también selecciona archivos. Las expresiones glob sirven el propósito de representar archivos mediante wildcards (caracteres especiales), dado un sistema de archivos; mientras que las expresiones regulares representan cadenas de texto, dada una secuencia de caracteres. Ambas expresiones sirven un propósito distinto aunque similar (y la sintaxis también es similar). Puesto que archivos se desean seleccionar en lugar de frases en un texto, las expresiones regulares no tienen sentido en este contexto. **Cuando los glob se utilizan en comandos, como `git add` por ejemplo, ponerlos entre comillas simples para evitar expansión del shell**.
+
+| ✔️ Evitar expansión de shell. Git procesa el glob | ❌ Expansión de shell. El shell expande la ruta y pasa la evaluación a Git. Git no procesa un glob |
+|:---:|:---:|
+| `git add '**/*.txt'` | `git add **/*.txt` |
+
+---
+
+### Notación de expresiones glob
+
+| Símbolo | Explicación |
+|---|---|
+| * | Representa cualquier número de caracteres, incluido ninguno, pero no una diagonal. |
+| ** | Representa uno o más directorios, pero no el directorio actual (`.`) ni el padre (`..`). |
+| ? | Representa un caracter. |
+| [abc] | Representa cualquier caracter contenido en los corchetes. |
+| [a-z] | Representa cualquier caracter contenido en el intervalo definido por los corchetes. |
+
+### .gitignore
+
+Este archivo define los archivos que Git ignorará. **Archivos tracked no son afectados por este archivo**. El archivo puede contener comentarios, los cuales inician con `#`. Para especificar archivos a ignorar, colocar un patrón glob por línea. Si se ignora un directorio, todos sus archivos y subdirectorios también son ignorados. Un repositorio puede tener más de un `.gitignore`, siendo sus patrones glob relativos a la ubicación del archivo.
+
+Git permite definir un `.gitignore` de impacto global (afecta todos los repositorios del usuario con esta configuración). Primero es necesario crear el archivo manualmente, luego se indica su ubicación en la configuración global.
+
+```bnf
+git config --global core.excludesFile <ruta-.gitignore>
+```
+
+### Ignorar archivos tracked
+
+Para ignorar archivos tracked (añadidos al staging environment o existentes en algún commit) primero deben ser olvidados por Git, es decir, cambiar su estado a untracked. Para conseguir esto se utiliza el comando siguiente, donde `<archivo>` acepta expresiones glob.
+
+```bnf
+git rm --cached <archivo>
+```
