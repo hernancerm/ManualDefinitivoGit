@@ -188,7 +188,13 @@ Un error usual es olvidar añadir archivos a un commit o redactar mal el mensaje
 git commit [--amend [--no-edit]] [-a] [-m "<mensaje>"]
 ```
 
-Retira archivos del repositorio, pero los mantiene en el working tree. Esto es muy útil cuando se desea ignorar (.gitignore) un archivo o directorio que tiene el estado tracked.
+Restaurar los archivos especificados por `<archivos>` (para seleccionar varios archivos, separar con un espacio los nombres) a la versión almacenada en el snapshot apuntado por el commit referido por `HEAD`. En otras palabras, deshace los cambios no committed de archivos selectos. En el extraño caso que el nombre de un archivo inicie con un guión alto (`-`), añada dos guiones altos antes (`--`) para que el shell lo trate como un archivo en lugar de una bandera. Ejemplo: `git checkout -- -foo.txt`.
+
+```bnf
+git checkout [--] <archivos>
+```
+
+Retira archivos del repositorio, pero los mantiene en el working tree. Esto es muy útil cuando se desea ignorar (`.gitignore`) un archivo o directorio que tiene el estado tracked. Véase [Parte 2. Profundizando](Parte2_Profundizando.md).
 
 ```bnf
 git rm --cached <archivo>
