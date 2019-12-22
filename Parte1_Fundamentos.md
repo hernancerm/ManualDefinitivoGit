@@ -282,10 +282,10 @@ Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la 
 git branch <rama>
 ```
 
-Cambiar a una rama existente. Utilizar `-b` para crear la rama (si no existe ya) y cambiarse a ella. Este comando también permite moverse a commits específicos.
+Cambiar a una rama existente. Utilizar `-b` para crear la rama (si no existe ya) y cambiarse a ella.
 
 ```bnf
-git checkout [-b] (<rama> | <commit>)
+git checkout [-b] <rama>
 ```
 
 ## Fusión de ramas
@@ -382,6 +382,130 @@ Forzosamente borra la rama seleccionada, incluso si tiene cambios no fusionados.
 
 ```bnf
 git branch -D <rama>
+```
+
+## Navegando entre commits: Conociendo `git checkout`
+
+En ocasiones resulta necesario revisar versiones anteriores del proyecto, ya sea por estar en busca de un bug (commit que introduce una regresión), requerir demostrar la evolución de un módulo o al necesitar revertir las modificaciones introducidas por algunos commits. Para lograr cualquiera de estas tareas es importante conocer cómo navegar el árbol de commits. Con el fin de demostrar la navegación se toma como árbol de referencia el mostrado en la figura inferior.
+
+<p align="center">
+  <img src="images/navigation_1.png" width="500px" />
+</p>
+
+Existen dos formas de navegación: por referencia **absoluta** o **relativa**. Recuerde de la sección [Objetos de Git](#objetos-de-git) que las versiones del proyecto son almacenadas en los snapshots asociados a cada objeto commit. Recorrer la historia del proyecto significa visitar commits pasados. También sabemos que una rama no es más que una referencia a un commit, por lo que la resolución de la rama (identificar el commit al que apunta), también representa una versión del proyecto. De forma similar, `HEAD` es una referencia que indica a Git la posición actual del usuario en el árbol de commits, apuntando siempre a un commit u objeto que pueda resolverse en un commit, como una rama.
+
+De este análisis encontramos que existen tres tipos de referencias que directamente o en su resolución apuntan al mismo tipo de objeto: un commit.
+
+> **Referencias relacionadas con commits: (1) commits, (2) ramas, (3) `HEAD`.**
+
+Existen otras referencias que también son o apuntan a commits, como los stashes discutidos en [Parte 2: Profundizando](Parte2_Profundizando.md) o los tags, pero esta sección se enfoca en las tres mencionadas.
+
+En [Comandos básicos para ramas](#comandos-básicos-para-ramas) se introdujo el comando `git checkout`, el cual permite cambiar la rama a la que apunta `HEAD`. Con cada nuevo commit realizada en tal rama, `HEAD` avanza acordemente. Aquí presento una forma más general de este comando, donde el argumento no tiene que ser una rama, pero cualquier referencia que sea o pueda resolverse en un commit, como una rama, `HEAD`, un commit, un tag o un stash.
+
+```bnf
+git checkout <referencia-resoluble-a-un-commit>
+```
+
+### Navegación absoluta
+
+Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo (especificando un commit) o el nombre de una rama. Podemos hallar una versión corta, de 7 caractéres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
+
+```shell
+$ git log --oneline --graph
+*   20d1091 (HEAD -> master) Merge branch 'feature'
+|\
+| * 1c27aea (feature) Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+```
+
+Ahora si quisiéramos navegar al commit con el mensaje *Add more content to f1*, tenemos la opción de utilizar `git checkout feature` o `git checkout 1c27aea`. Veamos ambas formas.
+
+---
+
+```shell
+$ git checkout feature
+Switched to branch 'feature'
+```
+
+<p align="center">
+  <img src="images/navigation_2.png" width="550px" />
+</p>
+
+---
+
+Por otro lado, si especificamos el hash en lugar del nombre de la rama podemos notar que el working treese actualiza con los contenidos del snapshot del mismo commit, pero el comando reporta algo muy distinto en la terminal.
+
+---
+
+```shell
+$ git checkout 1c27aea
+Note: checking out '1c27aea'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at 1c27aea Add more content to f1
+```
+
+<p align="center">
+  <img src="images/navigation_3.png" width="500px" />
+</p>
+
+---
+
+La primera vez que vi el mensaje *detached `HEAD` state* me confundí mucho, pero no es algo  de que alarmarse e incluso es sencillo entender la razón del mensaje. Hasta ahora, el apuntador `HEAD` siempre se ha visto en la siguiente posición: `HEAD -> <rama> -> <commit>`. Durante desarrollo siempre se tiene `HEAD` apuntando a una rama y nunca directamente a un commit.
+
+> **Se dice que `HEAD` está detached si apunta directamente a un commit. Se dice que `HEAD`está attached si apunta a una rama.**
+
+El mensaje aparece pues indica que todo commit realizado en la posición actual de `HEAD` será perdido cuando `HEAD` apunte a otro commit. Veamos un ejemplo.
+
+<p align="center">
+  <img src="images/navigation_4.png" width="500px" />
+</p>
+
+En la posición de detached `HEAD`, creé un archivo, lo agregué al staging area y realicé un commit. Al igual que en el caso cuando `HEAD` apunta a una rama, el apuntador se mueve junto con el nuevo commit. Sin embargo, ahora consideremos qué ocurre si se ejecuta `git checkout master`. O en general, si se hace checkout a cualquier otro commit.
+
+```shell
+$ git checkout master
+Warning: you are leaving 1 commit behind, not connected to
+any of your branches:
+
+  f2511b6 Create file-to-lose
+
+If you want to keep it by creating a new branch, this may be a good time
+to do so with:
+
+ git branch <new-branch-name> f2511b6
+
+Switched to branch 'master'
+```
+
+<p align="center">
+  <img src="images/navigation_5.png" width="500px" />
+</p>
+
+Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama. La forma de Git de prevenir de esta perdida tras cambiar la posición de `HEAD`es avisando del estado detached. Note que el commit no fue eliminado, Git no elimina commits, simplemente no es accesible mediante ningún recorrido de los `head`(ramas). Pude utilizar `git reflog` para hallar el hash y regresar al mismo.
+
+```shell
+$ git log -a --oneline
+20d1091 (HEAD -> master) Merge branch 'feature'
+1c27aea (feature) Add more content to f1
+494804a Create f3
+5a4b4dd Add content to f2
+a9e3559 Create f2
+44b6f5d Modify f1
+d04b4ee Start version control
 ```
 
 ## Conflictos al realizar un merge
