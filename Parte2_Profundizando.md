@@ -164,7 +164,9 @@ git rm --cached <archivo>
 
 Este comando es muy interesante, poderoso y, si ha comprendido la sección de ambiente de desarrollo, sencillo de entender. Similar a git checkout, este comando permite mover la referencia HEAD entre commits, mas difiere en tanto que no sólo actúa respecto a HEAD, sino que también respecto a una rama.
 
-![Checkout vs reset](/images/checkout_vs_reset.png)
+<p align="center">
+ <img src="images/checkout_vs_reset.png" width="650px" />
+</p>
 
 Existen tres modalidades de reseteos elegibles por las banderas --soft, --mixed y --hard, de los cuales --mixed es utilizado por defecto si ninguno es seleccionado. Las tres tienen en común que mueven HEAD y la rama apuntada por HEAD al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working directory. Respecto al working directory, restaurar significa sustituir los actual por los registrado en el snapshot del commit seleccionado.
 
@@ -187,7 +189,9 @@ git reset [--soft | --mixed | --hard] <commit>  (2)
 
 Al realizar un reseteo duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reseteo duro.
 
-![Visualización de git reset --hard](/images/reset_hard.png)
+<p align="center">
+ <img src="images/reset_hard.png" width="600px" />
+</p>
 
 Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperase de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reseteo duro respecto al mismo. Para hallar el hash, se utiliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Siguiendo el ejemplo, al hallar el hash 3, basta con realizar `git reset --hard 3`.
 
@@ -197,13 +201,17 @@ Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el 
 
 Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por uno o más commits. La distinción más importante radica en que este comando no modifica la historia, realizando la corrección no al eliminar commits, pero al agregar uno con las correcciones.
 
-![Reset vs revert](/images/reset_vs_revert.png)
+<p align="center">
+ <img src="images/reset_vs_revert.png" width="500px" />
+</p>
 
 #### `git revert` vs `git reset`
 
 Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás. Revert siempre es seguro, pues no altera la la historia del repositorio, haciendo imposible romper la historia un repo remoto mediante revert. Por otra lado, reset sí puede romper la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
 
-![Cuándo usar revert o reset](/images/revert_or_reset.png)
+<p align="center">
+ <img src="images/revert_or_reset.png" width="500px" />
+</p>
 
 #### Uso del comando
 
