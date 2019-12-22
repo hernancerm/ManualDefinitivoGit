@@ -162,18 +162,18 @@ git rm --cached <archivo>
 
 > Resumen de <https://www.atlassian.com/git/tutorials/undoing-changes/git-reset>
 
-Este comando es muy interesante, poderoso y, si ha comprendido la sección de ambiente de desarrollo, sencillo de entender. Similar a git checkout, este comando permite mover la referencia HEAD entre commits, mas difiere en tanto que no sólo actúa respecto a HEAD, sino que también respecto a una rama.
+Este comando es muy interesante, poderoso y, si ha comprendido la sección de ambiente de desarrollo, sencillo de entender. Similar a `git checkout`, este comando permite mover la referencia `HEAD` entre commits, mas difiere en tanto que no sólo actúa respecto a `HEAD`, sino que también respecto a una rama.
 
 <p align="center">
  <img src="images/checkout_vs_reset.png" width="650px" />
 </p>
 
-Existen tres modalidades de reseteos elegibles por las banderas --soft, --mixed y --hard, de los cuales --mixed es utilizado por defecto si ninguno es seleccionado. Las tres tienen en común que mueven HEAD y la rama apuntada por HEAD al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working directory. Respecto al working directory, restaurar significa sustituir los actual por los registrado en el snapshot del commit seleccionado.
+Existen tres modalidades de reseteos, las cuales son elegibles por las banderas `--soft`, `--mixed` y `--hard`. **Observe que `--mixed` es utilizada por defecto si ninguna bandera es seleccionada**. Las tres tienen en común que mueven `HEAD` y la rama apuntada por `HEAD` al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working tree. Respecto al working tree, restaurar significa actualizar el mismo respecto al snapshot del commit seleccionado.
 
 | Modalidad | Objetivo de restauración |
 |---|---|
-| `--soft` | (Ni el staging area ni el working tree son restaurados, sólo HEAD y la rama apuntada por HEAD son movidos.)<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el staging area** (evidentemente, son visibles también en el working tree).* |
-| `--mixed`<br>*modo predeterminado* | Staging area<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el working tree** (unstaged).* |
+| `--soft` | (Ni el staging area ni el working tree son restaurados, sólo `HEAD` y la rama apuntada por `HEAD` son movidos.)<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el staging area** (evidentemente, son visibles también en el working tree).* |
+| `--mixed`<br><br>*modo predeterminado* | Staging area<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el working tree** (unstaged).* |
 |`--hard`| Staging area y working tree<br><br>***Las modificaciones de los commits descendientes del commit seleccionado son ELIMINADAS***. |
 
 #### Uso del comando
