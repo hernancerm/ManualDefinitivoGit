@@ -108,7 +108,9 @@ Antes de abordar los comandos de Git, es muy importante conocer los fundamentos 
 
 ---
 
-![Ambiente de desarrollo](/images/dev_env.png "Ambiente de desarrollo")
+<p align="center">
+  <img src="images/dev_env.png" width="500px" />
+</p>
 
 - El **local repository**, o simplemente repositorio, almacena metadatos y los estados de los archivos, actuando efectivamente como una base de datos para la gestión del proyecto. El repositorio también se conoce como "directorio de Git", pues efectivamente se almacenan estos datos en un directorio; usualmente oculto, con el nombre `.git`.
 - El **working tree** abarca todos los archivos contenidos en el directorio que contiene a `.git`. Los subdirectorios también son considerados. Representa todos los posibles archivos que Git puede versionar.
@@ -204,7 +206,9 @@ Para poder tener un sólido entendimiento de las ramas de Git, es necesario expl
 
 ### Objetos de Git
 
-![Commit desglosado](/images/branches_1.png)
+<p align="center">
+  <img src="images/branches_1.png" width="600px" />
+</p>
 
 A lo largo de esta sección se denota a la carpeta `.git/objects` por el nombre "directorio objects". Recuérdese que `.git` está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
 
@@ -226,7 +230,9 @@ Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo 
 
 Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía unidireccional de objetos commit, tree y blob, en la que cada commit apunta a su padre. Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots (trees que representan el staging area al momento del commit) correspondientes.
 
-![Commits y sus snapshots](/images/branches_2.png)
+<p align="center">
+  <img src="images/branches_2.png" width="550px" />
+</p>
 
 Entendido este sistema, podemos ahora comprender con formalidad qué es una rama en Git.
 
@@ -236,15 +242,21 @@ Al igual que todas las referencias en Git, esta referencia es un hash SHA-1 que 
 
 Por defecto, Git proporciona la rama `master` como inicial. Completando la figura anterior y omitiendo el contenido de los commits por brevedad, tenemos que la imagen completa de los objetos es la mostrada próximamente.
 
-![Commit desglosado](/images/branches_3.png)
+<p align="center">
+  <img src="images/branches_3.png" width="500px" />
+</p>
 
 **Al crear una nueva rama, la nueva rama apunta al commit que es apuntado durante su creación**. Luego, en el ejemplo, si el desarrollador crea una rama `buf-fix`, ésta apunta al commit identificado por el hash SHA-1 iniciando con f30ab. Si el desarrollador se cambia a esta rama, arregla el bug, añade los archivos relevantes al staging area y realiza un commit, podemos notar algo muy interesante.
 
-![Commit desglosado con rama buf-fix](/images/branches_4.png)
+<p align="center">
+  <img src="images/branches_4.png" width="500px" />
+</p>
 
 Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tras ser realizado, mas el commit al que master apunta no fue actualizado. Ahora cabe preguntar, ¿cómo Git sabe en qué rama un usuario está? La respuesta yace en otro apuntador, también de la forma de un hash SHA-1 al que Git denomina `HEAD` (almacenado en `.git/HEAD`). Completando la figura anterior, puede verse que Git conoce que el usuario está trabajando en la rama `buf-fix` pues `HEAD` apunta a `buf-fix`, que a su vez apunta al último commit realizado por el usuario.
 
-![Commit desglosado con rama buf-fix y HEAD](/images/branches_5.png)
+<p align="center">
+  <img src="images/branches_5.png" width="500px" />
+</p>
 
 ---
 
@@ -278,11 +290,15 @@ Si las ramas son el mecanismo principal por el cual se organiza la colaboración
 
 Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres commits.
 
-![Estado inicial del árbol de commits](/images/merge_1.png)
+<p align="center">
+  <img src="images/merge_1.png" width="210px" />
+</p>
 
 Ahora Juan decide dedicarse a implementar una característica nueva, para lo cual crea la rama `feature`, se cambia a ésta y comienza a trabajar. Realiza un commit.
 
-![Nuevo commit en rama feature](/images/merge_2.png)
+<p align="center">
+  <img src="images/merge_2.png" width="300px" />
+</p>
 
 En este momento Juan es informado que existe un bug en `master` cuyo patch debe ser priorizado sobre la característica que está implementando. Para realizar la corrección del bug, Juan crea la nueva rama `bug-fix` a partir de `master`. Es decir, el desarrollador requirió ejecutar los siguientes comandos justo después de haber realizado su commit:
 
@@ -294,7 +310,9 @@ $ git checkout bug-fix
 
 En esta rama el desarrollador soluciona el bug con un único commit. Nótese que el progreso que Juan llevaba en la rama `feature` no existe en la rama `master`, pues se encuentra atrás en la historia. **Generalizando, al cambiar de rama, el working tree *suele mostrar* sólo los contenidos del snapshot del commit de la rama**. Ahora la relación de los commits luce como lo indica la figura siguiente.
 
-![Nuevo commit en rama bug-fix](/images/merge_3.png)
+<p align="center">
+  <img src="images/merge_3.png" width="300px" />
+</p>
 
 ### Fast-forward merge
 
@@ -311,11 +329,15 @@ Fast-forward
 
 La estrategia utilizada para el merge es fast-forward pues basta con adelantar la referencia `master` al commit 5 para incorporar los cambios de la rama `bug-fix`. Se elimina la rama `bug-fix` utilizando el comando `git branch -d bug-fix` pues no se necesita más y ahora las ramas y commits tienen la siguiente estructura y estado.
 
-![Merge fast-forward buf-fix en master](/images/merge_4.png)
+<p align="center">
+  <img src="images/merge_4.png" width="300px" />
+</p>
 
 Juan ya puede continuar trabajando en la característica que estaba implementando en `feature`, para lo cual se cambia a esta rama y logra terminar la implementación en un commit más, como se muestra a continuación.
 
-![Checkout feature y realizar un commit](/images/merge_5.png)
+<p align="center">
+  <img src="images/merge_5.png" width="350px" />
+</p>
 
 ### Recursive merge
 
@@ -332,7 +354,9 @@ Merge made by the 'recursive' strategy.
 
 En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y **genera un nuevo commit** (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3. Los commits y sus relaciones están mostrados por la siguiente figura.
 
-![Merge recursivo de feature en master](/images/merge_6.png)
+<p align="center">
+  <img src="images/merge_6.png" width="400px" />
+</p>
 
 ### Comandos básicos para merges
 
@@ -358,7 +382,9 @@ git branch -D <rama>
 
 En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos Git no puede ejecutar un merge de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró App.java, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
 
-![Checkout feature y hacer un commit](/images/merge_5.png)
+<p align="center">
+  <img src="images/merge_5.png" width="300px" />
+</p>
 
 Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo App.java, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios en las mismas líneas de este archivo.
 
@@ -389,7 +415,9 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar las modificaciones de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones en la parte superior del conflicto para una rápida resolución. Otros muchos editores de texto e IDEs también cuentan con estas facilidades.
 
-![Conflictos en Vim y VSCode](/images/editors_conflict.png)
+<p align="center">
+  <img src="images/editors_conflict.png" width="800px" />
+</p>
 
 Aquí puede verse la estructura por la cual Git informa de un conflicto, que se conforma por los siguientes marcadores.
 
@@ -422,7 +450,9 @@ Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositor
 
 Nótese que el término *repositorio remoto* es popularmente asociado con repositorios almacenados en GitHub, GitLab u otro servicio de cloud storage para repositorios de Git. Sin embargo, el repo remoto puede incluso residir en el mismo host, aunque esto es muy raro en la práctica. El servicio de cloud storage más popular para repositorios de Git es GitHub.
 
-!["Remote" no implica necesariamente que se encuentra en una red](/images/remote_repos.png)
+<p align="center">
+  <img src="images/remote_repos.png" width="650px" />
+</p>
 
 ### Acceso a repositorios remotos
 
@@ -515,7 +545,9 @@ git pull [<alias> <rama>]
 
 Observación acerca de la distinción entre `git fetch` y `git pull`.
 
-![git fetch vs git pull](/images/fetch_vs_pull.png)
+<p align="center">
+  <img src="images/fetch_vs_pull.png" width="700px" />
+</p>
 
 Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los cambios de la rama actual.
 
@@ -621,4 +653,6 @@ $ git branch -a
 
 Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son integrados a alguna rama local, sino que sólo son traídos al repo local para inspección y, si se desea, para integración mediante `git merge`. ¿En dónde son esos cambios almacenados para inspección? Los cambios son almacenados en una rama de nombre `<alias>/<rama>` que sirve como rama de enlace entre una local y su upstream asociada (conocida en inglés como tracking branch). **Entonces, en el proceso de enlace entre una rama local y una remota intervienen tres ramas: la rama local, la rama remota y una intermediara local que permite traer cambios del repo remoto sin inmediatamente agregarlos al repositorio local**.
 
-![Ramas remote tracking](/images/remote_tracking.png)
+<p align="center">
+  <img src="images/remote_tracking.png" width="400px" />
+</p>
