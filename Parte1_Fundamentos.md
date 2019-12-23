@@ -384,7 +384,9 @@ Forzosamente borra la rama seleccionada, incluso si tiene cambios no fusionados.
 git branch -D <rama>
 ```
 
-## Navegando entre commits: Conociendo `git checkout`
+## Navegando entre commits
+
+> Véase <https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection>
 
 En ocasiones resulta necesario revisar versiones anteriores del proyecto, ya sea por estar en busca de un bug (commit que introduce una regresión), requerir demostrar la evolución de un módulo o al necesitar revertir las modificaciones introducidas por algunos commits. Para lograr cualquiera de estas tareas es importante conocer cómo navegar el árbol de commits. Con el fin de demostrar la navegación se toma como árbol de referencia el mostrado en la figura inferior.
 
@@ -406,7 +408,7 @@ En [Comandos básicos para ramas](#comandos-básicos-para-ramas) se introdujo el
 git checkout <referencia-resoluble-a-un-commit>
 ```
 
-### Navegación absoluta
+### Referencias absolutas
 
 Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo (especificando un commit) o el nombre de una rama. Podemos hallar una versión corta, de 7 caractéres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
 
@@ -464,7 +466,7 @@ HEAD is now at 1c27aea Add more content to f1
 
 ---
 
-La primera vez que vi el mensaje *detached `HEAD` state* me confundí mucho, pero no es algo  de que alarmarse e incluso es sencillo entender la razón del mensaje. Hasta ahora, el apuntador `HEAD` siempre se ha visto en la siguiente posición: `HEAD -> <rama> -> <commit>`. Durante desarrollo siempre se tiene `HEAD` apuntando a una rama y nunca directamente a un commit.
+La primera vez que vi el mensaje **detached `HEAD` state** me confundí mucho, pero no es algo  de que alarmarse e incluso es sencillo entender la razón del mensaje. Hasta ahora, el apuntador `HEAD` siempre se ha visto en la siguiente posición: `HEAD -> <rama> -> <commit>`. Durante desarrollo siempre se tiene `HEAD` apuntando a una rama y nunca directamente a un commit.
 
 > **Se dice que `HEAD` está detached si apunta directamente a un commit. Se dice que `HEAD`está attached si apunta a una rama.**
 
@@ -530,6 +532,42 @@ do so (now or later) by using -b with the checkout command again. Example:
 
 HEAD is now at f2511b6 Create file-to-lose
 ```
+
+### Referencias relativas
+
+Recordemos el estado inicial del árbol de commits. La dirección de las flechas de commit a commit es muy importante: **cada commit sólo conoce a sus padres; a sus hijos no**. De esta observación adquiere sentido que existen marcadores de ascendencia (`~`, `^`), pero no de descendencia. Es decir, la navegación relativa se refiere a recorrer la *ascendencia* de un commit.
+
+<p align="center">
+  <img src="images/navigation_1.png" width="500px" />
+</p>
+
+Individualmente, tanto el marcador `~` como el `^` se refieren al primer padre del commit especificado; no hay diferencia. En los snippets utilizo `-c advice.detachedHead=false` para evitar la extensa advertencia del estado detached de `HEAD`. Puede utilizar `-c` para asignar variables de configuración sólo para ese comando.
+
+```shell
+$ git -c advice.detachedHead=false checkout HEAD~
+HEAD is now at 494804a Create f3
+```
+
+```shell
+$ git -c advice.detachedHead=false checkout HEAD^
+HEAD is now at 494804a Create f3
+```
+
+La distinción entre `~` y `^` se vuelve aparente al ser utilizados con números. `~1` denota al primer padre; `~2` denota al primer padre del primer padre del commit, etc. Por otro lado, `^1` también denota al primer padre, pero `^2` denota al segundo padre del commit (esto sólo tiene sentido en el contexto de un merge recursivo, cuando un commit tiene más de un padre).
+
+| Marcador de ascendencia | Ejemplos |
+|:---:|---|
+| `~n` | `HEAD~2 -> a9e3559`<br>`HEAD~3 -> 44b6f5d` |
+| `^n` | `HEAD^2 -> 1c27aea`<br>`HEAD^3 -> error: pathspec 'HEAD^3' did not match any file(s) known to git.` |
+
+Estos marcadores también pueden combinarse y tener como objeto una rama o incluso otro commit.
+
+| Ejemplos |
+|---|
+| `5a4b4dd` **`<-`** `HEAD^2~` ó `feature~` ó `1c27aea^` |
+| `a9e3559` **`<-`** `master^^` ó `master~~` ó `494804a~` |
+
+En ocasiones también encontrará referencias del formato `HEAD@{n}`, donde `n` es un número entero. Éstas son referencias a las entradas de `git reflog`.
 
 ## Conflictos al realizar un merge
 
