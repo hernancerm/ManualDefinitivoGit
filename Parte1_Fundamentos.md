@@ -495,7 +495,7 @@ Switched to branch 'master'
   <img src="images/navigation_5.png" width="500px" />
 </p>
 
-Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama. La forma de Git de prevenir de esta perdida tras cambiar la posición de `HEAD`es avisando del estado detached. Note que el commit no fue eliminado, Git no elimina commits, simplemente no es accesible mediante ningún recorrido de los `head`(ramas). Pude utilizar `git reflog` para hallar el hash y regresar al mismo.
+Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama.
 
 ```shell
 $ git log -a --oneline
@@ -506,6 +506,29 @@ $ git log -a --oneline
 a9e3559 Create f2
 44b6f5d Modify f1
 d04b4ee Start version control
+```
+
+La forma de Git de advertir de esta perdida es avisando del estado detached. Note que el commit no fue eliminado, **Git no elimina commits**, simplemente no es accesible mediante ningún recorrido de los `head`(ramas). Pude utilizar `git reflog` para hallar el hash y regresar al mismo.
+
+🔍 **Tip**. Si recuerda incluso parte del mensaje del commit y utiliza Bash como su shell, puede pasar lo que recuerda del nombre a `grep` ([documentación de `grep` en Bash](https://ss64.com/bash/grep.html)). Por ejemplo, recuerdo que la cadena "lose" se halla en el mensaje, entonces puede realizar lo siguiente para regresar al commit.
+
+```shell
+$ git reflog | grep -i "lose"
+f2511b6 HEAD@{7}: commit: Create file-to-lose
+
+$ git checkout f2511b6
+Note: checking out 'f2511b6'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at f2511b6 Create file-to-lose
 ```
 
 ## Conflictos al realizar un merge
