@@ -171,7 +171,7 @@ git rm --cached <archivo>
 
 Consideremos el siguiente experimento.
 
-```shell
+```bash
 $ git init
 Initialized empty Git repository in C:/Users/hjcer/temp/.git/
 
@@ -182,6 +182,9 @@ On branch master
 
 No commits yet
 
+# A pesar que el directorio foo existe en el working tree, Git
+# no lo reconoce, negando la posibilidad de agregarlo al staging
+# area y almacenarlo en un commit.
 nothing to commit (create/copy files and use "git add" to track)
 ```
 
@@ -282,13 +285,13 @@ e3646e8 Add content to file_1
 
 **Ejemplo 1. Eliminar modificaciones del último commit**
 
-```shell
+```bash
 $ git revert HEAD
 [master f5544d9] Revert "Add content to file_2"
  1 file changed, 1 deletion(-)
 
 $ git log --oneline
-f5544d9 (HEAD -> master) Revert "Add content to file_2"
+f5544d9 (HEAD -> master) Revert "Add content to file_2" # Commit con la corrección
 dc01f42 Add content to file_2
 386a54a Create file_2
 e3646e8 Add content to file_1
@@ -303,21 +306,30 @@ Este comando abre el editor de texto para pedir el mensaje del commit de correcc
 
 **Ejemplo 2. Eliminar modificaciones de commits no secuenciales**
 
-```shell
+```bash
+# Recuerde que `git revert` revierte sólo los cambios del commit especificado.
+# Intentar revertir el primer commit (creación de file_1) entra en conflicto
+# con el segundo commit (HEAD~2), pues éste agrega contenido al archivo que
+# se intenta eliminar.
 $ git revert HEAD~3
 error: could not revert 98a0ead... Create file_1
 hint: after resolving the conflicts, mark the corrected paths
 hint: with 'git add <paths>' or 'git rm <paths>'
 hint: and commit the result with 'git commit'
 
+# Resolver el conflicto eliminando el archivo manualmente.
 $ git rm file_1.txt
 rm 'file_1.txt'
 
+# Continuar el revert.
 $ git revert --continue
 [master 98b6774] Revert "Create file_1"
  1 file changed, 1 deletion(-)
  delete mode 100644 file_1.txt
 
+# Revertir añadir contenido a file_2 no entra en conflicto con las
+# modificaciones del commit siguiente, entonces el proceso de revert
+# es completamente automático y directo.
 $ git revert --no-edit HEAD~
 [master 90e5838] Revert "Add content to file_2"
  Date: Mon Dec 16 19:43:05 2019 -0600
@@ -393,9 +405,9 @@ From https://github.com/HerCerM/RewritingHistory
  + 1c0e104...5b9a0ca master     -> origin/master  (forced update)
 
 $ git log --oneline -a --graph
-*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature' # Nuevo commit tras el amend
+*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature' # Después del amend
 |\
-| | *   1c0e104 (HEAD -> master) Merge branch 'feature' # Antiguo commit antes del amend
+| | *   1c0e104 (HEAD -> master) Merge branch 'feature' # Antes del amend
 | | |\
 | |/ /
 |/| /
