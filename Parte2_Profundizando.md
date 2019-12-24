@@ -18,6 +18,10 @@
   - [Revert](#revert)
     - [¿Cuándo utilizar `git revert` sobre `git reset`?](#¿cuándo-utilizar-git-revert-sobre-git-reset)
     - [Uso del comando](#uso-del-comando-1)
+- [Reescribiendo la historia](#reescribiendo-la-historia)
+  - [¿Qué es *reescribir la historia*?](#¿qué-es-reescribir-la-historia)
+  - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
+  - [¿Cómo se corrigen commits públicos?](#¿cómo-se-corrigen-commits-públicos)
 
 ## Stashing para evitar commits parciales
 
@@ -331,3 +335,86 @@ e3646e8 Add content to file_1
 Aquí se hace énfasis en la falta de secuencia de los commits pues esto no sería posible utilizando `git reset`. Evidentemente, si los commits fueran secuenciales, el mismo proceso puede utilizarse. Puede verse que si se intenta revertir algún commit que tenga conflicto con un descendiente ocurre un conflicto, el cual se resuelve manualmente, se añaden las resoluciones al staging area y se ejecuta `git revert --continue`.
 
 ---
+
+## Reescribiendo la historia
+
+**Al colaborar en un repositorio visto y utilizado por otras personas, existe una regla de oro: no reescribir la historia pública.**
+
+Más que una regla, presento esto como una fuerte recomendación, pues es posible que los colaboradores acuerden reescribir parte de la historia y se haga de forma segura, pero lograr esto puede resultar complejo, muy confuso e innecesario. En general, se reescribe la historia pública por equivocación y no por una decisión meditada.
+
+### ¿Qué es *reescribir la historia*?
+
+Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
+
+> **Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (`git commit --amend` ó `git rebase`) o eliminación ([`git reset`](#reset) ó `git rebase`). Agregar commits secuenciales (`git commit`) no reescribe la historia.**
+
+Veamos un ejemplo sencillo utilizando `git commit --amend`.
+
+```bash
+$ git log --oneline -a --graph
+ # Observe que el hash del commit al que apunta HEAD es 1c0e104.
+*   1c0e104 (HEAD -> master, origin/master) Merge branch 'feature'
+|\
+| * 1c27aea (feature) Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+
+$ git commit --amend --no-edit
+[master 5b9a0ca] Merge branch 'feature'
+ Date: Sun Dec 22 12:20:44 2019 -0600
+
+$ git log --oneline -a --graph
+ # El hash ha cambiado de 1c0e104 a 5b9a0ca, no se trata del mismo objeto commit.
+*   5b9a0ca (HEAD -> master, origin/master) Merge branch 'feature'
+|\
+| * 1c27aea (feature) Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+```
+
+¿Por qué es importante que los hashes cambien si su contenido es el deseado (y en este ejemplo incluso es el mismo)? Esto sólo es importante en el contexto de repositorios remotos y colaboradores. Considere a un colaborador que trabajaba con la versión antigua y ejecuta un `git fetch origin` para revisar los cambios.
+
+```bash
+$ git fetch origin
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 2 (delta 0), reused 2 (delta 0), pack-reused 0
+Unpacking objects: 100% (2/2), done.
+From https://github.com/HerCerM/RewritingHistory
+ + 1c0e104...5b9a0ca master     -> origin/master  (forced update)
+
+$ git log --oneline -a --graph
+*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature' # Nuevo commit tras el amend
+|\
+| | *   1c0e104 (HEAD -> master) Merge branch 'feature' # Antiguo commit antes del amend
+| | |\
+| |/ /
+|/| /
+| |/
+| * 1c27aea Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+```
+
+De pronto `origin/master` y `master` apuntan a commits distintos a pesar que la versión de los archivos entre ellos es la misma. Esta divergencia, quizá no anticipada, puede ocasionar problemas y hacer la historia de commits confusa.
+
+### ¿Qué es la *historia pública*?
+
+Todo commit que exista en un repositorio remoto con colaboradores es parte de la historia pública. La regla de oro dice *no reescribir la historia **pública***, pues no existe ningún peligro en reescribir la historia local. Mientras los commits no hayan sido publicados (`git push`) a un repositorio remoto, siéntase libre de sustituirlos o eliminarlos utilizando `git commit --amend`, `git reset` ó `git rebase`. Por esta razón es una excelente práctica sólo hacer `git push` de sus commits cuando esté totalmente satisfecho con ellos, pues una vez publicados es mejor considerarlos escritos en piedra.
+
+### ¿Cómo se corrigen commits públicos?
+
+A pesar que es posible reescribir la historia de forma segura si los colaboradores lo pueden manejar, es recomendable no hacerlo. En lugar de reescribir la historia, considere utilizar [`git revert`](#revert) para añadir commits con las correcciones.
