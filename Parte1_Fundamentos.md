@@ -172,8 +172,10 @@ git commit [-a] [-m "<mensaje>"]
 
 Recorre el árbol de commits desde la posición de `HEAD`. El comando sin banderas muestra autor, fecha y hora de commit,  encabezado y cuerpo del mensaje, rama del commit y hash SHA-1 completo. El comando con la bandera `--oneline` muestra una versión más compacta, sólo desplegando el encabezado del mensaje, los primeros 7 caracteres del hash del commit y la rama en la que fue realizado. Si se desean ver todos los commits del repositorio (todos los commits accesibles mediante alguna rama) en lugar a sólo los accesibles a través de `HEAD`, utilice la bandera `-a`.
 
+Otras banderas menos utilizadas son `-<cantidad>`, que muestra sólo `<cantidad>` número de commits. Por ejemplo `-1` sólo muestra un commit. `--first-parent` recorre el árbol de commits sólo pasando por el primer padre. Esto es muy útil al revisar la historia de `master`, donde no se suele desear ver commits de ramas fusionadas. El argumento opcional `<commit>` permite especificar una posición distinta a `HEAD` para iniciar el recorrido del árbol. Este argumento toma cualquier referencia resoluble a un commit, véase [referencias absolutas](#referencias-absolutas) y [referencias relativas](#referencias-relativas).
+
 ```bnf
-git log [-a] [--oneline]
+git log [-a] [--oneline] [-<cantidad>] [--first-parent] [<commit>]
 ```
 
 Lista cronológica inversa (se muestra primero lo más reciente) de los objetos a los que `HEAD` ha apuntado. Este comando imprime un log de las referencias. A diferencia del comando log, reflog puede mostrar commits que no son accesibles mediante una rama, pues muestra un historial en lugar de recorrer el árbol.
