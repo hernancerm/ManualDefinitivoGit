@@ -417,7 +417,9 @@ git checkout <referencia-resoluble-a-un-commit>
 
 Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo (especificando un commit) o el nombre de una rama. Podemos hallar una versión corta, de 7 caracteres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
 
-```shell
+```bash
+# Para recorrer todo el árbol de commits sin importar la posición de
+# `HEAD` utilice también la bandera `-a`.
 $ git log --oneline --graph
 *   20d1091 (HEAD -> master) Merge branch 'feature'
 |\
@@ -519,7 +521,8 @@ La forma de Git de advertir de esta perdida es avisando del estado detached. Not
 
 🔍 **Tip**. Si recuerda incluso parte del mensaje del commit y utiliza Bash como su shell, puede pasar lo que recuerda del nombre a `grep` ([documentación de `grep` en Bash](https://ss64.com/bash/grep.html)). Por ejemplo, recuerdo que la cadena "lose" se halla en el mensaje, entonces puede realizar lo siguiente para regresar al commit.
 
-```shell
+```bash
+# La bandera `-i` de grep indica ignorar la capitalización.
 $ git reflog | grep -i "lose"
 f2511b6 HEAD@{7}: commit: Create file-to-lose
 
@@ -685,6 +688,7 @@ Por defecto, el alias creado al clonar un repositorio es `origin`. Por cada alia
 ```shell
 $ git remote
 origin
+
 $ git remote -v
 origin  https://github.com/HerCerM/BatchScripts (fetch)
 origin  https://github.com/HerCerM/BatchScripts (push)
@@ -780,6 +784,7 @@ Podemos ver que en el repositorio remoto sólo existe una rama: `master`. En adi
 ```shell
 $ git pull
 Already up to date.
+
 $ git push
 Everything up-to-date
 ```
@@ -799,6 +804,7 @@ See git-pull(1) for details.
 If you wish to set tracking information for this branch you can do so with:
 
     git branch --set-upstream-to=origin/<branch> master
+
 $ git push
 fatal: The current branch master has no upstream branch.
 To push the current branch and set the remote as upstream, use
@@ -833,8 +839,10 @@ Los upstreams configurados pueden mostrarse utilizando `git branch -vv`.
 ```shell
 $ git branch -vv
 * master e1d8495 Update README.md
+
 $ git branch -u origin/master master
 Branch 'master' set up to track remote branch 'master' from 'origin'.
+
 $ git branch -vv
 * master e1d8495 [origin/master] Update README.md
 ```
