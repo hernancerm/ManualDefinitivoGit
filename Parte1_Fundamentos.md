@@ -278,7 +278,7 @@ Las ramas son parte fundamental de Git. A diferencia de otros sistemas de contro
 Muestra todas las ramas del repositorio local si ninguna bandera es usada. Muestra todas las ramas del repositorio local y los remotos asociados al usar `-a`. La distinción entre ramas locales y remotas es examinada en otra sección del manual. La bandera `-vv` muestra una descripción completa por rama. La descripción por rama incluye su nombre, hash SHA-1 que las identifica, el encabezado del mensaje del commit al que apuntan y, en caso de existir, la [rama upstream](#configurar-upstreams) asociada.
 
 ```bnf
-git branch [-a | --all] [-vv | --verbose]
+git branch [-a | --all] [-vv]
 ```
 
 Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la misma.
