@@ -156,6 +156,36 @@ Para ignorar archivos tracked (añadidos al staging environment o existentes en 
 git rm --cached <archivo>
 ```
 
+## El confuso archivo `.gitkeep` y los directorios vacíos
+
+Consideremos el siguiente experimento.
+
+```shell
+$ git init
+Initialized empty Git repository in C:/Users/hjcer/temp/.git/
+
+$ mkdir foo
+
+$ git status
+On branch master
+
+No commits yet
+
+nothing to commit (create/copy files and use "git add" to track)
+```
+
+¿Nota algo extraño? **Git no permite almacenar directorios vacíos**.
+
+<p align="center">
+ <img src="images/gitkeep.png" width="800px" />
+</p>
+
+> Recuperado de <https://git.wiki.kernel.org/index.php/GitFaq#Can_I_add_empty_directories.3F>
+
+ En algunas situaciones podría resultar deseable almacenar en los snapshots de los commits ciertos directorios vacíos. Existen varias recomendaciones respecto a cómo conseguir esto, siendo una de las más populares crear un archivo con nombre `.gitkeep` en el directorio en cuestión, para que ya no esté vacío y pueda ser registrado por Git. En mi opinión, esta convención es muy confusa y no la recomiendo. `.gitkeep` no es un archivo que Git trate de forma especial, como lo serían por ejemplo [`.gitignore`](#ignorar-archivos-(.gitignore)) o `.gitconfig`, por lo que no tiene documentación oficial su uso; el prefijo `git` sugiere que es un archivo de configuración, cuando en realidad no lo es.
+
+ Para registrar directorios vacíos recomiendo utilizar un `readme.md` explicando la razón de la necesidad de hacer tracking de tal carpeta.
+
 ## Correcciones avanzadas
 
 ### Reset
