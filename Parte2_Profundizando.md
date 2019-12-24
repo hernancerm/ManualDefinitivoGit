@@ -10,12 +10,13 @@
   - [Notación de expresiones glob](#notación-de-expresiones-glob)
   - [.gitignore](#gitignore)
   - [Ignorar archivos tracked](#ignorar-archivos-tracked)
+- [El confuso archivo `.gitkeep` y los directorios vacíos](#el-confuso-archivo-gitkeep-y-los-directorios-vacíos)
 - [Correcciones avanzadas](#correcciones-avanzadas)
   - [Reset](#reset)
     - [Uso del comando](#uso-del-comando)
     - [Recuperación de un `git reset --hard` equivocado](#recuperación-de-un-git-reset---hard-equivocado)
   - [Revert](#revert)
-    - [`git revert` vs `git reset`](#git-revert-vs-git-reset)
+    - [¿Cuándo utilizar `git revert` sobre `git reset`?](#¿cuándo-utilizar-git-revert-sobre-git-reset)
     - [Uso del comando](#uso-del-comando-1)
 
 ## Stashing para evitar commits parciales
@@ -31,7 +32,7 @@ Please commit your changes or stash them before you switch branches.
 Aborting
 ```
 
-También ocurre que a la mitad de la implementación de algún patch o feature un repositorio remoto se actualiza y se desea traer los cambios al repositorio local. Si se tienen archivos modified y se realiza un pull un mensaje similar al siguiente se observa.
+También ocurre que a la mitad de la implementación de algún patch o feature, un repositorio remoto se actualiza y se desea traer los cambios al repositorio local. Si se tienen archivos modified y se realiza un pull, un mensaje similar al siguiente se observa.
 
 ```shell
 error: Your local changes to the following files would be overwritten by merge:
@@ -40,34 +41,38 @@ Please commit your changes or stash them before you switch branches.
 Aborting
 ```
 
-Aquí la solución más sencilla es realizar un commit, pero qué ocurre si el trabajo en la rama actual aún no está listo para ser persistido en un commit. La solución yace en el stashing. **Para crear un stash, existen los comandos `git stash`, `git stash push` y `git stash save`. Ya que el último no es recomendado (es sintaxis antigua, sustituido por `git stash push`) y el primero no provee más que lo esencial, me centraré en crear stashes mediante `git stash push`**.
+Si el trabajo en la rama actual aún no está listo para ser persistido en un commit, la solución yace en el stashing. **Para crear un stash, existen los comandos `git stash`, `git stash push` y `git stash save`. Ya que el último no es recomendado (es sintaxis antigua, sustituida por `git stash push`) y el primero está limitado, me centraré en crear stashes mediante `git stash push`**.
 
 ### ¿Qué es un stash?
 
-**Un stash es un commit** (creado mediante alguno de los comandos anteriormente mencionados) que tiene la particularidad de no estar asociado a alguna rama. Los stashes se almacenan en una pila indizada a partir del cero. Es decir, al crearse un nuevo stash, su índice en la pila es cero; el que era cero se vuelve uno, el que era uno se vuelve dos, etc. El hash SHA-1 del stash con índice cero puede hallarse en `.git/refs/stash`. **Al estar desacoplado de las ramas, los stashes pueden ser referidos en cualquier rama**.
+**Un stash es un commit** (creado mediante alguno de los comandos anteriormente mencionados) que tiene la particularidad de no estar asociado a alguna rama. Los stashes se almacenan en una pila indizada a partir del cero. Es decir, al crearse un nuevo stash, su índice en la pila es cero; el que era cero se vuelve uno, el que era uno se vuelve dos, etc. El hash SHA-1 del stash con índice cero puede hallarse en `.git/refs/stash`. (Recuerde que un commit almacena las referencias a sus padres, por lo que basta con almacenar sólo el stash más reciente de la pila.) **Al estar desacoplado de las ramas, los stashes pueden ser referidos en cualquier rama**.
 
 ### Comandos para administrar stashes
 
-Mostrar todos los stashes (commits desacoplados de ramas).
+Mostrar todos los stashes.
 
 ```bnf
 git stash list
 ```
 
-Crear un nuevo stash incluyendo sólo los archivos modificados (sin banderas `-u` ni `-a`); incluyendo archivos modificados y untracked (bandera `-u`); incluyendo archivos modificados, untracked e ignorados (bandera `-a`). Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. También es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
+Crear un nuevo stash incluyendo sólo los archivos modificados (comportamiento dado su uso sin banderas `-u` ni `-a`); incluyendo archivos modificados y untracked (bandera `-u`); incluyendo archivos modificados, untracked e ignorados (bandera `-a`). Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. También es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
 
 ```bnf
-git stash push [-u | -a | [-m "<mensaje>"]] [<archivos>]
+git stash push [-u | -a] [-m "<mensaje>"] [<archivos>]
 ```
 
-Aplicar los cambios de un stash al working tree. El stash permanece en la pila (1); para aplicar los cambios y eliminar el stash de la pila úsese (2). Si un stash no es proporcionado, se utiliza el stash `stash@{0}` para ambos comandos. **Nótese que si el stash tuviera conflictos con los archivos existentes en el working tree, por ejemplo, si en el stash existe un archivo foo.txt y en el working tree también, ninguno de los dos comandos realizaría cambio alguno sobre el stash o working tree**, reportando en su lugar un error sobre las líneas de *foo.txt already exists, no checkout [\n] Could not restore untracked files from stash entry*. Para evitar este error y entrar en el modo de resolución de conflictos, añadir todas las modificaciones actuales al staging area y luego realizar un `git stash pop` o `git stash apply`.
+Aplicar los cambios de un stash al working tree. El stash permanece en la pila (1); para aplicar los cambios y eliminar el stash de la pila úsese (2). Si un stash no es proporcionado, se utiliza el stash `stash@{0}` para ambos comandos.
+
+**Nótese que si el stash tuviera conflictos con los archivos existentes en el working tree, por ejemplo, si en el stash existe un archivo foo.txt y en el working tree también, ninguno de los dos comandos realizaría cambio alguno sobre el stash o working tree**, reportando en su lugar un error. Para evitar este error y entrar en el modo de resolución de conflictos, añadir todas las modificaciones actuales al staging area y luego realizar un `git stash pop` o `git stash apply`.
+
+🔍 **Tip.** [Recuperar stashes perdidos](https://stackoverflow.com/questions/32517870/how-to-undo-git-stash-clear) puede ser complicado, por ello recomiendo utilizar `git commit` incluso para cambios parciales si estos son muy significativos. Luego siempre es posible realizar un `git commit --amend` para terminar de componer el commit.
 
 ```bnf
 git stash apply [stash@{<índice>}]  (1)
 git stash pop [stash@{<índice>}]    (2)
 ```
 
-Eliminar un stash, sin aplicar los cambios (1). Si ningún stash es proporcionado, se elimina stash@{0}. Eliminar todos los stashes de la pila (2). Los cambios de los stashes eliminados no pueden ser recuperados.
+Eliminar un stash, sin aplicar los cambios (1). Si ningún stash es proporcionado, se elimina `stash@{0}`. Eliminar todos los stashes de la pila (2).
 
 ```bnf
 git stash drop [stash@{<índice>}]  (1)
@@ -102,7 +107,7 @@ Ahora dirijamos nuestra atención a casos en los que no es posible un cambio de 
 
 > Resumen de <https://git-scm.com/docs/git-clean>
 
-Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git. Aquí se presenta una sintaxis simplificada que muestra las banderas más comunes. Si la variable de configuración `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando. Utilice `-d` para recursivamente eliminar directorios untracked. Utilice `-x` para eliminar también archivos ignorados.
+Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git (untracked). Si la variable de configuración `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando. Utilice `-d` para recursivamente eliminar directorios untracked. Utilice `-x` para eliminar también archivos ignorados. Si `<paths>` no es proporcionado, limpia el working tree desde el directorio en el que el comando es ejecutado.
 
 ```bnf
 git clean [-d] [-f] [-x] [<path>]
@@ -112,15 +117,17 @@ git clean [-d] [-f] [-x] [<path>]
 
 > Resumen de <https://git-scm.com/docs/gitignore>
 
-En la sección dedicada al ambiente de desarrollo se mencionan los estados de los archivos de acuerdo a Git: tracked (posiblemente modified o staged) y untracked. En adición, **un archivo puede tener el estado *ignored***. Existen archivos de configuración de IDEs o editores de texto, como .vscode de VSCode o .idea/workspace.xml de IntelliJ IDEA, los cuales no se desean agregar al repositorio. De la misma intención son objeto los archivos resultantes de un build, como un directorio `target` o los `.class` de Java. En estos casos, dichos archivos se desean dejar permanentemente untracked.
+En la sección de [Parte 1: Fundamentos](Parte1_Fundamentos.md) dedicada al ambiente de desarrollo, se mencionan los estados de los archivos de acuerdo a Git: tracked (posiblemente modified o staged) y untracked. En adición, **un archivo puede tener el estado *ignored***. Existen archivos de configuración de IDEs o editores de texto, como `.vscode` de VSCode o `.idea/workspace.xml` de IntelliJ IDEA, los cuales no se desean agregar al repositorio. De la misma intención son objeto los archivos resultantes de un build, como un directorio `target` o los `.class` de Java. Agregando un ejemplo más, las dependencias externas de un proyecto también suelen ser ignoradas, como el directorio `node_modules` de Node.js. En estos casos, dichos archivos se desean dejar permanentemente untracked.
 
-La solución es ignorar los archivos, volviéndolos no elegibles para los comandos de Git (utilizar la bandera `-a` o `--all` en algunos comandos, como `git stash push`, pueden considerar archivos ignorados). Para ignorar archivos se requiere un archivo de configuración `.gitignore`, el cual puede tener impacto global o sólo respecto a un repositorio. Los archivos a ignorar se seleccionan utilizando [expresiones glob](https://en.wikipedia.org/wiki/Glob_(programming)).
+La solución es ignorar los archivos, volviéndolos no elegibles para los comandos de Git. (Algunas banderas de algunos comandos permiten seleccionar archivos ignorados, como `-a` en `git stash push`o `-x` en `git clean`.) Para ignorar archivos se requiere un archivo de configuración `.gitignore`, el cual puede tener impacto global o sólo respecto a un repositorio. Los archivos a ignorar se seleccionan utilizando [expresiones glob](https://en.wikipedia.org/wiki/Glob_(programming)).
 
 ---
 
 ### Expresiones glob vs regulares
 
-Varios comandos de Git requieren seleccionar archivos, como `git add` o `git stash push`. El archivo `.gitignore` también selecciona archivos. Las expresiones glob sirven el propósito de representar archivos mediante wildcards (caracteres especiales), dado un sistema de archivos; mientras que las expresiones regulares representan cadenas de texto, dada una secuencia de caracteres. Ambas expresiones sirven un propósito distinto aunque similar (y la sintaxis también es similar). Puesto que archivos se desean seleccionar en lugar de frases en un texto, las expresiones regulares no tienen sentido en este contexto. **Cuando los glob se utilizan en comandos, como `git add` por ejemplo, ponerlos entre comillas simples para evitar expansión del shell**.
+Varios comandos de Git requieren seleccionar archivos, como `git add` o `git stash push`. A pesar que pueda parecer que aceptan expresiones regulares, en realidad lo que aceptan son expresiones glob. Las expresiones glob sirven el propósito de representar archivos mediante wildcards (caracteres especiales), dado un sistema de archivos; mientras que las expresiones regulares representan cadenas de texto, dada una secuencia de caracteres.
+
+Ambas expresiones sirven un propósito distinto aunque similar (y la sintaxis también es similar). Puesto que archivos se desean seleccionar en lugar de frases en un texto, las expresiones regulares no son ideales en este contexto. **Cuando los glob se utilizan en comandos, como `git add` por ejemplo, ponerlos entre comillas para evitar expansión del shell**.
 
 | ✔️ Evitar expansión de shell. Git procesa el glob | ❌ Expansión de shell. El shell expande la ruta y pasa la evaluación a Git. Git no procesa un glob |
 |:---:|:---:|
@@ -131,16 +138,16 @@ Varios comandos de Git requieren seleccionar archivos, como `git add` o `git sta
 ### Notación de expresiones glob
 
 | Símbolo | Explicación |
-|---|---|
+|:---:|---|
 | * | Representa cualquier número de caracteres, incluido ninguno, pero no una diagonal. |
 | ** | Representa uno o más directorios, pero no el directorio actual (`.`) ni el padre (`..`). |
 | ? | Representa un carácter. |
 | [abc] | Representa cualquier carácter contenido en los corchetes. |
-| [a-z] | Representa cualquier carácter contenido en el intervalo definido por los corchetes. |
+| [a-z] | Representa cualquier carácter contenido en el intervalo definido por los corchetes. Este intervalo es dependiente de la configuración regional. |
 
 ### .gitignore
 
-Este archivo define los archivos que Git ignorará. **Archivos tracked no son afectados por este archivo**. El archivo puede contener comentarios, los cuales inician con `#`. Para especificar archivos a ignorar, colocar un patrón glob por línea. Si se ignora un directorio, todos sus archivos y subdirectorios también son ignorados. Un repositorio puede tener más de un `.gitignore`, siendo sus patrones glob relativos a la ubicación del archivo.
+Este archivo define los archivos que Git ignorará. **Archivos tracked no son afectados**. El archivo puede contener comentarios de una línea, los cuales inician con `#`. Para especificar archivos a ignorar, colocar un patrón glob por línea. Si se ignora un directorio, todos sus archivos y subdirectorios también son ignorados. Un repositorio puede tener más de un `.gitignore`, siendo sus patrones glob relativos a la ubicación del archivo.
 
 Git permite definir un `.gitignore` de impacto global (afecta todos los repositorios del usuario con esta configuración). Primero es necesario crear el archivo manualmente, luego se indica su ubicación en la configuración global.
 
@@ -174,7 +181,7 @@ No commits yet
 nothing to commit (create/copy files and use "git add" to track)
 ```
 
-¿Nota algo extraño? **Git no permite almacenar directorios vacíos**.
+¿Nota algo extraño? **Git no versiona directorios vacíos**.
 
 <p align="center">
  <img src="images/gitkeep.png" width="800px" />
@@ -182,7 +189,7 @@ nothing to commit (create/copy files and use "git add" to track)
 
 > Recuperado de <https://git.wiki.kernel.org/index.php/GitFaq#Can_I_add_empty_directories.3F>
 
- En algunas situaciones podría resultar deseable almacenar en los snapshots de los commits ciertos directorios vacíos. Existen varias recomendaciones respecto a cómo conseguir esto, siendo una de las más populares crear un archivo con nombre `.gitkeep` en el directorio en cuestión, para que ya no esté vacío y pueda ser registrado por Git. En mi opinión, esta convención es muy confusa y no la recomiendo. `.gitkeep` no es un archivo que Git trate de forma especial, como lo serían por ejemplo [`.gitignore`](#ignorar-archivos-(.gitignore)) o `.gitconfig`, por lo que no tiene documentación oficial su uso; el prefijo `git` sugiere que es un archivo de configuración, cuando en realidad no lo es.
+ En algunas situaciones podría resultar deseable almacenar en los commits ciertos directorios vacíos. Existen varias recomendaciones respecto a cómo conseguir esto, siendo una de las más populares crear un archivo con nombre `.gitkeep` en el directorio en cuestión, para que ya no esté vacío y pueda ser registrado por Git. En mi opinión, esta convención es muy confusa y no la recomiendo. `.gitkeep` no es un archivo que Git trate de forma especial, como lo serían por ejemplo [`.gitignore`](#ignorar-archivos-(.gitignore)) o `.gitconfig`, por lo que no tiene documentación oficial su uso; el prefijo `git` sugiere que es un archivo de configuración, cuando en realidad no lo es.
 
  Para registrar directorios vacíos recomiendo utilizar un `readme.md` explicando la razón de la necesidad de hacer tracking de tal carpeta.
 
@@ -204,13 +211,13 @@ Se observa que `git checkout` mueve `HEAD`, pero `git reset` también mueve a la
  <img src="images/reset_2.png" width="550px" />
 </p>
 
-Existen tres modalidades de reseteos, las cuales son elegibles por las banderas `--soft`, `--mixed` y `--hard`. **Observe que `--mixed` es utilizada por defecto si ninguna bandera es seleccionada**. Las tres tienen en común que mueven `HEAD` y la rama apuntada por `HEAD` al commit seleccionado. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working tree. Respecto al working tree, restaurar significa actualizar el mismo respecto al snapshot del commit seleccionado.
+Existen tres modalidades de reseteos, las cuales son elegibles por las banderas `--soft`, `--mixed` y `--hard`. Observe que `--mixed` es utilizada por defecto si ninguna bandera es seleccionada. **Las tres modalidades tienen en común que mueven `HEAD` y la rama apuntada por `HEAD` al commit seleccionado**. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working tree. Respecto al working tree, restaurar significa actualizar el mismo respecto al snapshot del commit seleccionado.
 
 | Modalidad | Objetivo de restauración |
 |---|---|
 | `--soft` | (Ni el staging area ni el working tree son restaurados, sólo `HEAD` y la rama apuntada por `HEAD` son movidos.)<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el staging area** (evidentemente, son visibles también en el working tree).* |
 | `--mixed`<br><br>*modo predeterminado* | Staging area<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el working tree** (unstaged).* |
-|`--hard`| Staging area y working tree<br><br>***Las modificaciones de los commits descendientes del commit seleccionado son ELIMINADAS***. |
+|`--hard`| Staging area y working tree<br><br>⚠️ ***Las modificaciones de los commits descendientes del commit seleccionado son ELIMINADAS***. |
 
 #### Uso del comando
 
@@ -223,13 +230,13 @@ git reset [--soft | --mixed | --hard] <commit>  (2)
 
 #### Recuperación de un `git reset --hard` equivocado
 
-Al realizar un reseteo duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reseteo duro.
+Al realizar un reset duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reset duro.
 
 <p align="center">
  <img src="images/reset_3.png" width="700px" />
 </p>
 
-Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperase de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reseteo duro respecto al mismo. Para hallar el hash, se utiliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Siguiendo el ejemplo, al hallar el hash 3, basta con realizar `git reset --hard 3`.
+Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperase de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reset duro respecto al mismo. Para hallar el hash, se utiliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Para el ejemplo presentado la solución es dada por `git reset --hard 3`.
 
 ### Revert
 
@@ -241,9 +248,9 @@ Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por
  <img src="images/revert_1.png" width="600px" />
 </p>
 
-#### `git revert` vs `git reset`
+#### ¿Cuándo utilizar `git revert` sobre `git reset`?
 
-Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás. Revert siempre es seguro, pues no altera la la historia del repositorio, haciendo imposible romper la historia un repo remoto mediante revert. Por otra lado, reset sí puede romper la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
+Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás a partir de la punta de una rama. Revert siempre es seguro, pues no altera la la historia del repositorio, haciendo imposible sobrescribir la historia un repo remoto mediante revert. Por otra lado, reset sí puede sobrescribir la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
 
 <p align="center">
  <img src="images/revert_2.png" width="400px" />
@@ -251,7 +258,7 @@ Revert permite deshacer los cambios introducidos por commits selectos (incluso c
 
 #### Uso del comando
 
-Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis completa refiérase a <https://git-scm.com/docs/git-revert>. Sin el uso de la bandera `-n`, este comando crea un nuevo commit con la corrección (sin las modificaciones incorporadas en los commits seleccionados), abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit. Utilizar `--no-edit` para no abrir el editor de texto y usar el mensaje predeterminado. Al utilizar la bandera `-n`, en lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
+Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis completa refiérase a <https://git-scm.com/docs/git-revert>. Crea un nuevo commit con la corrección, abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit. Utilizar `--no-edit` para no abrir el editor de texto y usar el mensaje predeterminado. Al utilizar la bandera `-n`, en lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
 
 ```bnf
 git revert [--no-edit] [-n] <commit>
@@ -260,39 +267,6 @@ git revert [--no-edit] [-n] <commit>
 Para demostrar distintas correcciones utilizando este comando, considere este repositorio.
 
 ```shell
-$ git init
-Initialized empty Git repository in C:/Users/hjcer/temp/.git/
-
-$ touch file_1.txt
-
-$ git add file_1.txt
-
-$ git commit -m "Create file_1"
-[master (root-commit) 97017e3] Add file_1
- 1 file changed, 0 insertions(+), 0 deletions(-)
- create mode 100644 file_1.txt
-
-$ echo "First line of file_1" > file_1.txt
-
-$ git commit -a -m "Add content to file_1"
-[master 9bb6e59] Add content to file_1
- 1 file changed, 1 insertion(+)
-
-$ touch file_2.txt
-
-$ git add file_2.txt
-
-$ git commit -m "Create file_2"
-[master e935221] Add file_2
- 1 file changed, 0 insertions(+), 0 deletions(-)
- create mode 100644 file_2.txt
-
-$ echo "First line of file_2" > file_2.txt
-
-$ git commit -a -m "Add content to file_2"
-[master 04a0106] Add content to file_2
- 1 file changed, 1 insertion(+)
-
 $ git log --oneline
 dc01f42 (HEAD -> master) Add content to file_2
 386a54a Create file_2
@@ -317,7 +291,7 @@ e3646e8 Add content to file_1
 98a0ead Create file_1
 ```
 
-Este comando abre el editor de texto para pedir el mensaje del commit de corrección. (Si prefiere evitar el editor de texto y aceptar el menaje predeterminado, el comando sería `git revert --no-edit HEAD`.) Tras salir del editor, puede verificar que un nuevo commit ha sido creado. Esta corrección pudo haberse realizado mediante un reset duro, pero al emplear un revert se evita reescribir la historia, lo cual casi nunca no es recomendable hacer en una rama pública (los cambios han pasado a un repo remoto por `git push`).
+Este comando abre el editor de texto para pedir el mensaje del commit de corrección. (Si prefiere evitar el editor de texto y aceptar el mensaje predeterminado, use `git revert --no-edit HEAD`.) Tras salir del editor, puede verificar que un nuevo commit ha sido creado. Esta corrección pudo haberse realizado mediante un reset duro, pero al emplear un revert se evita reescribir la historia, lo cual casi nunca no es recomendable hacer en los commits de una rama pública (rama publicada a un repo remoto).
 
 ---
 
