@@ -62,6 +62,8 @@ Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede
 | MacOS                                  | Instalador: <https://git-scm.com/download/mac><br>Mavericks (10.9) o superior: `git --version` |
 | Windows                                | Instalador: <https://git-scm.com/download/win><br>Chocolatey: `choco install git` |
 
+🔍 **Tip.** En Windows, tras la instalación puede actualizar su versión de Git con el comando `git update-git-for-windows`. Para revisar su versión actual el comando es `git version`. Estos comandos los ingresa en el Git Bash.
+
 ## Configuración
 
 > Resumen de <https://git-scm.com/book/en/v1/Getting-Started-First-Time-Git-Setup>
