@@ -211,7 +211,7 @@ git rm --cached <archivo>
 
 > A branch in Git is simply a lightweight movable pointer to a commit object.
 >
-> Resumen de <https://git-scm.com/book/en/v1/Git-Branching-What-a-Branch-Is>
+> Resumen de <https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell>
 
 Para poder tener un sólido entendimiento de las ramas de Git, es necesario explorar con más detalle el funcionamiento de bajo nivel de Git en cuanto a cómo almacena las distintas versiones de los archivos. Entendido esto, el concepto de rama es tan sólo una extensión del sistema. Esta sección acaso sea una de las más difíciles de entender, mas su compresión lo vale en absoluto.
 
@@ -235,7 +235,7 @@ Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo 
 |--------|---------|
 |blob    | Representa los contenidos de un archivo que no es directorio. |
 |tree    | Afín a un directorio. Almacena los nombres de los archivos de un directorio, al igual que un apuntador al blob o tree correspondiente que guarda el contenido de los archivos. |
-|commit  | Apunta a un tree que representa el staging area en un momento determinado; almacena el nombre del autor, el commiter y el mensaje del commit. |
+|commit  | Apunta a un tree que representa el staging area al momento de realizar el commit; almacena el nombre del autor, commiter, el mensaje del commit y sus commits padres. |
 
 **Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores con puntos suspensivos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referirse a ellos. A continuación, se presenta un término más del vocabulario de Git.
 
