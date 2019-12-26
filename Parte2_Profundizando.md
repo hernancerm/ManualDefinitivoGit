@@ -412,7 +412,7 @@ Más que una regla, presento esto como una fuerte recomendación, pues es posibl
 
 Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
 
-> **Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (`git commit --amend` ó `git rebase`) o eliminación ([`git reset`](#reset) ó `git rebase`). Agregar commits secuenciales (`git commit`) no reescribe la historia.**
+> **Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (`git commit --amend` ó `git rebase`) o eliminación ([`git reset`](#reset) ó `git rebase`). Agregar commits secuenciales (`git commit`) no reescribe la historia, pues no altera el pasado.**
 
 Veamos un ejemplo sencillo utilizando `git commit --amend`.
 
@@ -434,7 +434,8 @@ $ git commit --amend --no-edit
  Date: Sun Dec 22 12:20:44 2019 -0600
 
 $ git log --oneline -a --graph
- # El hash ha cambiado de 1c0e104 a 5b9a0ca, no se trata del mismo objeto commit.
+ # El hash ha cambiado de 1c0e104 a 5b9a0ca,
+ # no se trata del mismo objeto commit.
 *   5b9a0ca (HEAD -> master, origin/master) Merge branch 'feature'
 |\
 | * 1c27aea (feature) Add more content to f1
@@ -459,9 +460,10 @@ From https://github.com/HerCerM/RewritingHistory
  + 1c0e104...5b9a0ca master     -> origin/master  (forced update)
 
 $ git log --oneline -a --graph
-*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature' # Después del amend
-|\
-| | *   1c0e104 (HEAD -> master) Merge branch 'feature' # Antes del amend
+    # Después del amend
+*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature'
+|\      # Antes del amend
+| | *   1c0e104 (HEAD -> master) Merge branch 'feature'
 | | |\
 | |/ /
 |/| /
