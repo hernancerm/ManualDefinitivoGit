@@ -235,6 +235,60 @@ git reset [--] <archivos>                       (1)
 git reset [--soft | --mixed | --hard] <commit>  (2)
 ```
 
+Para demostrar el uso del comando considere el siguiente repositorio.
+
+```shell
+$ git log --oneline
+ca4ae71 (HEAD -> master) Add a body to foo.txt
+edea02a Add title to foo.txt
+d96dc66 Add file foo.txt
+35554aa Create README.md
+```
+
+---
+
+**Ejemplo 1. Mover últimos commits de `master` a nueva rama `feature/foo`**
+
+```shell
+$ git branch feature/foo
+
+$ git reset --hard HEAD~3
+HEAD is now at 35554aa Create README.md
+```
+
+Ahora sólo el primer commit (crear un `README.md`) pertenece a `master`. Porque una imagen vale mil palabras, a continuación se explican los comandos con diagramas.
+
+<p align="center">
+  <img src="images/reset_4.png" width="450px">
+</p>
+
+---
+
+---
+
+**Ejemplo 1.1. Compactar commits de `feature/foo` en tan sólo uno**
+
+Veamos que los commits de `feature/foo` cumplen un sólo propósito: crear `foo.txt` con el contenido deseado. Digamos que en este proyecto tiene más sentido tener un sólo commit para contener estos cambios.
+
+```shell
+$ git checkout feature/foo
+Switched to branch 'feature/foo'
+
+$ git reset --soft HEAD~2
+
+$ git commit --amend -m "Create foo.txt"
+[feature/foo 3cbc27e] Create foo.txt
+ Date: Thu Dec 26 09:44:59 2019 -0600
+ 1 file changed, 3 insertions(+)
+ create mode 100644 foo.txt
+```
+
+<p align="center">
+  <img src="images/reset_5.png" width="450px">
+</p>
+
+---
+
 #### Recuperación de un `git reset --hard` equivocado
 
 Al realizar un reset duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reset duro.
