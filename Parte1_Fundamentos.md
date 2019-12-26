@@ -175,7 +175,7 @@ Recorre el árbol de commits desde la posición de `HEAD`. El comando sin bander
 Otras banderas menos utilizadas son `-<cantidad>`, que muestra sólo `<cantidad>` número de commits. Por ejemplo `-1` sólo muestra un commit. `--first-parent` recorre el árbol de commits sólo pasando por el primer padre. Esto es muy útil al revisar la historia de `master`, donde no se suele desear ver commits de ramas fusionadas. El argumento opcional `<commit>` permite especificar una posición distinta a `HEAD` para iniciar el recorrido del árbol. Este argumento toma cualquier referencia resoluble a un commit, véase [referencias absolutas](#referencias-absolutas) y [referencias relativas](#referencias-relativas).
 
 ```bnf
-git log [-a] [--oneline] [-<cantidad>] [--first-parent] [<commit>]
+git log [--all] [--oneline] [-<cantidad>] [--first-parent] [<commit>]
 ```
 
 Lista cronológica inversa (se muestra primero lo más reciente) de los objetos a los que `HEAD` ha apuntado. Este comando imprime un log de las referencias. A diferencia del comando log, reflog puede mostrar commits que no son accesibles mediante una rama, pues muestra un historial en lugar de recorrer el árbol.
@@ -507,7 +507,7 @@ Switched to branch 'master'
 Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama.
 
 ```shell
-$ git log -a --oneline
+$ git log --all --oneline
 20d1091 (HEAD -> master) Merge branch 'feature'
 1c27aea (feature) Add more content to f1
 494804a Create f3
