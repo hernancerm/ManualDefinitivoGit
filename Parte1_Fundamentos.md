@@ -66,7 +66,7 @@ Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede
 
 ## Configuración
 
-> Resumen de <https://git-scm.com/book/en/v1/Getting-Started-First-Time-Git-Setup>
+> Resumen de <https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup>
 
 Git trae una herramienta llamada `git config` que permite cambiar variables de configuración acerca de cómo Git luce y funciona. El email y nombre del usuario son necesarios configurar como primer paso al empezar a usar Git y sólo es requerido hacerlo una vez, mas en cualquier momento los valores pueden ser modificados si así se desea. Existen muchas más variables de configuración que puede revisar aquí: <https://git-scm.com/docs/git-config>.
 
@@ -106,8 +106,6 @@ git config --list
 ## Ambiente de desarrollo
 
 > Now, pay attention. This is the main thing to remember about Git if you want the rest of your learning process to go smoothly.
->
-> Resumen de <https://git-scm.com/book/en/v1/Getting-Started-Git-Basics>
 
 Antes de abordar los comandos de Git, es muy importante conocer los fundamentos de Git. Puedo corroborar esto haciendo alusión a mis primeras experiencia con la herramienta, durante las cuales el desconocimiento de los fundamentos causaron más frustración de la necesaria. Al trabajar con Git es muy importante conocer el ambiente de desarrollo, el cual es componente central del flujo de trabajo. Los archivos son apreciados por Git en tres áreas: el working tree, staging area y local repository.
 
@@ -211,7 +209,7 @@ git rm --cached <archivo>
 
 > A branch in Git is simply a lightweight movable pointer to a commit object.
 >
-> Resumen de <https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell>
+> Más información en <https://git-scm.com/book/en/v2/Git-Internals-Git-Objects>
 
 Para poder tener un sólido entendimiento de las ramas de Git, es necesario explorar con más detalle el funcionamiento de bajo nivel de Git en cuanto a cómo almacena las distintas versiones de los archivos. Entendido esto, el concepto de rama es tan sólo una extensión del sistema. Esta sección acaso sea una de las más difíciles de entender, mas su compresión lo vale en absoluto.
 
@@ -297,7 +295,7 @@ git checkout [-b] <rama>
 
 ## Fusión de ramas
 
-> Resumen de <https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging>
+> Resumen de <https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging>
 
 Si las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto no es discutido en esta parte del manual.
 
