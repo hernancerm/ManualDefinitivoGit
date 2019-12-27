@@ -131,6 +131,8 @@ En particular, un archivo se considera tracked si existe una versión registrada
 
 ## Comandos básicos para la gestión de un repositorio
 
+---
+
 > Para algunos de estos comandos se presentan también banderas u argumentos que me han resultado útiles, mas cabe mencionar que existen muchas más opciones. Git tiene integrado un sistema de ayuda; para cada comando se puede solicitar su documentación mediante las siguientes dos opciones de sintaxis.
 >
 >```bnf
@@ -138,7 +140,21 @@ En particular, un archivo se considera tracked si existe una versión registrada
 > git help <comando>    (2)
 >```
 >
-> **La sintaxis mostrada a lo largo del manual es expresada en [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
+> **La sintaxis mostrada a lo largo del manual es expresada en [EBNF](#extended-backus-naur-form-(ebnf)) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
+
+### Extended Backus-Naur Form (EBNF)
+
+[EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) es notación utilizada para describir la sintaxis de un lenguaje. En este manual es utilizada para describir las banderas y estructura de los comandos.
+
+| Símbolo | Explicación |
+|:---:|---|
+| `<variable>` | Cualquier palabra encerrada en los símbolos de menor qué y mayor qué (`<>`) se coloca como *placeholder* (secuencia de caracteres para ser sustituida) de algún tipo de valor. En este manual en ocasiones es el nombre de una rama, o el de un archivo, etc. |
+| `constante` | Las palabras que no estén delimitadas por alguna marca son necesarias colocarlas tal como están redactadas. |
+| `[]` | Las palabras encerradas en corchetes (`[]`) pueden omitirse. |
+| `|` | La barra vertical (`|`) indica opciones exclusivas dentro de corchetes o paréntesis. |
+| `()` | El paréntesis (`()`) indica un grupo. Esto es útil al emplear la barra vertical dentro. |
+
+---
 
 Crear un repositorio local.
 
