@@ -402,6 +402,278 @@ Aquí se hace énfasis en la falta de secuencia de los commits pues esto no ser�
 
 ---
 
+### Rebase
+
+Esta sección explora el muy poderoso comando `git rebase`, cuya función es clonar una secuencia de commits y aplicarlos sobre una base distinta. Por clonar me refiero a copiar los snapshots a los que apuntan, al igual que el resto de sus datos (commiter, fecha y mensaje), pero cambiar la base (commit padre) de la secuencia seleccionada.
+
+El comando tiene un modo interactivo que permite realizar correcciones que no serían posibles con `git reset` ni con `git revert`, como modificar el mensaje o snapshot de un commit muy atrás en la historia, reordenar commits, o eliminar commits intermedios.
+
+⚠️ Al igual que [`git reset`](#reset), `git rebase` [reescribe la historia](#reescribiendo-la-historia), pero al hacer esto de forma más compleja que sólo retrocediendo `HEAD` y una rama puede resultar complicado recuperarse aún utilizando `git reflog`. **Tener cuidado de no reescribir historia pública.**
+
+```bnf
+git rebase [(-i | --interactive) [--root]] [<nuevo-padre> [<rama>]]
+```
+
+#### Rebase interactivo
+
+Para ilustrar este modo, pensemos en la siguiente situación. Alguien acaba de iniciar un proyecto de documentación, teniendo como primer commit la creación del `README.md`. Después de unos cuantos commits observa que hay una falta de ortografía en el `README.md`, pero en lugar de crear un nuevo commit para resolverlo desea modificar el primer commit.
+
+```bash
+$ git log --oneline
+* fd0f171 (HEAD -> part-1) Add notes about basic branch commands
+* 3dba01b Add notes about what a branch is
+* 8161b46 Add notes about introductory concepts and commands
+* 9daa971 Add preliminary notes before diving in the development environment
+* 79944e8 (master) Start of version control
+
+$ cat README.md
+#...
+
+# Se quiere cambiar coneceptos -> conceptos modificando el primer commit
+El énfasis respecto a los coneceptos # <- error
+por sobre los comandos es inspirado por [git_training](https://github.com
+/UnseenWizzard/git_training).
+#...
+```
+
+<p align="center">
+ <img src="images/rebase_1.png" width="450px" />
+</p>
+
+🔍 El proceso de rebase interactivo (y no interactivo) **sí crea nuevos commits**, con los cuales sustituye los antiguos. Mas como es un proceso de sustitución y no aumenta el número de commits del árbol, parece que no agrega. Sin embargo los hashes cambian, vea [reescribiendo la historia](#reescribiendo-la-historia) para conocer la importancia de esto.
+
+Pues se desea modificar el primer commit, se ejecuta el rebase con la bandera `--root`. Apuntando `HEAD` a `part-1`, se ejecuta `git rebase -i --root` y el editor de texto configurado en `core.editor` muestra lo siguiente.
+
+```bash
+pick 79944e8 Start of version control
+pick 9daa971 Add preliminary notes before diving into the development environment
+pick 8161b46 Add notes about introductory concepts and commands
+pick 3dba01b Add notes about what a branch is
+pick fd0f171 Add notes about basic branch commands
+
+# Rebase fd0f171 onto 3dba01b (5 commands)
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup <commit> = like "squash", but discard this commit's log message
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+# .       create a merge commit using the original merge commit's
+# .       message (or the oneline, if no original merge commit was
+# .       specified). Use -c <commit> to reword the commit message.
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+Todas las líneas empezando con `#` son comentarios explicando el proceso de rebase interactivo. Como puede leer, **si elimina una línea que representa a un commit éste será eliminado del árbol de commits**. También puede cambiar el orden de los commits y más interesante aún, puede utilizar las opciones que se muestran en los comentarios. Se desea editar el primer commit, así que se hace la siguiente sustitución.
+
+```bash
+# ANTES
+pick 79944e8 Start of version control
+pick 9daa971 Add preliminary notes before diving into the development environment
+pick 8161b46 Add notes about introductory concepts and commands
+pick 3dba01b Add notes about what a branch is
+pick fd0f171 Add notes about basic branch commands
+#...
+
+#DESPUÉS
+edit 79944e8 Start of version control # pick -> edit
+pick 9daa971 Add preliminary notes before diving into the development environment
+pick 8161b46 Add notes about introductory concepts and commands
+pick 3dba01b Add notes about what a branch is
+pick fd0f171 Add notes about basic branch commands
+#...
+```
+
+Luego se guarda el cambio y se cierra el editor de texto. Entonces se muestra el commit en el que se ha detenido el proceso y las instrucciones para la edición.
+
+```shell
+$ git rebase -i --root
+Stopped at 79944e8...  Start of version control
+You can amend the commit now, with
+
+  git commit --amend
+
+Once you are satisfied with your changes, run
+
+  git rebase --continue
+
+$
+```
+
+Para realizar la corrección se modifica `README.md` y se ejecuta un amend. Luego se continúa el rebase.
+
+```bash
+# Editar README.md
+
+$ git commit -a --amend --no-edit
+[detached HEAD 193bf98] Start of version control
+ Date: Wed Dec 18 11:54:42 2019 -0600
+ 3 files changed, 10 insertions(+)
+ create mode 100644 Parte1_Fundamentos.md
+ create mode 100644 Parte2_Profundizando.md
+ create mode 100644 README.md
+
+$ git rebase --continue
+Successfully rebased and updated refs/heads/part-1.
+```
+
+Si tras el rebase visualiza el log de commits verá algo interesante y [potencialmente peligroso](#reescribiendo-la-historia): **los hashes de los commits han cambiado, es decir, no se trata de los mismo commits**. En esta ocasión tiene una consecuencia peculiar: `master` parece haber desaparecido.
+
+```bash
+# Antes del rebase
+$ git log --oneline
+* fd0f171 (HEAD -> part-1) Add notes about basic branch commands
+* 3dba01b Add notes about what a branch is
+* 8161b46 Add notes about introductory concepts and commands
+* 9daa971 Add preliminary notes before diving into the development environment
+* 79944e8 (master) Start of version control
+
+# Después del rebase
+$ git log --oneline
+9c59bf2 (HEAD -> part-1) Add notes about basic branch commands
+9cf8acc Add notes about what a branch is
+752ba23 Add notes about introductory concepts and commands
+06f3efe Add preliminary notes before diving into the development environment
+193bf98 Start of version control # master sigue apuntando a 79944e8
+```
+
+Tras el rebase existen dos árboles distintos de commits. El original en el que aún existe `master` y el nuevo.
+
+<p align="center">
+ <img src="images/rebase_2.png" width="450px" />
+</p>
+
+Para terminar la corrección se realiza lo siguiente.
+
+```shell
+$ git checkout master
+Switched to branch 'master'
+
+$ git reset --hard 193bf98
+HEAD is now at 193bf98 Start of version control
+```
+
+<p align="center">
+ <img src="images/rebase_3.png" width="450px" />
+</p>
+
+Ahora pensemos que el desarrollador desea compactar los últimos dos commits (que corresponden a notas acerca de ramas) en uno solo. Como se muestra en la sección dedicada a [`git reset`](#reset), esto puede lograrse utilizando tal comando, pero veamos cómo se lograría con un rebase interactivo.
+
+Se desea editar los últimos dos commits de `part-1`. En la rama `part-1`, se ejecuta `git rebase -i HEAD~2`, pues el padre de los commits que se desean modificar (`HEAD` y `HEAD~`) es `HEAD~2`. Al aparecer el editor de texto se cambia `pick` del commit más reciente por `squash`.
+
+```bash
+pick 9cf8acc Add notes about what a branch is
+squash 9c59bf2 Add notes about basic branch commands
+
+# Rebase 752ba23..9c59bf2 onto 752ba23 (2 commands)
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup <commit> = like "squash", but discard this commit's log message
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+# .       create a merge commit using the original merge commit's
+# .       message (or the oneline, if no original merge commit was
+# .       specified). Use -c <commit> to reword the commit message.
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+Tras guardar y cerrar el editor, otro editor es abierto mostrando lo siguiente.
+
+```bash
+ # This is a combination of 2 commits.
+ # This is the 1st commit message:
+
+ Add notes about what a branch is
+
+ # This is the commit message #2:
+
+ Add notes about basic branch commands
+
+ # Please enter the commit message for your changes. Lines starting
+ # with '#' will be ignored, and an empty message aborts the commit.
+ #
+ # Date:      Wed Dec 18 13:29:04 2019 -0600
+ #
+ # interactive rebase in progress; onto 752ba23
+ # Last commands done (2 commands done):
+ #    pick 9cf8acc Add notes about what a branch is
+ #    squash 9c59bf2 Add notes about basic branch commands
+ # No commands remaining.
+ # You are currently rebasing branch 'part-1' on '752ba23'.
+ #
+ # Changes to be committed:
+ #       modified:   Parte1_Fundamentos.md
+ #       new file:   images/branches_1.png
+ #       new file:   images/branches_2.png
+ #       new file:   images/branches_3.png
+ #       new file:   images/branches_4.png
+ #       new file:   images/branches_5.png
+ #
+```
+
+El mensaje del nuevo commit es el obtenido de las líneas no comentadas (que no inician con `#`). Nuevamente, se edita, guarda y cierra el editor. En la terminal esto ocurrió.
+
+```shell
+$ git checkout part-1
+Switched to branch 'part-1'
+
+$ git rebase -i HEAD~2
+[detached HEAD 4d10372] Add branch notes
+ Date: Wed Dec 18 13:29:04 2019 -0600
+ 6 files changed, 91 insertions(+)
+ create mode 100644 images/branches_1.png
+ create mode 100644 images/branches_2.png
+ create mode 100644 images/branches_3.png
+ create mode 100644 images/branches_4.png
+ create mode 100644 images/branches_5.png
+Successfully rebased and updated refs/heads/part-1.
+```
+
+Ahora el log de commits es el deseado.
+
+```shell
+$ git log --oneline
+4d10372 (HEAD -> part-1) Add branch notes
+752ba23 Add notes about introductory concepts and commands
+06f3efe Add preliminary notes before diving into the development environment
+193bf98 (master) Start of version control
+```
+
+El árbol de commits final, incluyendo una visualización de los commits inaccesibles, es el siguiente.
+
+<p align="center">
+ <img src="images/rebase_4.png" width="500px" />
+</p>
+
 ## Reescribiendo la historia
 
 **Al colaborar en un repositorio visto y utilizado por otras personas, existe una regla de oro: no reescribir la historia pública.**
