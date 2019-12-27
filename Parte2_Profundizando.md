@@ -410,8 +410,11 @@ El comando tiene un modo interactivo que permite realizar correcciones que no se
 
 ⚠️ Al igual que [`git reset`](#reset), `git rebase` [reescribe la historia](#reescribiendo-la-historia), pero al hacer esto de forma más compleja que sólo retrocediendo `HEAD` y una rama puede resultar complicado recuperarse aún utilizando `git reflog`. **Tener cuidado de no reescribir historia pública.**
 
+La primera sintaxis (1) es para el rebase interactivo; la segunda (2), para el no interactivo. En los siguientes dos apartados se exploran ambos modos, respectivamente. Ambas sintaxis son simplificadas de acuerdo a lo mostrado en los ejemplos, para la sintaxis completa vea <https://git-scm.com/docs/git-rebase>.
+
 ```bnf
-git rebase [(-i | --interactive) [--root]] [<nuevo-padre> [<rama>]]
+git rebase [-i | --interactive] (<padre> | --root)  (1)
+git rebase <nuevo-padre> [<rama>]                   (2)
 ```
 
 #### Rebase interactivo
@@ -668,11 +671,92 @@ $ git log --oneline
 193bf98 (master) Start of version control
 ```
 
-El árbol de commits final, incluyendo una visualización de los commits inaccesibles, es el siguiente.
+El árbol de commits final, incluyendo una visualización de los commits inaccesibles mediante alguna rama (pero accesibles por `git reflog`), es el siguiente.
 
 <p align="center">
  <img src="images/rebase_4.png" width="500px" />
 </p>
+
+#### Rebase no interactivo
+
+Algunos workflows (flujos de trabajo) con Git utilizan `git rebase` para mantener, en su mayoría, una historia lineal (véase por ejemplo <https://dev.to/shosta/the-git-rebase-workflow-2g49>). En el árbol de *Antes* vemos que un merge de `master` con cualquier otra rama resultaría en Git utilizando la estrategia recursiva; por otro lado, un merge de `master` con cualquier otra rama en *Después* utilizaría la estrategia fast-forward, manteniendo la historia lineal. Veamos cómo ir de *Antes* a *Después*.
+
+<p align="center">
+ <img src="images/rebase_5.png" width="650px" />
+</p>
+
+La tarea de reordenar el árbol se realiza con un rebase no interactivo. Antes de resolver el ejemplo, veamos con una imagen cómo funciona el comando `git rebase <nuevo-padre> [<rama>]`.
+
+<p align="center">
+ <img src="images/rebase_6.png" width="850px" />
+</p>
+
+Ahora bien, para resolver el ejemplo, el primer paso es ejecutar un rebase de `feature` respecto a `master`. Para identificar qué commits de `feature` serán basados en `master` puede usar `git log <upstream>..<rama>`, que muestra los commits en `<rama>` que no son accesibles por `<upstream>`. En este caso sería `git log --oneline master..feature`.
+
+```shell
+$ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: Create foo.txt
+Applying: Add data to foo.txt
+Applying: Expand foo.txt
+```
+
+<p align="center">
+ <img src="images/rebase_7.png" width="550px" />
+</p>
+
+De amarillo vemos los commits nuevos resultantes del rebase. El rebase de la rama `feature` ha sido logrado sin más dificultad, pero vemos algo interesante en la rama `twist`: ahora tiene cinco commits propios en lugar de tres. Veamos qué ocurre al realizar el siguiente paso: un rebase de `twist` respecto a `feature`.
+
+```shell
+$ git rebase feature twist
+First, rewinding head to replay your work on top of it...
+Applying: Add more content to foo.txt
+Using index info to reconstruct a base tree...
+M       foo.txt
+Falling back to patching base and 3-way merge...
+Auto-merging foo.txt
+CONFLICT (content): Merge conflict in foo.txt
+error: Failed to merge in the changes.
+hint: Use 'git am --show-current-patch' to see the failed patch
+Patch failed at 0001 Add more content to foo.txt
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+```
+
+En todo rebase existe el riesgo de tener conflictos, pero su proceso de solución es igual al de un conflicto de merge; basta con retirar los marcadores de conflicto, añadir los cambios al staging area y ejecutar `git rebase --continue`.
+
+```shell
+$ git add foo.txt
+
+$ git rebase --continue
+Applying: Add more content to foo.txt
+Applying: Super Yikes to foo.txt
+Using index info to reconstruct a base tree...
+M       foo.txt
+Falling back to patching base and 3-way merge...
+Auto-merging foo.txt
+Applying: Another line, another commit
+Using index info to reconstruct a base tree...
+M       foo.txt
+Falling back to patching base and 3-way merge...
+Auto-merging foo.txt
+```
+
+Los nuevos commits introducidos por el segundo rebase son mostrados en naranja. ¿Nota algo inesperado? Al realizar el rebase de `twist` a `master`, la rama `twist` tenía cinco commits sólo accesibles a través de ella, pero después del rebase sólo existen tres. De alguna forma, después del rebase los commits duplicados fueron omitidos, ¡dejando el árbol de commits en el estado deseado!
+
+<p align="center">
+ <img src="images/rebase_8.png" width="750px" />
+</p>
+
+La respuesta a la muy conveniente omisión de commits duplicados puede encontrarse en la documentación oficial.
+
+<p align="center">
+ <img src="images/rebase_9.png" width="750px" />
+</p>
+
+> Recuperado de <https://git-scm.com/docs/git-rebase>
 
 ## Reescribiendo la historia
 
