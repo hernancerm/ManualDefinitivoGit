@@ -15,6 +15,9 @@
   - [Fast-forward merge](#fast-forward-merge)
   - [Recursive merge](#recursive-merge)
   - [Comandos básicos para merges](#comandos-básicos-para-merges)
+- [Navegando entre commits](#navegando-entre-commits)
+  - [Referencias absolutas](#referencias-absolutas)
+  - [Referencias relativas](#referencias-relativas)
 - [Conflictos al realizar un merge](#conflictos-al-realizar-un-merge)
 - [Repositorios remotos](#repositorios-remotos)
   - [Acceso a repositorios remotos](#acceso-a-repositorios-remotos)
@@ -108,7 +111,9 @@ Antes de abordar los comandos de Git, es muy importante conocer los fundamentos 
 
 ---
 
-![Ambiente de desarrollo](/images/dev_env.png "Ambiente de desarrollo")
+<p align="center">
+  <img src="images/dev_env.png" width="500px" />
+</p>
 
 - El **local repository**, o simplemente repositorio, almacena metadatos y los estados de los archivos, actuando efectivamente como una base de datos para la gestión del proyecto. El repositorio también se conoce como "directorio de Git", pues efectivamente se almacenan estos datos en un directorio; usualmente oculto, con el nombre `.git`.
 - El **working tree** abarca todos los archivos contenidos en el directorio que contiene a `.git`. Los subdirectorios también son considerados. Representa todos los posibles archivos que Git puede versionar.
@@ -186,7 +191,13 @@ Un error usual es olvidar añadir archivos a un commit o redactar mal el mensaje
 git commit [--amend [--no-edit]] [-a] [-m "<mensaje>"]
 ```
 
-Retira archivos del repositorio, pero los mantiene en el working tree. Esto es muy útil cuando se desea ignorar (.gitignore) un archivo o directorio que tiene el estado tracked.
+Restaurar los archivos especificados por `<archivos>` (para seleccionar varios archivos, separar con un espacio los nombres) a la versión almacenada en el snapshot apuntado por el commit referido por `HEAD`. En otras palabras, deshace los cambios no committed de archivos selectos. En el extraño caso que el nombre de un archivo inicie con un guión alto (`-`), añada dos guiones altos antes (`--`) para que el shell lo trate como un archivo en lugar de una bandera. Ejemplo: `git checkout -- -foo.txt`.
+
+```bnf
+git checkout [--] <archivos>
+```
+
+Retira archivos del repositorio, pero los mantiene en el working tree. Esto es muy útil cuando se desea ignorar (`.gitignore`) un archivo o directorio que tiene el estado tracked. Véase [Parte 2. Profundizando](Parte2_Profundizando.md).
 
 ```bnf
 git rm --cached <archivo>
@@ -204,7 +215,9 @@ Para poder tener un sólido entendimiento de las ramas de Git, es necesario expl
 
 ### Objetos de Git
 
-![Commit desglosado](/images/branches_1.png)
+<p align="center">
+  <img src="images/branches_1.png" width="600px" />
+</p>
 
 A lo largo de esta sección se denota a la carpeta `.git/objects` por el nombre "directorio objects". Recuérdese que `.git` está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
 
@@ -226,7 +239,9 @@ Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo 
 
 Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía unidireccional de objetos commit, tree y blob, en la que cada commit apunta a su padre. Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots (trees que representan el staging area al momento del commit) correspondientes.
 
-![Commits y sus snapshots](/images/branches_2.png)
+<p align="center">
+  <img src="images/branches_2.png" width="550px" />
+</p>
 
 Entendido este sistema, podemos ahora comprender con formalidad qué es una rama en Git.
 
@@ -236,15 +251,21 @@ Al igual que todas las referencias en Git, esta referencia es un hash SHA-1 que 
 
 Por defecto, Git proporciona la rama `master` como inicial. Completando la figura anterior y omitiendo el contenido de los commits por brevedad, tenemos que la imagen completa de los objetos es la mostrada próximamente.
 
-![Commit desglosado](/images/branches_3.png)
+<p align="center">
+  <img src="images/branches_3.png" width="500px" />
+</p>
 
 **Al crear una nueva rama, la nueva rama apunta al commit que es apuntado durante su creación**. Luego, en el ejemplo, si el desarrollador crea una rama `buf-fix`, ésta apunta al commit identificado por el hash SHA-1 iniciando con f30ab. Si el desarrollador se cambia a esta rama, arregla el bug, añade los archivos relevantes al staging area y realiza un commit, podemos notar algo muy interesante.
 
-![Commit desglosado con rama buf-fix](/images/branches_4.png)
+<p align="center">
+  <img src="images/branches_4.png" width="500px" />
+</p>
 
 Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tras ser realizado, mas el commit al que master apunta no fue actualizado. Ahora cabe preguntar, ¿cómo Git sabe en qué rama un usuario está? La respuesta yace en otro apuntador, también de la forma de un hash SHA-1 al que Git denomina `HEAD` (almacenado en `.git/HEAD`). Completando la figura anterior, puede verse que Git conoce que el usuario está trabajando en la rama `buf-fix` pues `HEAD` apunta a `buf-fix`, que a su vez apunta al último commit realizado por el usuario.
 
-![Commit desglosado con rama buf-fix y HEAD](/images/branches_5.png)
+<p align="center">
+  <img src="images/branches_5.png" width="500px" />
+</p>
 
 ---
 
@@ -264,10 +285,10 @@ Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la 
 git branch <rama>
 ```
 
-Cambiar a una rama existente. Utilizar `-b` para crear la rama (si no existe ya) y cambiarse a ella. Este comando también permite moverse a commits específicos.
+Cambiar a una rama existente. Utilizar `-b` para crear la rama (si no existe ya) y cambiarse a ella.
 
 ```bnf
-git checkout [-b] (<rama> | <commit>)
+git checkout [-b] <rama>
 ```
 
 ## Fusión de ramas
@@ -278,11 +299,15 @@ Si las ramas son el mecanismo principal por el cual se organiza la colaboración
 
 Imagínese que un desarrollador, llamado Juan, trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres commits.
 
-![Estado inicial del árbol de commits](/images/merge_1.png)
+<p align="center">
+  <img src="images/merge_1.png" width="210px" />
+</p>
 
 Ahora Juan decide dedicarse a implementar una característica nueva, para lo cual crea la rama `feature`, se cambia a ésta y comienza a trabajar. Realiza un commit.
 
-![Nuevo commit en rama feature](/images/merge_2.png)
+<p align="center">
+  <img src="images/merge_2.png" width="300px" />
+</p>
 
 En este momento Juan es informado que existe un bug en `master` cuyo patch debe ser priorizado sobre la característica que está implementando. Para realizar la corrección del bug, Juan crea la nueva rama `bug-fix` a partir de `master`. Es decir, el desarrollador requirió ejecutar los siguientes comandos justo después de haber realizado su commit:
 
@@ -294,7 +319,9 @@ $ git checkout bug-fix
 
 En esta rama el desarrollador soluciona el bug con un único commit. Nótese que el progreso que Juan llevaba en la rama `feature` no existe en la rama `master`, pues se encuentra atrás en la historia. **Generalizando, al cambiar de rama, el working tree *suele mostrar* sólo los contenidos del snapshot del commit de la rama**. Ahora la relación de los commits luce como lo indica la figura siguiente.
 
-![Nuevo commit en rama bug-fix](/images/merge_3.png)
+<p align="center">
+  <img src="images/merge_3.png" width="300px" />
+</p>
 
 ### Fast-forward merge
 
@@ -311,11 +338,15 @@ Fast-forward
 
 La estrategia utilizada para el merge es fast-forward pues basta con adelantar la referencia `master` al commit 5 para incorporar los cambios de la rama `bug-fix`. Se elimina la rama `bug-fix` utilizando el comando `git branch -d bug-fix` pues no se necesita más y ahora las ramas y commits tienen la siguiente estructura y estado.
 
-![Merge fast-forward buf-fix en master](/images/merge_4.png)
+<p align="center">
+  <img src="images/merge_4.png" width="300px" />
+</p>
 
 Juan ya puede continuar trabajando en la característica que estaba implementando en `feature`, para lo cual se cambia a esta rama y logra terminar la implementación en un commit más, como se muestra a continuación.
 
-![Checkout feature y realizar un commit](/images/merge_5.png)
+<p align="center">
+  <img src="images/merge_5.png" width="350px" />
+</p>
 
 ### Recursive merge
 
@@ -332,7 +363,9 @@ Merge made by the 'recursive' strategy.
 
 En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y **genera un nuevo commit** (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3. Los commits y sus relaciones están mostrados por la siguiente figura.
 
-![Merge recursivo de feature en master](/images/merge_6.png)
+<p align="center">
+  <img src="images/merge_6.png" width="400px" />
+</p>
 
 ### Comandos básicos para merges
 
@@ -354,11 +387,198 @@ Forzosamente borra la rama seleccionada, incluso si tiene cambios no fusionados.
 git branch -D <rama>
 ```
 
+## Navegando entre commits
+
+> Véase <https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection>
+
+En ocasiones resulta necesario revisar versiones anteriores del proyecto, ya sea por estar en busca de un bug (commit que introduce una regresión), requerir demostrar la evolución de un módulo o al necesitar revertir las modificaciones introducidas por algunos commits. Para lograr cualquiera de estas tareas es importante conocer cómo navegar el árbol de commits. Con el fin de demostrar la navegación se toma como árbol de referencia el mostrado en la figura inferior.
+
+<p align="center">
+  <img src="images/navigation_1.png" width="500px" />
+</p>
+
+Existen dos formas de navegación: por referencia **absoluta** o **relativa**. Recuerde de la sección [Objetos de Git](#objetos-de-git) que las versiones del proyecto son almacenadas en los snapshots asociados a cada objeto commit. Recorrer la historia del proyecto significa visitar commits pasados. También sabemos que una rama no es más que una referencia a un commit, por lo que la resolución de la rama (identificar el commit al que apunta), también representa una versión del proyecto. De forma similar, `HEAD` es una referencia que indica a Git la posición actual del usuario en el árbol de commits, apuntando siempre a un commit u objeto que pueda resolverse en un commit, como una rama.
+
+De este análisis encontramos que existen tres tipos de referencias que directamente o en su resolución apuntan al mismo tipo de objeto: un commit.
+
+> **Referencias relacionadas con commits: (1) commits, (2) ramas, (3) `HEAD`.**
+
+Existen otras referencias que también son o apuntan a commits, como los stashes discutidos en [Parte 2: Profundizando](Parte2_Profundizando.md) o los tags, pero esta sección se enfoca en las tres mencionadas.
+
+En [Comandos básicos para ramas](#comandos-básicos-para-ramas) se introdujo el comando `git checkout`, el cual permite cambiar la rama a la que apunta `HEAD`. Con cada nuevo commit realizada en tal rama, `HEAD` avanza acordemente. Aquí presento una forma más general de este comando, donde el argumento no tiene que ser una rama, pero cualquier referencia que sea o pueda resolverse en un commit, como una rama, `HEAD`, un commit, un tag o un stash.
+
+```bnf
+git checkout <referencia-resoluble-a-un-commit>
+```
+
+### Referencias absolutas
+
+Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo (especificando un commit) o el nombre de una rama. Podemos hallar una versión corta, de 7 caractéres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
+
+```shell
+$ git log --oneline --graph
+*   20d1091 (HEAD -> master) Merge branch 'feature'
+|\
+| * 1c27aea (feature) Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+```
+
+Ahora si quisiéramos navegar al commit con el mensaje *Add more content to f1*, tenemos la opción de utilizar `git checkout feature` o `git checkout 1c27aea`. Veamos ambas formas.
+
+---
+
+```shell
+$ git checkout feature
+Switched to branch 'feature'
+```
+
+<p align="center">
+  <img src="images/navigation_2.png" width="550px" />
+</p>
+
+---
+
+Por otro lado, si especificamos el hash en lugar del nombre de la rama podemos notar que el working treese actualiza con los contenidos del snapshot del mismo commit, pero el comando reporta algo muy distinto en la terminal.
+
+---
+
+```shell
+$ git checkout 1c27aea
+Note: checking out '1c27aea'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at 1c27aea Add more content to f1
+```
+
+<p align="center">
+  <img src="images/navigation_3.png" width="500px" />
+</p>
+
+---
+
+La primera vez que vi el mensaje **detached `HEAD` state** me confundí mucho, pero no es algo  de que alarmarse e incluso es sencillo entender la razón del mensaje. Hasta ahora, el apuntador `HEAD` siempre se ha visto en la siguiente posición: `HEAD -> <rama> -> <commit>`. Durante desarrollo siempre se tiene `HEAD` apuntando a una rama y nunca directamente a un commit.
+
+> **Se dice que `HEAD` está detached si apunta directamente a un commit. Se dice que `HEAD`está attached si apunta a una rama.**
+
+El mensaje aparece pues indica que todo commit realizado en la posición actual de `HEAD` será perdido cuando `HEAD` apunte a otro commit. Veamos un ejemplo.
+
+<p align="center">
+  <img src="images/navigation_4.png" width="500px" />
+</p>
+
+En la posición de detached `HEAD`, creé un archivo, lo agregué al staging area y realicé un commit. Al igual que en el caso cuando `HEAD` apunta a una rama, el apuntador se mueve junto con el nuevo commit. Sin embargo, ahora consideremos qué ocurre si se ejecuta `git checkout master`. O en general, si se hace checkout a cualquier otro commit.
+
+```shell
+$ git checkout master
+Warning: you are leaving 1 commit behind, not connected to
+any of your branches:
+
+  f2511b6 Create file-to-lose
+
+If you want to keep it by creating a new branch, this may be a good time
+to do so with:
+
+ git branch <new-branch-name> f2511b6
+
+Switched to branch 'master'
+```
+
+<p align="center">
+  <img src="images/navigation_5.png" width="500px" />
+</p>
+
+Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama.
+
+```shell
+$ git log -a --oneline
+20d1091 (HEAD -> master) Merge branch 'feature'
+1c27aea (feature) Add more content to f1
+494804a Create f3
+5a4b4dd Add content to f2
+a9e3559 Create f2
+44b6f5d Modify f1
+d04b4ee Start version control
+```
+
+La forma de Git de advertir de esta perdida es avisando del estado detached. Note que el commit no fue eliminado, **Git no elimina commits**, simplemente no es accesible mediante ningún recorrido de los `head`(ramas). Pude utilizar `git reflog` para hallar el hash y regresar al mismo.
+
+🔍 **Tip**. Si recuerda incluso parte del mensaje del commit y utiliza Bash como su shell, puede pasar lo que recuerda del nombre a `grep` ([documentación de `grep` en Bash](https://ss64.com/bash/grep.html)). Por ejemplo, recuerdo que la cadena "lose" se halla en el mensaje, entonces puede realizar lo siguiente para regresar al commit.
+
+```shell
+$ git reflog | grep -i "lose"
+f2511b6 HEAD@{7}: commit: Create file-to-lose
+
+$ git checkout f2511b6
+Note: checking out 'f2511b6'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at f2511b6 Create file-to-lose
+```
+
+### Referencias relativas
+
+Recordemos el estado inicial del árbol de commits. La dirección de las flechas de commit a commit es muy importante: **cada commit sólo conoce a sus padres; a sus hijos no**. De esta observación adquiere sentido que existen marcadores de ascendencia (`~`, `^`), pero no de descendencia. Es decir, la navegación relativa se refiere a recorrer la *ascendencia* de un commit.
+
+<p align="center">
+  <img src="images/navigation_1.png" width="500px" />
+</p>
+
+Individualmente, tanto el marcador `~` como el `^` se refieren al primer padre del commit especificado; no hay diferencia. En los snippets utilizo `-c advice.detachedHead=false` para evitar la extensa advertencia del estado detached de `HEAD`. Puede utilizar `-c` para asignar variables de configuración sólo para ese comando.
+
+```shell
+$ git -c advice.detachedHead=false checkout HEAD~
+HEAD is now at 494804a Create f3
+```
+
+```shell
+$ git -c advice.detachedHead=false checkout HEAD^
+HEAD is now at 494804a Create f3
+```
+
+La distinción entre `~` y `^` se vuelve aparente al ser utilizados con números. `~1` denota al primer padre; `~2` denota al primer padre del primer padre del commit, etc. Por otro lado, `^1` también denota al primer padre, pero `^2` denota al segundo padre del commit (esto sólo tiene sentido en el contexto de un merge recursivo, cuando un commit tiene más de un padre).
+
+| Marcador de ascendencia | Ejemplos |
+|:---:|---|
+| `~n` | `HEAD~2 -> a9e3559`<br>`HEAD~3 -> 44b6f5d` |
+| `^n` | `HEAD^2 -> 1c27aea`<br>`HEAD^3 -> error: pathspec 'HEAD^3' did not match any file(s) known to git.` |
+
+Estos marcadores también pueden combinarse y tener como objeto una rama o incluso otro commit.
+
+| Ejemplos |
+|---|
+| `5a4b4dd` **`<-`** `HEAD^2~` ó `feature~` ó `1c27aea^` |
+| `a9e3559` **`<-`** `master^^` ó `master~~` ó `494804a~` |
+
+En ocasiones también encontrará referencias del formato `HEAD@{n}`, donde `n` es un número entero. Éstas son referencias a las entradas de `git reflog`.
+
 ## Conflictos al realizar un merge
 
 En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos Git no puede ejecutar un merge de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró App.java, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
 
-![Checkout feature y hacer un commit](/images/merge_5.png)
+<p align="center">
+  <img src="images/merge_5.png" width="300px" />
+</p>
 
 Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo App.java, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios en las mismas líneas de este archivo.
 
@@ -389,7 +609,9 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 Para resolver el conflicto, basta con abrir el archivo utilizando cualquier editor de texto y seleccionar las modificaciones de la rama deseada. En las capturas de pantalla inferiores se muestra App.java abierto en Vim (izquierda) y VSCode (derecha). Nótese la conveniente integración de VSCode con Git, que despliega opciones en la parte superior del conflicto para una rápida resolución. Otros muchos editores de texto e IDEs también cuentan con estas facilidades.
 
-![Conflictos en Vim y VSCode](/images/editors_conflict.png)
+<p align="center">
+  <img src="images/editors_conflict.png" width="800px" />
+</p>
 
 Aquí puede verse la estructura por la cual Git informa de un conflicto, que se conforma por los siguientes marcadores.
 
@@ -422,7 +644,9 @@ Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositor
 
 Nótese que el término *repositorio remoto* es popularmente asociado con repositorios almacenados en GitHub, GitLab u otro servicio de cloud storage para repositorios de Git. Sin embargo, el repo remoto puede incluso residir en el mismo host, aunque esto es muy raro en la práctica. El servicio de cloud storage más popular para repositorios de Git es GitHub.
 
-!["Remote" no implica necesariamente que se encuentra en una red](/images/remote_repos.png)
+<p align="center">
+  <img src="images/remote_repos.png" width="650px" />
+</p>
 
 ### Acceso a repositorios remotos
 
@@ -515,7 +739,9 @@ git pull [<alias> <rama>]
 
 Observación acerca de la distinción entre `git fetch` y `git pull`.
 
-![git fetch vs git pull](/images/fetch_vs_pull.png)
+<p align="center">
+  <img src="images/fetch_vs_pull.png" width="700px" />
+</p>
 
 Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los cambios de la rama actual.
 
@@ -621,4 +847,6 @@ $ git branch -a
 
 Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son integrados a alguna rama local, sino que sólo son traídos al repo local para inspección y, si se desea, para integración mediante `git merge`. ¿En dónde son esos cambios almacenados para inspección? Los cambios son almacenados en una rama de nombre `<alias>/<rama>` que sirve como rama de enlace entre una local y su upstream asociada (conocida en inglés como tracking branch). **Entonces, en el proceso de enlace entre una rama local y una remota intervienen tres ramas: la rama local, la rama remota y una intermediara local que permite traer cambios del repo remoto sin inmediatamente agregarlos al repositorio local**.
 
-![Ramas remote tracking](/images/remote_tracking.png)
+<p align="center">
+  <img src="images/remote_tracking.png" width="400px" />
+</p>
