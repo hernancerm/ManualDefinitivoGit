@@ -39,7 +39,8 @@ Git es un sistema de control de versiones (VCS) open source originalmente desarr
 
 Cabe destacar que Git no es la única herramienta para el control de versiones, mas Git supera a las demás opciones en integraciones y características. Sin importar qué VCS se utilice, siempre se pueden esperar las siguientes ventajas.
 
-- Prevención de cambios conflictivos sobre un conjunto de archivos.
+> **Reversibilidad y fácil integración**
+
 - Historial completo y detallado del proyecto. Esto abarca todos los cambios realizados por todos los contribuidores, incluyendo modificaciones, eliminación y creación de archivos, así como su movimiento y cambio de nombre. El beneficio más aparente de esto radica en su cualidad de respaldo, pues **bajo el control de un VCS, ninguna modificación resulta fatal, siempre se puede regresar a alguna versión anterior**. Más aún, la identificación de la causa raíz de algún bug puede ser rastreada con mucha más facilidad.
 - Ramas y su fusión. Un VCS provee ramificaciones del proyecto, es decir, versiones aisladas en las cuales algún desarrollador puede trabajar. Terminada su modificación, puede incorporar estos cambios a la rama principal, fusionando sus cambios y verificando si existen conflictos. El VCS informa de todos los conflictos y queda a responsabilidad de programador resolverlos para poder concluir el proceso de fusión. **La colaboración en equipos se vuelve simple, incluso en equipos muy grandes**.
 
