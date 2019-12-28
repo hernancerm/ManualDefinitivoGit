@@ -773,7 +773,7 @@ Primero hay que recordar que la historia de Git se compone por el árbol de comm
 Veamos un ejemplo sencillo utilizando `git commit --amend`.
 
 ```bash
-$ git log --oneline -a --graph
+$ git log --oneline --all --graph
  # Observe que el hash del commit al que apunta HEAD es 1c0e104.
 *   1c0e104 (HEAD -> master, origin/master) Merge branch 'feature'
 |\
@@ -789,7 +789,7 @@ $ git commit --amend --no-edit
 [master 5b9a0ca] Merge branch 'feature'
  Date: Sun Dec 22 12:20:44 2019 -0600
 
-$ git log --oneline -a --graph
+$ git log --oneline --all --graph
  # El hash ha cambiado de 1c0e104 a 5b9a0ca,
  # no se trata del mismo objeto commit.
 *   5b9a0ca (HEAD -> master, origin/master) Merge branch 'feature'
@@ -815,7 +815,7 @@ Unpacking objects: 100% (2/2), done.
 From https://github.com/HerCerM/RewritingHistory
  + 1c0e104...5b9a0ca master     -> origin/master  (forced update)
 
-$ git log --oneline -a --graph
+$ git log --oneline --all --graph
     # Después del amend
 *   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature'
 |\      # Antes del amend
