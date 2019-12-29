@@ -830,7 +830,7 @@ Más que una regla, presento esto como una fuerte recomendación, pues es posibl
 
 Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
 
-> **Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (`git commit --amend` ó `git rebase`) o eliminación ([`git reset`](#reset) ó `git rebase`). Agregar commits secuenciales (`git commit`) no reescribe la historia, pues no altera el pasado.**
+> **Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (`git commit --amend` o `git rebase`) o eliminación ([`git reset`](#reset) o [`git rebase`](#rebase)). Agregar commits secuenciales (`git commit`) no reescribe la historia, pues no altera el pasado.**
 
 Veamos un ejemplo sencillo utilizando `git commit --amend`.
 
