@@ -23,6 +23,60 @@
   - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
   - [¿Cómo se corrigen commits públicos?](#¿cómo-se-corrigen-commits-públicos)
 
+## Flujos de trabajo (workflows)
+
+Utilizar Git eficientemente demanda más que únicamente conocer sus conceptos y los comandos que los implementan. Saber no sólo qué es una rama, pero cuándo y para qué crearlas, cuándo realizar [rebases](#rebase) o preferir merges recursivos sobre fast-forward, etc. son asuntos que van más allá del conocimiento técnico de la herramienta, adentrándose en una línea de pensamiento más organizacional que tecnológica.
+
+Al inicio de [Parte 1: Fundamentos](Parte1_Fundamentos.md), se habla de las ventajas de no sólo usar Git *per se*, pero cualquier sistema de control de versiones. El objetivo de estas herramientas es acelerar el desarrollo de software facilitando la colaboración, al hacer el proceso de integración simple, mientras un historial del proyecto que efectivamente funciona como respaldo es construido por la misma herramienta. Los VCSs (*version control systems*) facilitan la colaboración, aceleran el desarrollo de software y generan respaldos del proyecto. Git es muy flexible en tanto que no impone ningún flujo de trabajo específico, en su lugar sólo proporciona herramientas. Elegir conscientemente cómo usar Git puede hacer de este programa mucho más o menos útil en conseguir su propósito.
+
+### ¿Qué es un flujo de trabajo?
+
+> **Un flujo de trabajo define cómo un proyecto evoluciona, especificando el flujo o proceso iterativo mediante el cual se generan modificaciones sobre un proyecto, se revisan las modificaciones y se integran a una versión unificada.**
+
+Este flujo podría utilizar muchas o pocas ramas; las ramas podrían extenderse decenas de commits antes de ser fusionadas en la versión unificada o ser fusionadas constantemente. Podría existir una nomenclatura para las ramas, podría en su lugar no usarse ramas del todo y apegarse a `master`. El acuerdo sobre estas decisiones conforman un flujo de trabajo.
+
+### ¿Cómo elegir un flujo de trabajo?
+
+No existe *el* workflow correcto y único a seguir, cada equipo debe considerar sus integrantes, estrategia de despliegue (*deployment*) y necesidades para elegir el flujo de trabajo que más los agilice, implicando la menor carga mental innecesaria posible. El hecho que no exista *el* workflow ideal, no significa que no existan flujos de trabajo populares y efectivos. Como se menciona en <https://www.atlassian.com/git/tutorials/comparing-workflows>, al elegir un workflow es importante considerar lo siguiente:
+
+- ¿Existen ceremonias que innecesariamente atrasen al equipo o impongan carga mental redundante?
+- ¿Se presentan problemas al añadir más integrantes al equipo?
+- ¿Es sencillo revertir errores?
+
+### Un buen punto de partida: GitHub Flow
+
+Antes de abarcar el flujo de trabajo que lleva de nombre *GitHub Flow*, hay una pequeña historia que resulta relevante mencionar. En 2010, [Vincent Driessen](https://nvie.com/about/) publicó un post en su blog titulado [A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/), que más tarde fue popularmente conocido como *GitFlow*. En lugar de explicarlo aquí he ligado a su artículo original y usted mismo podrá comprobar que la complejidad del modelo es alta, incluyendo además mucha ceremonia. De ninguna manera estoy haciendo menos a GitFlow, pero quiero remarcar que contrario a lo que muchos creen, ésta no es *la única* forma de trabajar con Git.
+
+GitFlow es un flujo de trabajo diseñado alrededor de lanzamientos, promoviendo cierta ceremonia para cada uno.  Algunos productos, como GitHub por ejemplo, son desplegados a producción [incluso varias veces al día](http://scottchacon.com/2011/08/31/github-flow.html), resultando en la implementación de un workflow como éste un atraso más que un facilitador. Espero con este ejemplo hacer notar que más complejidad no siempre es mejor, las necesidades y estrategias deben valorarse.
+
+Retomando el desarrollo de [GitHub](https://github.com/), [Scott Chacon](http://scottchacon.com/about.html),  uno de los autores de [Pro Git](https://git-scm.com/book/en/v2), libro en el que en su mayoría este manual está basado, explica en un post de su blog el workflow utilizado en el desarrollo de GitHub, [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html). En adición a las situaciones en las que él considera recomendable este flujo de trabajo, pienso que es un workflow que se adapta bien a muchos proyectos, es fácil de entender y por ello amigable para principiantes, sin mencionar que también es robusto como para orquestar el desarrollo de GitHub.
+
+<p align="center">
+ <img src="images/workflows_1.png" width="650px" />
+</p>
+
+Como Chacon menciona en su post, las reglas de GitHub Flow son las siguientes:
+
+- **Cualquier commit en `master` es desplegable** (libre de bugs mayores y listo para ser lanzado a producción). Me imagino que la única excepción a esta regla es justo al inicio del proyecto, cuando los fundamentos del producto aún están siendo construidos.
+- **Para trabajar en algo nuevo (corrección de un bug, implementación de tests, añadir features o realizar hotfixes) crear una rama con un nombre descriptivo y trabajar ahí**. La única imposición aquí es que el nombre sea descriptivo, mas si se desea un tanto más de estandarización también podría ser posible haciendo cumplir una nomenclatura. Por ejemplo, toda rama que contribuya a un feature tener la estructura `feature/<nombre-del-feature>`.
+- **Realice commits frecuentemente y regularmente haga push de su rama de trabajo**. De esta forma tendrá el respaldo de su trabajo en el servidor y otros miembros del equipo podrán revisarlo.
+- **Cuando necesite ayuda o piense que una rama está lista para ser fusionada en `master`, utilice un *pull request***. Los pull requests son una increíble herramienta que GitHub ofrece (y otros servicios de almacenamiento de repositorios, como [GitLab](https://about.gitlab.com/) o [Bitbucket](https://bitbucket.org/product)) para hacer revisiones de ramas, permitiendo comentar sobre el código e intercambiar mensajes entre el autor y el encargado de la revisión.
+- **Tras ser aceptado el pull request, fusionar la rama en `master`**. Tras ser fusionada la rama debería realizarse un despliegue a producción con el último commit de `master`.
+
+En adición a dejar el contrato del workflow en voz o escrito, algunas reglas pueden hacerse cumplir mediante los [hooks de Git](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks), como [estandarizar el nombre de las ramas](https://itnext.io/using-git-hooks-to-enforce-branch-naming-policy-ffd81fa01e5e) o [proteger `master` de commits directos](https://stackoverflow.com/questions/40462111/git-prevent-commits-in-master-branch).
+
+Para una introducción interactiva a GitHub recomiendo [Git-it](http://jlord.us/git-it/), la cual también abarca varios fundamentos discutidos en [Parte 1: Fundamentos](Parte1_Fundamentos.md).
+
+### Conociendo más flujos de trabajo
+
+Recomiendo mucho explorar más flujos de trabajo, entre los cuales recomiendo [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/) por su versatilidad y popularidad. Si está en busca de un trabajo es muy probable que el workflow utilizado en la compañía a la que aspira sea inspirado por Git Flow.
+
+- Git Flow: <https://nvie.com/posts/a-successful-git-branching-model/>
+- GitHub Flow: <http://scottchacon.com/2011/08/31/github-flow.html>
+- Discusión general de workflows: <https://www.atlassian.com/git/tutorials/comparing-workflows>
+- Trunk-based flows (e.g. GitHub Flow) vs GitFlow <https://www.toptal.com/software/trunk-based-development-git-flow>
+- Integración continua con Git: <https://www.youtube.com/watch?v=TWM1YNzSwB8&list=LLO-gLu2Npbe6rRcMdTQ_ZIw&index=2&t=0s>
+
 ## Stashing para evitar commits parciales
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning>
