@@ -7,6 +7,7 @@
 - [Configuración](#configuración)
 - [Ambiente de desarrollo](#ambiente-de-desarrollo)
 - [Comandos básicos para la gestión de un repositorio](#comandos-básicos-para-la-gestión-de-un-repositorio)
+  - [Extended Backus-Naur Form (EBNF)](#extended-backus-naur-form-ebnf)
 - [Correcciones básicas](#correcciones-básicas)
 - [Concepto de rama](#concepto-de-rama)
   - [Objetos de Git](#objetos-de-git)
