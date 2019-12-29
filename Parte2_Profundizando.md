@@ -1,5 +1,10 @@
 # Profundizando
 
+- [Flujos de trabajo (workflows)](#flujos-de-trabajo-workflows)
+  - [¿Qué es un flujo de trabajo?](#¿qué-es-un-flujo-de-trabajo)
+  - [¿Cómo elegir un flujo de trabajo?](#¿cómo-elegir-un-flujo-de-trabajo)
+  - [Un buen punto de partida: GitHub Flow](#un-buen-punto-de-partida-github-flow)
+  - [Conociendo más flujos de trabajo](#conociendo-más-flujos-de-trabajo)
 - [Stashing para evitar commits parciales](#stashing-para-evitar-commits-parciales)
   - [¿Qué es un stash?](#¿qué-es-un-stash)
   - [Comandos para administrar stashes](#comandos-para-administrar-stashes)
@@ -18,6 +23,9 @@
   - [Revert](#revert)
     - [¿Cuándo utilizar `git revert` sobre `git reset`?](#¿cuándo-utilizar-git-revert-sobre-git-reset)
     - [Uso del comando](#uso-del-comando-1)
+  - [Rebase](#rebase)
+    - [Rebase interactivo](#rebase-interactivo)
+    - [Rebase no interactivo](#rebase-no-interactivo)
 - [Reescribiendo la historia](#reescribiendo-la-historia)
   - [¿Qué es *reescribir la historia*?](#¿qué-es-reescribir-la-historia)
   - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
