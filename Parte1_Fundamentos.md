@@ -7,6 +7,7 @@
 - [Configuración](#configuración)
 - [Ambiente de desarrollo](#ambiente-de-desarrollo)
 - [Comandos básicos para la gestión de un repositorio](#comandos-básicos-para-la-gestión-de-un-repositorio)
+  - [Extended Backus-Naur Form (EBNF)](#extended-backus-naur-form-ebnf)
 - [Correcciones básicas](#correcciones-básicas)
 - [Concepto de rama](#concepto-de-rama)
   - [Objetos de Git](#objetos-de-git)
@@ -39,7 +40,8 @@ Git es un sistema de control de versiones (VCS) open source originalmente desarr
 
 Cabe destacar que Git no es la única herramienta para el control de versiones, mas Git supera a las demás opciones en integraciones y características. Sin importar qué VCS se utilice, siempre se pueden esperar las siguientes ventajas.
 
-- Prevención de cambios conflictivos sobre un conjunto de archivos.
+> **Reversibilidad y fácil integración**
+
 - Historial completo y detallado del proyecto. Esto abarca todos los cambios realizados por todos los contribuidores, incluyendo modificaciones, eliminación y creación de archivos, así como su movimiento y cambio de nombre. El beneficio más aparente de esto radica en su cualidad de respaldo, pues **bajo el control de un VCS, ninguna modificación resulta fatal, siempre se puede regresar a alguna versión anterior**. Más aún, la identificación de la causa raíz de algún bug puede ser rastreada con mucha más facilidad.
 - Ramas y su fusión. Un VCS provee ramificaciones del proyecto, es decir, versiones aisladas en las cuales algún desarrollador puede trabajar. Terminada su modificación, puede incorporar estos cambios a la rama principal, fusionando sus cambios y verificando si existen conflictos. El VCS informa de todos los conflictos y queda a responsabilidad de programador resolverlos para poder concluir el proceso de fusión. **La colaboración en equipos se vuelve simple, incluso en equipos muy grandes**.
 
@@ -62,9 +64,11 @@ Uno de los principales objetivos de Git es la flexibilidad. La herramienta puede
 | MacOS                                  | Instalador: <https://git-scm.com/download/mac><br>Mavericks (10.9) o superior: `git --version` |
 | Windows                                | Instalador: <https://git-scm.com/download/win><br>Chocolatey: `choco install git` |
 
+🔍 **Tip.** En Windows, tras la instalación puede actualizar su versión de Git con el comando `git update-git-for-windows`. Para revisar su versión actual el comando es `git version`. Estos comandos los ingresa en el Git Bash.
+
 ## Configuración
 
-> Resumen de <https://git-scm.com/book/en/v1/Getting-Started-First-Time-Git-Setup>
+> Resumen de <https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup>
 
 Git trae una herramienta llamada `git config` que permite cambiar variables de configuración acerca de cómo Git luce y funciona. El email y nombre del usuario son necesarios configurar como primer paso al empezar a usar Git y sólo es requerido hacerlo una vez, mas en cualquier momento los valores pueden ser modificados si así se desea. Existen muchas más variables de configuración que puede revisar aquí: <https://git-scm.com/docs/git-config>.
 
@@ -104,8 +108,6 @@ git config --list
 ## Ambiente de desarrollo
 
 > Now, pay attention. This is the main thing to remember about Git if you want the rest of your learning process to go smoothly.
->
-> Resumen de <https://git-scm.com/book/en/v1/Getting-Started-Git-Basics>
 
 Antes de abordar los comandos de Git, es muy importante conocer los fundamentos de Git. Puedo corroborar esto haciendo alusión a mis primeras experiencia con la herramienta, durante las cuales el desconocimiento de los fundamentos causaron más frustración de la necesaria. Al trabajar con Git es muy importante conocer el ambiente de desarrollo, el cual es componente central del flujo de trabajo. Los archivos son apreciados por Git en tres áreas: el working tree, staging area y local repository.
 
@@ -131,6 +133,8 @@ En particular, un archivo se considera tracked si existe una versión registrada
 
 ## Comandos básicos para la gestión de un repositorio
 
+---
+
 > Para algunos de estos comandos se presentan también banderas u argumentos que me han resultado útiles, mas cabe mencionar que existen muchas más opciones. Git tiene integrado un sistema de ayuda; para cada comando se puede solicitar su documentación mediante las siguientes dos opciones de sintaxis.
 >
 >```bnf
@@ -138,7 +142,21 @@ En particular, un archivo se considera tracked si existe una versión registrada
 > git help <comando>    (2)
 >```
 >
-> **La sintaxis mostrada a lo largo del manual es expresada en [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
+> **La sintaxis mostrada a lo largo del manual es expresada en [EBNF](#extended-backus-naur-form-(ebnf)) y simplificada (sólo muestro lo más útil y común). Vea la documentación oficial de cada comando para todas las banderas y opciones**.
+
+### Extended Backus-Naur Form (EBNF)
+
+[EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) es notación utilizada para describir la sintaxis de un lenguaje. En este manual es utilizada para describir las banderas y estructura de los comandos.
+
+| Símbolo | Explicación |
+|:---:|---|
+| `<variable>` | Cualquier palabra encerrada en los símbolos de menor qué y mayor qué (`<>`) se coloca como *placeholder* (secuencia de caracteres para ser sustituida) de algún tipo de valor. En este manual en ocasiones es el nombre de una rama, o el de un archivo, etc. |
+| `constante` | Las palabras que no estén delimitadas por alguna marca son necesarias colocarlas tal como están redactadas. |
+| `[]` | Las palabras encerradas en corchetes (`[]`) pueden omitirse. |
+| `|` | La barra vertical (`|`) indica opciones exclusivas dentro de corchetes o paréntesis. |
+| `()` | El paréntesis (`()`) indica un grupo. Esto es útil al emplear la barra vertical dentro. |
+
+---
 
 Crear un repositorio local.
 
@@ -172,8 +190,10 @@ git commit [-a] [-m "<mensaje>"]
 
 Recorre el árbol de commits desde la posición de `HEAD`. El comando sin banderas muestra autor, fecha y hora de commit,  encabezado y cuerpo del mensaje, rama del commit y hash SHA-1 completo. El comando con la bandera `--oneline` muestra una versión más compacta, sólo desplegando el encabezado del mensaje, los primeros 7 caracteres del hash del commit y la rama en la que fue realizado. Si se desean ver todos los commits del repositorio (todos los commits accesibles mediante alguna rama) en lugar a sólo los accesibles a través de `HEAD`, utilice la bandera `-a`.
 
+Otras banderas menos utilizadas son `-<cantidad>`, que muestra sólo `<cantidad>` número de commits. Por ejemplo `-1` sólo muestra un commit. `--first-parent` recorre el árbol de commits sólo pasando por el primer padre. Esto es muy útil al revisar la historia de `master`, donde no se suele desear ver commits de ramas fusionadas. El argumento opcional `<commit>` permite especificar una posición distinta a `HEAD` para iniciar el recorrido del árbol. Este argumento toma cualquier referencia resoluble a un commit, véase [referencias absolutas](#referencias-absolutas) y [referencias relativas](#referencias-relativas).
+
 ```bnf
-git log [-a] [--oneline]
+git log [--all] [--oneline] [-<cantidad>] [--first-parent] [<commit>]
 ```
 
 Lista cronológica inversa (se muestra primero lo más reciente) de los objetos a los que `HEAD` ha apuntado. Este comando imprime un log de las referencias. A diferencia del comando log, reflog puede mostrar commits que no son accesibles mediante una rama, pues muestra un historial en lugar de recorrer el árbol.
@@ -207,7 +227,7 @@ git rm --cached <archivo>
 
 > A branch in Git is simply a lightweight movable pointer to a commit object.
 >
-> Resumen de <https://git-scm.com/book/en/v1/Git-Branching-What-a-Branch-Is>
+> Más información en <https://git-scm.com/book/en/v2/Git-Internals-Git-Objects>
 
 Para poder tener un sólido entendimiento de las ramas de Git, es necesario explorar con más detalle el funcionamiento de bajo nivel de Git en cuanto a cómo almacena las distintas versiones de los archivos. Entendido esto, el concepto de rama es tan sólo una extensión del sistema. Esta sección acaso sea una de las más difíciles de entender, mas su compresión lo vale en absoluto.
 
@@ -231,7 +251,7 @@ Ahora el desarrollador ejecuta el comando `git commit -m "Start of VC"`, con lo 
 |--------|---------|
 |blob    | Representa los contenidos de un archivo que no es directorio. |
 |tree    | Afín a un directorio. Almacena los nombres de los archivos de un directorio, al igual que un apuntador al blob o tree correspondiente que guarda el contenido de los archivos. |
-|commit  | Apunta a un tree que representa el staging area en un momento determinado; almacena el nombre del autor, el commiter y el mensaje del commit. |
+|commit  | Apunta a un tree que representa el staging area al momento de realizar el commit; almacena el nombre del autor, commiter, el mensaje del commit y sus commits padres. |
 
 **Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores con puntos suspensivos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referirse a ellos. A continuación, se presenta un término más del vocabulario de Git.
 
@@ -276,7 +296,7 @@ Las ramas son parte fundamental de Git. A diferencia de otros sistemas de contro
 Muestra todas las ramas del repositorio local si ninguna bandera es usada. Muestra todas las ramas del repositorio local y los remotos asociados al usar `-a`. La distinción entre ramas locales y remotas es examinada en otra sección del manual. La bandera `-vv` muestra una descripción completa por rama. La descripción por rama incluye su nombre, hash SHA-1 que las identifica, el encabezado del mensaje del commit al que apuntan y, en caso de existir, la [rama upstream](#configurar-upstreams) asociada.
 
 ```bnf
-git branch [-a | --all] [-vv | --verbose]
+git branch [-a | --all] [-vv]
 ```
 
 Crea una rama. Nótese que al crear una rama no se cambia automáticamente a la misma.
@@ -293,7 +313,7 @@ git checkout [-b] <rama>
 
 ## Fusión de ramas
 
-> Resumen de <https://git-scm.com/book/en/v1/Git-Branching-Basic-Branching-and-Merging>
+> Resumen de <https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging>
 
 Si las ramas son el mecanismo principal por el cual se organiza la colaboración en equipos, debe existir una manera por la cual los cambios de cada rama se integren, obteniendo una versión unificada de todas las colaboraciones. A través de un ejemplo que asemeja una situación que podría presentarse en la realidad, veamos cómo la fusión de ramas ocurre. En esta sección se presentan los dos tipos de merge que existen en Git: (1) **fast-forward** y (2) **recursive**. En adición al merge existe el comando rebase para integrar cambios entre ramas, mas su uso es más avanzado y por lo tanto no es discutido en esta parte del manual.
 
@@ -413,9 +433,11 @@ git checkout <referencia-resoluble-a-un-commit>
 
 ### Referencias absolutas
 
-Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo (especificando un commit) o el nombre de una rama. Podemos hallar una versión corta, de 7 caractéres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
+Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo (especificando un commit) o el nombre de una rama. Podemos hallar una versión corta, de 7 caracteres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
 
-```shell
+```bash
+# Para recorrer todo el árbol de commits sin importar la posición de
+# `HEAD` utilice también la bandera `-a`.
 $ git log --oneline --graph
 *   20d1091 (HEAD -> master) Merge branch 'feature'
 |\
@@ -503,7 +525,7 @@ Switched to branch 'master'
 Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama.
 
 ```shell
-$ git log -a --oneline
+$ git log --all --oneline
 20d1091 (HEAD -> master) Merge branch 'feature'
 1c27aea (feature) Add more content to f1
 494804a Create f3
@@ -517,7 +539,8 @@ La forma de Git de advertir de esta perdida es avisando del estado detached. Not
 
 🔍 **Tip**. Si recuerda incluso parte del mensaje del commit y utiliza Bash como su shell, puede pasar lo que recuerda del nombre a `grep` ([documentación de `grep` en Bash](https://ss64.com/bash/grep.html)). Por ejemplo, recuerdo que la cadena "lose" se halla en el mensaje, entonces puede realizar lo siguiente para regresar al commit.
 
-```shell
+```bash
+# La bandera `-i` de grep indica ignorar la capitalización.
 $ git reflog | grep -i "lose"
 f2511b6 HEAD@{7}: commit: Create file-to-lose
 
@@ -683,6 +706,7 @@ Por defecto, el alias creado al clonar un repositorio es `origin`. Por cada alia
 ```shell
 $ git remote
 origin
+
 $ git remote -v
 origin  https://github.com/HerCerM/BatchScripts (fetch)
 origin  https://github.com/HerCerM/BatchScripts (push)
@@ -778,6 +802,7 @@ Podemos ver que en el repositorio remoto sólo existe una rama: `master`. En adi
 ```shell
 $ git pull
 Already up to date.
+
 $ git push
 Everything up-to-date
 ```
@@ -797,6 +822,7 @@ See git-pull(1) for details.
 If you wish to set tracking information for this branch you can do so with:
 
     git branch --set-upstream-to=origin/<branch> master
+
 $ git push
 fatal: The current branch master has no upstream branch.
 To push the current branch and set the remote as upstream, use
@@ -831,8 +857,10 @@ Los upstreams configurados pueden mostrarse utilizando `git branch -vv`.
 ```shell
 $ git branch -vv
 * master e1d8495 Update README.md
+
 $ git branch -u origin/master master
 Branch 'master' set up to track remote branch 'master' from 'origin'.
+
 $ git branch -vv
 * master e1d8495 [origin/master] Update README.md
 ```
