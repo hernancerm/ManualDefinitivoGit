@@ -271,13 +271,13 @@ nothing to commit (create/copy files and use "git add" to track)
 Este comando es muy interesante, poderoso y directo de comprender si se tiene un claro entendimiento del ambiente de desarrollo de Git, discutido en [Parte 1: Fundamentos](Parte1_Fundamentos.md). Similar a `git checkout`, este comando permite mover la referencia `HEAD` entre commits, mas difiere en tanto que no sólo actúa respecto a `HEAD`, sino que también respecto a una rama. Por ejemplo, considere el siguiente árbol de commits.
 
 <p align="center">
- <img src="images/reset_1.png" width="250px" />
+ <img src="images/reset_1.png" width="220px" />
 </p>
 
 Se observa que `git checkout` mueve `HEAD`, pero `git reset` también mueve a la rama apuntada por `HEAD`.
 
 <p align="center">
- <img src="images/reset_2.png" width="550px" />
+ <img src="images/reset_2.png" width="500px" />
 </p>
 
 Existen tres modalidades de reseteos, las cuales son elegibles por las banderas `--soft`, `--mixed` y `--hard`. Observe que `--mixed` es utilizada por defecto si ninguna bandera es seleccionada. **Las tres modalidades tienen en común que mueven `HEAD` y la rama apuntada por `HEAD` al commit seleccionado**. Los modos difieren en lo que restauran (sobre qué tiene efecto el reset), siendo los objetivos de restauración el working tree y el staging area. En cuanto al staging area, restaurar alude a retirar los archivos del estado staged, mas los cambios se mantienen en el working tree. Respecto al working tree, restaurar significa actualizar el mismo respecto al snapshot del commit seleccionado.
