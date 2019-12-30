@@ -76,7 +76,7 @@ Extended Backus-Naur Form o [EBNF](https://en.wikipedia.org/wiki/Extended_Backus
 | `<variable>` | Cualquier palabra encerrada en los símbolos de menor qué y mayor qué (`<>`) se coloca como *placeholder* (secuencia de caracteres para ser sustituida) de algún tipo de valor. En este manual en ocasiones es el nombre de una rama, o el de un archivo, etc. |
 | `constante` | Las palabras que no estén delimitadas por alguna marca son necesarias colocarlas tal como están redactadas. |
 | `[]` | Las palabras encerradas en corchetes (`[]`) pueden omitirse. |
-| `|` | La barra vertical (`|`) indica opciones exclusivas dentro de corchetes o paréntesis. |
+| `\|` | La barra vertical (`\|`) indica opciones exclusivas dentro de corchetes o paréntesis. |
 | `()` | El paréntesis (`()`) indica un grupo. Esto es útil al emplear la barra vertical dentro. |
 
 ## Configuración
