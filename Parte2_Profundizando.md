@@ -131,7 +131,13 @@ Mostrar todos los stashes.
 git stash list
 ```
 
-Crear un nuevo stash incluyendo sólo los archivos modificados (comportamiento dado su uso sin banderas `-u` ni `-a`); incluyendo archivos modificados y untracked (bandera `-u`); incluyendo archivos modificados, untracked e ignorados (bandera `-a`). Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. También es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
+Crear un nuevo stash incluyendo sólo los archivos modificados.
+
+- (`-u`) Incluyendo archivos modificados y untracked.
+- (`-a`) Incluyendo archivos modificados, untracked e ignorados.
+- (`-m`) Agregar mensaje al stash. Es posible utilizar la misma bandera de mensaje de commit (`-m`) para etiquetar al stash con un mensaje.
+
+Adicionalmente, a diferencia de `git stash save` o simplemente `git stash`, `git stash push` permite especificar los archivos que se almacenan en el stash. Tras crear un stash, todo lo almacenado en tal commit es retirado del working tree.
 
 ```bnf
 git stash push [-u | -a] [-m "<mensaje>"] [<archivos>]
@@ -189,7 +195,13 @@ Ahora dirijamos nuestra atención a casos en los que no es posible un cambio de 
 
 > Resumen de <https://git-scm.com/docs/git-clean>
 
-Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git (untracked). Si la variable de configuración `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando. Utilice `-d` para recursivamente eliminar directorios untracked. Utilice `-x` para eliminar también archivos ignorados. Si `<paths>` no es proporcionado, limpia el working tree desde el directorio en el que el comando es ejecutado.
+Eliminar archivos untracked. Ya sea por un build u otra razón, a veces simplemente se quiere eliminar los archivos no versionados por Git (untracked).
+
+- (`-f`) Si la variable de configuración `clean.requireForce` no tiene el valor `false`, entonces la bandera `-f` siempre es requerida para ejecutar el comando.
+- (`-d`) Recursivamente eliminar directorios untracked.
+- (`-x`) Eliminar también archivos ignorados.
+
+Si `<paths>` no es proporcionado, limpia el working tree desde el directorio en el que el comando es ejecutado.
 
 ```bnf
 git clean [-f] [-d] [-x] [<path>]
@@ -403,7 +415,13 @@ Revert permite deshacer los cambios introducidos por commits selectos (incluso c
 
 #### Uso del comando
 
-Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis completa refiérase a <https://git-scm.com/docs/git-revert>. Crea un nuevo commit con la corrección, abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit. Utilizar `--no-edit` para no abrir el editor de texto y usar el mensaje predeterminado. Al utilizar la bandera `-n`, en lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
+Crea un nuevo commit con la corrección, abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit.
+
+- (`--no-edit`) No abrir el editor de texto y usar el mensaje predeterminado.
+- (`-n`) En lugar de directamente crear un commit, las modificaciones son realizadas en el working tree y colocadas en el staging area.
+- (`<commit>`) Commit cuyos cambios desean ser revertidos.
+
+Como es usual, aquí se presenta una sintaxis simplificada respecto a las banderas y opciones más comunes. Para la sintaxis completa refiérase a <https://git-scm.com/docs/git-revert>.
 
 ```bnf
 git revert [--no-edit] [-n] <commit>
