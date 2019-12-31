@@ -1,5 +1,7 @@
 # Fundamentos
 
+👈 [README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)
+
 - [¿Qué es Git?](#qué-es-git)
   - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
   - [¿Por qué Git y no otro VCS?](#por-qué-git-y-no-otro-vcs)
@@ -927,3 +929,5 @@ Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son inte
 <p align="center">
   <img src="images/remote_tracking.png" width="400px" />
 </p>
+
+👈 [README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)

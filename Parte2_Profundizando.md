@@ -1,5 +1,7 @@
 # Profundizando
 
+[👈 Parte 1: Fundamentos](Parte1_Fundamentos.md)
+
 - [Flujos de trabajo (workflows)](#flujos-de-trabajo-workflows)
   - [¿Qué es un flujo de trabajo?](#qué-es-un-flujo-de-trabajo)
   - [¿Cómo elegir un flujo de trabajo?](#cómo-elegir-un-flujo-de-trabajo)
@@ -909,3 +911,5 @@ Todo commit que exista en un repositorio remoto con colaboradores es parte de la
 ### ¿Cómo se corrigen commits públicos?
 
 A pesar que es posible reescribir la historia de forma segura si los colaboradores lo pueden manejar, es recomendable no hacerlo. En lugar de reescribir la historia, considere utilizar [`git revert`](#revert) para añadir commits con las correcciones.
+
+[👈 Parte 1: Fundamentos](Parte1_Fundamentos.md)
