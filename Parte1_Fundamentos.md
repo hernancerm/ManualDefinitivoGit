@@ -1,8 +1,8 @@
 # Fundamentos
 
-- [¿Qué es Git?](#¿qué-es-git)
+- [¿Qué es Git?](#qué-es-git)
   - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
-  - [¿Por qué Git y no otro VCS?](#¿por-qué-git-y-no-otro-vcs)
+  - [¿Por qué Git y no otro VCS?](#por-qué-git-y-no-otro-vcs)
 - [Instalación](#instalación)
 - [Cómo leer la sintaxis de los comandos](#cómo-leer-la-sintaxis-de-los-comandos)
 - [Configuración](#configuración)
