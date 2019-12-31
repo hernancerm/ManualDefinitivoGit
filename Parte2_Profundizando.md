@@ -39,7 +39,13 @@ Al inicio de [Parte 1: Fundamentos](Parte1_Fundamentos.md), se habla de las vent
 
 ### ¿Qué es un flujo de trabajo?
 
-> **Un flujo de trabajo define cómo un proyecto evoluciona, especificando el flujo o proceso iterativo mediante el cual se generan modificaciones sobre un proyecto, se revisan las modificaciones y se integran a una versión unificada.**
+<table>
+  <tr>
+    <td>
+    Un flujo de trabajo define cómo un proyecto evoluciona, especificando el flujo o proceso iterativo mediante el cual se generan modificaciones sobre un proyecto, se revisan las modificaciones y se integran a una versión unificada.
+    </td>
+  </tr>
+</table>
 
 Este flujo podría utilizar muchas o pocas ramas; las ramas podrían extenderse decenas de commits antes de ser fusionadas en la versión unificada o ser fusionadas constantemente. Podría existir una nomenclatura para las ramas, podría en su lugar no usarse ramas del todo y sólo codificar en `master`. El acuerdo sobre estas decisiones conforman un flujo de trabajo.
 
@@ -153,7 +159,13 @@ git stash clear                    (2)
 
 Al inicio de esta sección se mencionó que *en ocasiones* Git reporta un mensaje de error cuando se ejecuta un checkout a otra rama teniendo cambios uncommitted en el working tree. Esto implica que, en algunas situaciones, es posible cambiar de rama sin hacer commit de los cambios y sin perder los mismos. Puntualmente, sólo una condición debe satisfacerse para que la posibilidad exista.
 
-> Es posible cambiar de rama teniendo modificaciones uncommitted en el working tree si el cambio **no requiere deshacer** dichas modificaciones.
+<table>
+  <tr>
+    <td>
+    Es posible cambiar de rama teniendo modificaciones uncommitted en el working tree si el cambio <b>no requiere deshacer</b> dichas modificaciones.
+    </td>
+  </tr>
+</table>
 
 Un cambio de rama conlleva un posible cambio del working tree, pues el working tree muestra el contenido almacenado en el snapshot asociado al commit al que apunta la rama. Pensemos en un ejemplo. Al cambiar de la rama `X` a la rama `Y` las siguientes acciones ocurren, donde `Xs` y `Ys` son los snapshots correspondientes de los commits a los que apuntan las ramas.
 
@@ -801,7 +813,15 @@ La respuesta a la muy conveniente omisión de commits duplicados puede encontrar
 
 Al colaborar en un repositorio visto y trabajado por otras personas, existe una regla de oro:
 
-> **No reescribir la historia pública**
+<table>
+  <tr align="center">
+    <td>
+    <b>
+    No reescribir la historia pública.
+    </b>
+    </td>
+  </tr>
+</table>
 
 Más que una regla, presento esto como una fuerte recomendación, pues es posible que los colaboradores acuerden reescribir parte de la historia y se haga de forma segura, pero lograr esto puede resultar complejo, muy confuso e innecesario. En general, se reescribe la historia pública por equivocación y no por una decisión meditada.
 
@@ -809,7 +829,13 @@ Más que una regla, presento esto como una fuerte recomendación, pues es posibl
 
 Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
 
-> **Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (`git commit --amend` o `git rebase`) o eliminación ([`git reset`](#reset) o [`git rebase`](#rebase)). Agregar commits secuenciales (`git commit`) no reescribe la historia, pues no altera el pasado.**
+<table>
+  <tr>
+    <td>
+    Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (<code>git commit --amend</code> o <code>git rebase</code>) o eliminación (<code>git reset</code> o <code>git rebase</code>). Agregar commits secuenciales (<code>git commit</code>) no reescribe la historia, pues no altera el pasado.
+    </td>
+  </tr>
+</table>
 
 Veamos un ejemplo sencillo utilizando `git commit --amend`.
 

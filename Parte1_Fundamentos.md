@@ -41,7 +41,15 @@ Git es un sistema de control de versiones (*version control system* o VCS) open 
 
 Cabe destacar que Git no es la única herramienta para el control de versiones, mas Git supera a las demás opciones en integraciones y características. Sin importar qué VCS se utilice, siempre se pueden esperar ciertas ventajas, las cuales se pueden resumir en la siguiente frase:
 
-> **Reversibilidad y fácil integración**
+<table>
+  <tr align="center">
+    <td>
+    <b>
+    Reversibilidad y fácil integración.
+    </b>
+    </td>
+  </tr>
+</table>
 
 - La reversibilidad significa que **ningún cambio resulta fatal**, siempre es posible recuperar versiones pasadas. La reversibilidad es lograda mediante la generación automática de un árbol o estructura que almacena la cronología del proyecto. En Git esta estructura es el árbol de commits.
 - La simplicidad en la colaboración se logra mediante la trivialidad en el proceso de integración de las aportaciones de cada colaborador, resultando en **tiempos de desarrollo mucho menores**. En Git, la integración de cambios se logra mediante [fusión de ramas](#fusión-de-ramas) o cambios de base (rebases), examinados en [Parte 2: Profundizando](Parte2_Profundizando.md).
@@ -259,7 +267,13 @@ El desarrollador desea realizar un commit con su progreso. Para lograr esto, **a
 
 **Todos los objetos son identificados por Git mediante un hash SHA-1**. Aquí es importante recordar que SHA-1 produce códigos de 40 caracteres de longitud (SHA-1 produce valores hash de 160 bits, en hexadecimal). Entonces, los identificadores con puntos suspensivos sobre los objetos de la figura son hashes SHA-1, etiqueta que Git les asigna para poder identificarlos y referirse a ellos. A continuación, se presenta un término más del vocabulario de Git.
 
-> **Snapshot**. Tree que representa el staging area asociado a un commit.
+<table>
+  <tr align="center">
+    <td>
+    <b>Snapshot.</b> Tree que representa el staging area asociado a un commit.
+    </td>
+  </tr>
+</table>
 
 Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía unidireccional de objetos commit, tree y blob, en la que cada commit apunta a su padre (y cada commit no conoce a sus descendientes). Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots correspondientes.
 
@@ -269,7 +283,13 @@ Ahora bien, continuemos el ejemplo. El programador continua trabajando en su rep
 
 Entendido este sistema, podemos ahora comprender con formalidad qué es una rama en Git.
 
-> **Rama**. Referencia a un objeto commit.
+<table>
+  <tr align="center">
+    <td>
+    <b>Rama.</b> Referencia a un objeto commit.
+    </td>
+  </tr>
+</table>
 
 Al igual que todas las referencias en Git, esta referencia es un hash SHA-1 que identifica a un commit. Al crearse nuevos commits, la referencia avanza al último commit realizado, por lo que se dice que estas referencias pueden moverse (son movable). También son ligeras (lightweight) pues se requiere de poco más de 160 bits para ser almacenadas. **Los programadores suelen usar la palabra rama; Git se refiere a estos apuntadores con el término `head`**. Esto puede comprobarse al inspeccionar `.git/refs/heads`.
 
@@ -419,7 +439,13 @@ Existen dos formas de navegación: por referencia **absoluta** o **relativa**. R
 
 De este análisis encontramos que existen tres tipos de referencias que directamente o en su resolución apuntan al mismo tipo de objeto: un commit.
 
-> **Referencias relacionadas con commits: (1) commits, (2) ramas, (3) `HEAD`.**
+<table>
+  <tr align="center">
+    <td>
+    Referencias relacionadas con commits: (1) commits, (2) ramas, (3) <code>HEAD</code>.
+    </td>
+  </tr>
+</table>
 
 Existen otras referencias que también son o apuntan a commits, como los stashes discutidos en [Parte 2: Profundizando](Parte2_Profundizando.md) o los tags, pero esta sección se enfoca en las tres mencionadas.
 
@@ -491,7 +517,14 @@ HEAD is now at 1c27aea Add more content to f1
 
 La primera vez que vi el mensaje **detached `HEAD` state** me confundí mucho, pero no es algo  de que alarmarse e incluso es sencillo entender la razón del mensaje. Hasta ahora, el apuntador `HEAD` siempre se ha visto en la siguiente posición: `HEAD -> <rama> -> <commit>`. Durante desarrollo siempre se tiene `HEAD` apuntando a una rama y nunca directamente a un commit.
 
-> **Se dice que `HEAD` está detached si apunta directamente a un commit. Se dice que `HEAD`está attached si apunta a una rama.**
+
+<table>
+  <tr align="center">
+    <td>
+    Se dice que <code>HEAD</code> está detached si apunta directamente a un commit. Se dice que <code>HEAD</code>está attached si apunta a una rama.
+    </td>
+  </tr>
+</table>
 
 El mensaje aparece pues indica que todo commit realizado en la posición actual de `HEAD` será perdido cuando `HEAD` apunte a otro commit. Veamos un ejemplo.
 
@@ -661,7 +694,13 @@ Ahora sólo resta realizar un commit que representará el commit de merge que, c
 
 Hasta ahora, todos los ejemplos y explicaciones han estado limitados a repositorios locales. Es decir, el directorio `.git` únicamente existe en la máquina del desarrollador. Una de las más grandes ventajas de un VCS es la facilidad para orquestar colaboraciones. **Para poder colaborar sobre un proyecto gestionado por Git es necesario administrar repositorios remotos**. A pesar que no existe definición formal de repositorio remoto, aquí menciono mi entendimiento del concepto.
 
-> **Repositorio remoto**. Sea R un repositorio, cualquier otro repositorio (`.git`) que represente el mismo proyecto que R y sea accesible por R (ya sea mediante una red o acceso a memoria local) se considera remoto a R.
+<table>
+  <tr>
+    <td>
+    <b>Repositorio remoto</b>. Sea R un repositorio, cualquier otro repositorio (<code>.git</code>) que represente el mismo proyecto que R y sea accesible por R (ya sea mediante una red o acceso a memoria local) se considera remoto a R.
+    </td>
+  </tr>
+</table>
 
 Nótese que el término *repositorio remoto* es popularmente asociado con repositorios almacenados en GitHub, GitLab u otro servicio de cloud storage para repositorios de Git. Sin embargo, el repo remoto puede incluso residir en el mismo host, aunque esto es muy raro en la práctica. El servicio de cloud storage más popular para repositorios de Git es GitHub.
 
@@ -834,7 +873,15 @@ To push the current branch and set the remote as upstream, use
 
 En ambos casos la operación no se realiza con éxito, reportando Git que no hay información de tracking para la rama actual (en este caso, para `master`) o, en otras palabras como lo reporta el error de `git push`, que la rama `master` no tiene una rama upstream. Para resolver este problema de configuración es necesario asignar una rama upstream a `master`.
 
-> **Rama upstream**. Rama de un repositorio remoto que es objeto de operaciones de lectura/escritura (fetch, pull y push) respecto a una rama en el repositorio local.
+
+
+<table>
+  <tr>
+    <td>
+    <b>Rama upstream</b>. Rama de un repositorio remoto que es objeto de operaciones de lectura/escritura (fetch, pull y push) respecto a una rama en el repositorio local.
+    </td>
+  </tr>
+</table>
 
 Es decir, cuando se realiza por ejemplo, `git pull origin master` ubicándose en la rama `master` del repo local, se dice que la rama `master` del repositorio ubicado en `origin` es upstream de la rama `master` del repositorio local para esa operación de pull.
 
