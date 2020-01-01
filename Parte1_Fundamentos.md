@@ -28,6 +28,12 @@
   - [Operaciones de lectura y escritura (fetch, pull y push)](#operaciones-de-lectura-y-escritura-fetch-pull-y-push)
   - [Obtener información detallada de un repositorio remoto](#obtener-información-detallada-de-un-repositorio-remoto)
   - [Configurar upstreams](#configurar-upstreams)
+- [Tagging](#tagging)
+  - [Tags ligeros](#tags-ligeros)
+  - [Tags anotados](#tags-anotados)
+  - [Visualizar y navegar entre tags](#visualizar-y-navegar-entre-tags)
+    - [Tags y ramas con el mismo nombre](#tags-y-ramas-con-el-mismo-nombre)
+  - [Publicar y eliminar tags](#publicar-y-eliminar-tags)
 
 ## ¿Qué es Git?
 
@@ -469,12 +475,12 @@ De este análisis encontramos que existen tres tipos de referencias que directam
 <table>
   <tr align="center">
     <td>
-    Referencias relacionadas con commits: (1) commits, (2) ramas, (3) <code>HEAD</code>.
+    Referencias resolubles a un commit: (1) commits, (2) ramas, (3) <code>HEAD</code>.
     </td>
   </tr>
 </table>
 
-Existen otras referencias que también son o apuntan a commits, como los stashes discutidos en [Parte 2: Profundizando](Parte2_Profundizando.md) o los tags, pero esta sección se enfoca en las tres mencionadas.
+Existen otras referencias que también son o apuntan a commits, como los stashes discutidos en [Parte 2: Profundizando](Parte2_Profundizando.md) o los [tags](#tagging), pero esta sección se enfoca en las tres mencionadas.
 
 En [Comandos básicos para ramas](#comandos-básicos-para-ramas) se introdujo el comando `git checkout`, el cual permite cambiar la rama a la que apunta `HEAD`. Con cada nuevo commit realizado en tal rama, `HEAD` avanza acordemente. Aquí presento una forma más general de este comando, donde el argumento no tiene que ser una rama, pero cualquier referencia que sea o pueda resolverse en un commit, como una rama, `HEAD`, un commit, un tag o un stash.
 
@@ -902,8 +908,6 @@ To push the current branch and set the remote as upstream, use
 
 En ambos casos la operación no se realiza con éxito, reportando Git que no hay información de tracking para la rama actual (en este caso, para `master`) o, en otras palabras como lo reporta el error de `git push`, que la rama `master` no tiene una rama upstream. Para resolver este problema de configuración es necesario asignar una rama upstream a `master`.
 
-
-
 <table>
   <tr>
     <td>
@@ -956,5 +960,166 @@ Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son inte
 <p align="center">
   <img src="images/remote_tracking.png" width="400px" />
 </p>
+
+## Tagging
+
+> Resumen de <https://git-scm.com/book/en/v2/Git-Basics-Tagging>
+
+Como se hace mención en [Navegando entre commits](#navegando-entre-commits), existen tres tipos de referencia que son o pueden resolverse en un commit: los commits, las ramas y `HEAD`. En esta sección se introducen los tags (etiquetas), que también son resolubles a un commit.
+
+El propósito de un tag es marcar un commit importante en la historia de commits. Este momento suele significar versiones desplegadas (`v1.0`, `v2.0`, etc.).
+
+Existen dos tipos de tags: (1) ligeros y (2) anotados. Ambos son almacenados en `.git\refs\tags`.
+
+### Tags ligeros
+
+Los tags ligeros son muy similares a una rama. Como se explica en [Objetos de Git](#objetos-de-git), una rama simplemente es una referencia a un objeto commit; de igual forma, un tag ligero no es más que una referencia a un objeto commit. Entonces la distinción entre ramas y tags es semántica. Una rama cumple el propósito de aislar un grupo de trabajo, lo cual tiene implicaciones funcionales distintas a las de un tag. Al hacer `git checkout` a un tag, [`HEAD` queda en estado detached](#referencias-absolutas), pues la intención de un tag no es aislar un grupo de commits, sino marcar uno en la historia para fácil revisión.
+
+Crea un tag ligero con nombre `<nombre>` apuntando a `HEAD`.
+
+- (`<referencia-resoluble-a-un-commit>`) En lugar de crear el tag apuntando a `HEAD`, puede especificarse el commit al que se apunta.
+
+```bnf
+git tag <nombre> [<referencia-resoluble-a-un-commit>]
+```
+
+### Tags anotados
+
+Los tags anotados son almacenados como objetos de Git, no son sólo una referencia directa a un commit. El objeto brinda información adicional: nombre del autor del tag, email, fecha y mensaje.
+
+Crea un tag anotado con nombre `<nombre>` apuntando a `HEAD`.
+
+- (`<referencia-resoluble-a-un-commit>`) En lugar de crear el tag apuntando a `HEAD`, puede especificarse el commit al que se apunta.
+- (`-m`) Proporcionar mensaje del tag (`<mensaje>`) evitando abrir el editor configurado en `core.editor`.
+
+```bnf
+git tag -a <nombre> [-m <mensaje>] [<referencia-resoluble-a-un-commit>]
+```
+
+### Visualizar y navegar entre tags
+
+Listar tags.
+
+- (`-l`) Si esta bandera es proporcionada sin un valor para `<expresión-glob>`, es funcionalmente equivalente a no proporcionar la bandera.
+- (`<expresión-glob>`) Seguido de `-l` o `--list`, especifica un patrón para filtrar los tags. En [Parte 2: Profundizando](Parte2_Profundizando.md) se discuten las expresiones glob.
+
+```bnf
+git tag [(-l | --list) [<expresión-glob>]]
+```
+
+Para ver la información del objeto de un tag anotado y su commit (o sólo del objeto commit en caso de ser un tag ligero) utilice [`git show`](https://git-scm.com/docs/git-show). Ejemplo para un tag anotado:
+
+```shell
+$ git show v1.0
+tag v1.0
+Tagger: Hernán Cervera <hjcerveram@hotmail.com>
+Date:   Tue Dec 31 18:33:01 2019 -0600
+
+First working version
+
+commit 9deb702fb6b76c1503a85fd01e9aa575f0f82e1d (HEAD -> master, tag: v1.0)
+Author: Hernán Cervera <hjcerveram@hotmail.com>
+Date:   Thu Dec 26 12:13:22 2019 -0600
+
+    Expand foo.txt
+
+diff --git a/foo.txt b/foo.txt
+index 0b607a7..3b2bf89 100644
+--- a/foo.txt
++++ b/foo.txt
+@@ -1 +1,2 @@
+ A file devoid of purpose
++Such a useless file to be working on
+```
+
+Para navegar al commit apuntado por un tag, utilice `git checkout`. La advertencia *detached `HEAD` state* es explicada en [referencias absolutas](#referencias-absolutas).
+
+```shell
+$ git checkout v1.0
+Note: switching to 'v1.0'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 9deb702 Expand foo.txt
+```
+
+#### Tags y ramas con el mismo nombre
+
+Consideremos el extraño caso en el que existe un tag ligero de nombre `master`, que evidentemente tiene el mismo nombre que la rama `master`. **Antes de proseguir, debo aclarar que este ejemplo sirve únicamente propósitos ilustrativos y la colisión aquí mostrada no debería ocurrir si la nomenclatura de tags y ramas ha sido meditada y acordada entre los colaboradores.**
+
+<p align="center">
+  <img src="images/tags_1.png" width="450px" />
+</p>
+
+Consideremos ahora el siguiente comando.
+
+```shell
+$ git checkout master
+warning: refname 'master' is ambiguous.
+Previous HEAD position was 6e88949 Add data to foo.txt
+Switched to branch 'master'
+```
+
+<p align="center">
+  <img src="images/tags_2.png" width="450px" />
+</p>
+
+Como es de esperarse, una advertencia es presentada y en este caso se elije a la rama. Al realizar un `git log` vemos que ahora se elije al tag y no la rama.
+
+```shell
+$ git log --oneline master
+warning: refname 'master' is ambiguous.
+cac92bb (tag: master) Create foo.txt
+93a5a4d Add content to bar.txt
+d932489 Create bar.txt
+```
+
+Para resolver la ambigüedad se debe especificar el nombre completo de la referencia. Para tags, el nombre es `refs/tags/<tag>` y para ramas, `refs/heads/<rama>`. Este nombre completo alude a la organización de las referencias en `.git`.
+
+<p align="center">
+  <img src="images/tags_3.png" width="250px" />
+</p>
+
+Así, por ejemplo, el siguiente comando no es ambigüo.
+
+```shell
+$ git log --oneline refs/heads/master
+880e9bb (HEAD -> master) Expand foo.txt
+6e88949 Add data to foo.txt
+cac92bb (tag: master) Create foo.txt
+93a5a4d Add content to bar.txt
+d932489 Create bar.txt
+```
+
+### Publicar y eliminar tags
+
+Al igual que las ramas, para transferir los tags a un [repositorio remoto](#repositorios-remotos) es necesario publicarlas explícitamente.
+
+Publicar el tag `<tag>` al repo remoto `<alias>` (1). Alternativamente, pueden publicarse todos los tags a `<alias>` con un solo comando (2).
+
+```bnf
+git push <alias> <tag>   (1)
+git push <alias> --tags  (2)
+```
+
+Eliminar un tag del repositorio local (1). Eliminar un tag de un repositorio remoto indicado por `<alias>` (2). Observe que (2) no elimina el tag localmente, sólo en el repositorio remoto.
+
+```bnf
+git tag -d <tag>                        (1)
+git push <alias> (-d | --delete) <tag>  (2)
+```
 
 👈 [README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)
