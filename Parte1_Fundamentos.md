@@ -816,13 +816,15 @@ From https://github.com/HerCerM/BatchScripts
 
 ### Operaciones de lectura y escritura (fetch, pull y push)
 
-Omitir `<rama>` para obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local. También pueden solicitarse sólo los cambios de una rama.
+Recuerdo que la sintaxis aquí presentada es simplificada, para la sintaxis completa revise la documentación oficial.
+
+Omitir `<rama>` para obtener todos los cambios del remoto identificado por `<alias>` no existentes en el repo local. También pueden solicitarse sólo los cambios de una rama. Documentación oficial: <https://git-scm.com/docs/git-fetch>.
 
 ```bnf
 git fetch <alias> [<rama>]
 ```
 
-Es importante destacar que este comando solamente trae los cambios, mas no los integra a las ramas respectivas mediante un merge. Entonces, para incorporar las modificaciones hace falta un merge manual. Podemos ver que los cambios han sido traídos (almacenados en la rama `origin/master`), pero no incorporados a `master`.
+Es importante destacar que `git fetch` solamente trae los cambios, mas no los integra a las ramas respectivas mediante un merge. Entonces, para incorporar las modificaciones hace falta un merge manual. Podemos ver que los cambios han sido traídos (almacenados en la rama `origin/master`), pero no incorporados a `master`.
 
 ```shell
 $ git fetch origin
@@ -831,7 +833,7 @@ $ git branch -a
   remotes/origin/master
 ```
 
-En la práctica, la mayoría de las veces se desea realizar un merge inmediatamente después de un fetch. `git pull` es un comando pensado para esto. **Es decir, `git pull` ejecuta dos comandos: primero un `git fetch`, seguido de `git merge`**.
+En la práctica, la mayoría de las veces se desea realizar un merge inmediatamente después de un fetch. `git pull` es un comando pensado para esto. **Es decir, `git pull` ejecuta dos comandos: primero un `git fetch`, seguido de `git merge`**. Omitir `<alias>` y `<rama>` para realizar el pull respecto al [upstream configurado](#configurar-upstreams), de otra forma realizar fetch de la rama remota especificada y realizar merge con la que apunta `HEAD`. Documentación oficial: <https://git-scm.com/docs/git-pull>.
 
 ```bnf
 git pull [<alias> <rama>]
@@ -843,7 +845,7 @@ Observación acerca de la distinción entre `git fetch` y `git pull`.
   <img src="images/fetch_vs_pull.png" width="700px" />
 </p>
 
-Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los cambios de la rama actual.
+Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los cambios de la rama actual. Omitir `<alias>` y `<rama>` para realizar el push respecto al [upstream configurado](#configurar-upstreams), de otra forma realizar push de la rama remota especificada. Documentación oficial: <https://git-scm.com/docs/git-push>.
 
 ```bnf
 git push [<alias> <rama>]
