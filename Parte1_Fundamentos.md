@@ -1,6 +1,6 @@
 # Fundamentos
 
-👈 [README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)
+[👈 README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)
 
 - [¿Qué es Git?](#qué-es-git)
   - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
@@ -1124,4 +1124,4 @@ git tag -d <tag>                        (1)
 git push <alias> (-d | --delete) <tag>  (2)
 ```
 
-👈 [README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)
+[👈 README](README.md) | [Parte 2: Profundizando 👉](Parte2_Profundizando.md)
