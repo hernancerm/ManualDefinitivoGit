@@ -20,11 +20,11 @@
 - [El confuso archivo `.gitkeep` y los directorios vacíos](#el-confuso-archivo-gitkeep-y-los-directorios-vacíos)
 - [Correcciones avanzadas](#correcciones-avanzadas)
   - [Reset](#reset)
-    - [Uso del comando](#uso-del-comando)
+    - [Uso de `git reset`](#uso-de-git-reset)
     - [Recuperación de un `git reset --hard` equivocado](#recuperación-de-un-git-reset---hard-equivocado)
   - [Revert](#revert)
     - [¿Cuándo utilizar `git revert` sobre `git reset`?](#cuándo-utilizar-git-revert-sobre-git-reset)
-    - [Uso del comando](#uso-del-comando-1)
+    - [Uso de `git revert`](#uso-de-git-revert)
   - [Rebase](#rebase)
     - [Rebase interactivo](#rebase-interactivo)
     - [Rebase no interactivo](#rebase-no-interactivo)
@@ -33,13 +33,13 @@
   - [¿Qué es la *historia pública*?](#qué-es-la-historia-pública)
   - [¿Cómo se corrigen commits públicos?](#cómo-se-corrigen-commits-públicos)
 
-## Flujos de trabajo (workflows)
+## <a name="flujos-de-trabajo-workflows">Flujos de trabajo (workflows)</a> [&#8593;](#profundizando)
 
 Utilizar Git eficientemente demanda más que únicamente conocer sus conceptos y los comandos que los implementan. Saber no sólo qué es una rama, pero cuándo y para qué crearlas, o cuándo realizar [rebases](#rebase) o preferir merges recursivos sobre fast-forward, etc. son asuntos que van más allá del conocimiento técnico de la herramienta, adentrándose en una línea de pensamiento más organizacional que tecnológica.
 
 Al inicio de [Parte 1: Fundamentos](Parte1_Fundamentos.md), se habla de las ventajas de no sólo usar Git *per se*, pero cualquier sistema de control de versiones. El objetivo de estas herramientas es acelerar el desarrollo de software facilitando la colaboración, al hacer el proceso de integración simple, mientras un historial del proyecto que efectivamente funciona como respaldo es construido por la misma herramienta. Los VCSs (*version control systems*) facilitan la colaboración, aceleran el desarrollo de software y generan respaldos del proyecto. Git es muy flexible en tanto que no impone ningún flujo de trabajo específico, en su lugar sólo proporciona herramientas. Elegir conscientemente cómo usar Git puede hacer de este programa mucho más o menos útil en conseguir su propósito.
 
-### ¿Qué es un flujo de trabajo?
+### <a name="qué-es-un-flujo-de-trabajo">¿Qué es un flujo de trabajo?</a> [&#8593;](#profundizando)
 
 <table>
   <tr>
@@ -51,7 +51,7 @@ Al inicio de [Parte 1: Fundamentos](Parte1_Fundamentos.md), se habla de las vent
 
 Este flujo podría utilizar muchas o pocas ramas; las ramas podrían extenderse decenas de commits antes de ser fusionadas en la versión unificada o ser fusionadas constantemente. Podría existir una nomenclatura para las ramas, podría en su lugar no usarse ramas del todo y sólo codificar en `master`. El acuerdo sobre estas decisiones conforman un flujo de trabajo.
 
-### ¿Cómo elegir un flujo de trabajo?
+### <a name="cómo-elegir-un-flujo-de-trabajo">¿Cómo elegir un flujo de trabajo?</a> [&#8593;](#profundizando)
 
 No existe *el* workflow correcto y único a seguir, cada equipo debe considerar sus integrantes, estrategia de despliegue (*deployment*) y necesidades con el fin de elegir el flujo de trabajo que más los agilice, implicando la menor carga mental innecesaria posible. El hecho que no exista *el* workflow ideal, no significa que no existan flujos de trabajo populares y efectivos. Como se menciona en <https://www.atlassian.com/git/tutorials/comparing-workflows>, al elegir un workflow es importante considerar lo siguiente:
 
@@ -59,7 +59,7 @@ No existe *el* workflow correcto y único a seguir, cada equipo debe considerar 
 - ¿Se presentan problemas al añadir más integrantes al equipo?
 - ¿Es sencillo revertir errores?
 
-### Un buen punto de partida: GitHub Flow
+### <a name="un-buen-punto-de-partida-github-flow">Un buen punto de partida: GitHub Flow</a> [&#8593;](#profundizando)
 
 Antes de abarcar el flujo de trabajo que lleva de nombre *GitHub Flow*, hay una pequeña historia que resulta relevante mencionar. En 2010, [Vincent Driessen](https://nvie.com/about/) publicó un post en su blog titulado [A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/), que más tarde fue popularmente conocido como *GitFlow*. En lugar de explicarlo aquí he ligado a su artículo original y usted mismo podrá comprobar que la complejidad del modelo es alta, incluyendo además mucha ceremonia. De ninguna manera estoy haciendo menos a GitFlow, pero quiero remarcar que contrario a lo que muchos creen, ésta no es *la única* forma de trabajar con Git.
 
@@ -83,7 +83,7 @@ En adición a dejar el contrato del workflow en voz o escrito, algunas reglas pu
 
 Para una introducción interactiva a GitHub recomiendo [Git-it](http://jlord.us/git-it/), la cual también abarca varios fundamentos discutidos en [Parte 1: Fundamentos](Parte1_Fundamentos.md).
 
-### Conociendo más flujos de trabajo
+### <a name="conociendo-más-flujos-de-trabajo">Conociendo más flujos de trabajo</a> [&#8593;](#profundizando)
 
 Recomiendo mucho explorar más flujos de trabajo, entre los cuales recomiendo [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/) por su versatilidad y popularidad. Si está en busca de un trabajo es muy probable que el workflow utilizado en la compañía a la que aspira sea inspirado por Git Flow.
 
@@ -93,7 +93,7 @@ Recomiendo mucho explorar más flujos de trabajo, entre los cuales recomiendo [G
 - Trunk-based flows (e.g. GitHub Flow) vs GitFlow <https://www.toptal.com/software/trunk-based-development-git-flow>
 - Integración continua con Git: <https://www.youtube.com/watch?v=TWM1YNzSwB8&list=LLO-gLu2Npbe6rRcMdTQ_ZIw&index=2&t=0s>
 
-## Stashing para evitar commits parciales
+## <a name="stashing-para-evitar-commits-parciales">Stashing para evitar commits parciales</a> [&#8593;](#profundizando)
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning>
 
@@ -117,13 +117,13 @@ Aborting
 
 Si el trabajo en la rama actual aún no está listo para ser persistido en un commit, la solución yace en el stashing. **Para crear un stash, existen los comandos `git stash`, `git stash push` y `git stash save`. Ya que el último no es recomendado (es sintaxis antigua, sustituida por `git stash push`) y el primero está limitado, me centraré en crear stashes mediante `git stash push`**.
 
-### ¿Qué es un stash?
+### <a name="qué-es-un-stash">¿Qué es un stash?</a> [&#8593;](#profundizando)
 
 **Un stash es un commit** (creado mediante alguno de los comandos anteriormente mencionados) que tiene la particularidad de no estar asociado a alguna rama. Los stashes se almacenan en una pila indizada a partir del cero. Es decir, al crearse un nuevo stash, su índice en la pila es cero; el que era cero se vuelve uno, el que era uno se vuelve dos, etc. El hash SHA-1 del stash con índice cero puede hallarse en `.git/refs/stash`. (Recuerde que un commit almacena las referencias a sus padres, por lo que basta con almacenar sólo el stash más reciente de la pila.)
 
 **Al estar desacoplado de las ramas, los stashes pueden ser referidos en cualquier rama**. La idea es poder limpiar tanto el working tree como el staging area pero no perder los cambios, almacenándolos en un commit. Esto para poder cambiar de rama aún si no está listo para realizar un commit o en caso que requiera ejecutar `git pull`. Los cambios de este commit pueden ser luego aplicados al trabajar en una rama distinta o en la misma rama.
 
-### Comandos para administrar stashes
+### <a name="comandos-para-administrar-stashes">Comandos para administrar stashes</a> [&#8593;](#profundizando)
 
 Mostrar todos los stashes.
 
@@ -161,7 +161,7 @@ git stash drop [stash@{<índice>}]  (1)
 git stash clear                    (2)
 ```
 
-### ¿Cuándo puede cambiarse de rama sin hacer commit o stash de las modificaciones?
+### <a name="cuándo-puede-cambiarse-de-rama-sin-hacer-commit-o-stash-de-las-modificaciones">¿Cuándo puede cambiarse de rama sin hacer commit o stash de las modificaciones?</a> [&#8593;](#profundizando)
 
 > Simplificación de <https://stackoverflow.com/questions/22053757/checkout-another-branch-when-there-are-uncommitted-changes-on-the-current-branch>
 
@@ -191,7 +191,7 @@ Ahora dirijamos nuestra atención a casos en los que no es posible un cambio de 
 - Se crea un archivo cuyo nombre y extensión existen en otra rama. En la rama actual el archivo está untracked, pero en la rama objeto del checkout el archivo está tracked. Al intentar el cambio, se requiere la acción 1 (creación) sobre el nuevo archivo; en el snapshot de la rama origen no existe el archivo, pero en el snapshot de la rama destino sí, entonces se crea, pero en el proceso colisiona con el archivo modificado.
 - Se modifica un archivo que en otra rama no existe. Es ilegal cambiarse a esa rama con la modificación uncommitted pues se requiere la acción 2 (eliminación) sobre el archivo modificado.
 
-## Eliminar archivos untracked
+## <a name="eliminar-archivos-untracked">Eliminar archivos untracked</a> [&#8593;](#profundizando)
 
 > Resumen de <https://git-scm.com/docs/git-clean>
 
@@ -207,7 +207,7 @@ Si `<paths>` no es proporcionado, limpia el working tree desde el directorio en 
 git clean [-f] [-d] [-x] [<path>]
 ```
 
-## Ignorar archivos (.gitignore)
+## <a name="ignorar-archivos-gitignore">Ignorar archivos (.gitignore)</a> [&#8593;](#profundizando)
 
 > Resumen de <https://git-scm.com/docs/gitignore>
 
@@ -217,7 +217,7 @@ La solución es ignorar los archivos, volviéndolos no elegibles para los comand
 
 ---
 
-### Expresiones glob vs regulares
+### <a name="expresiones-glob-vs-regulares">Expresiones glob vs regulares</a> [&#8593;](#profundizando)
 
 Varios comandos de Git requieren seleccionar archivos, como `git add` o `git stash push`. A pesar que pueda parecer que aceptan expresiones regulares, en realidad lo que aceptan son expresiones glob. Las expresiones glob sirven el propósito de representar archivos mediante wildcards (caracteres especiales), dado un sistema de archivos; mientras que las expresiones regulares representan cadenas de texto, dada una secuencia de caracteres.
 
@@ -229,7 +229,7 @@ Ambas expresiones sirven un propósito distinto aunque similar (y la sintaxis ta
 
 ---
 
-### Notación de expresiones glob
+### <a name="notación-de-expresiones-glob">Notación de expresiones glob</a> [&#8593;](#profundizando)
 
 | Símbolo | Explicación |
 |:---:|---|
@@ -239,7 +239,7 @@ Ambas expresiones sirven un propósito distinto aunque similar (y la sintaxis ta
 | [abc] | Representa cualquier carácter contenido en los corchetes. |
 | [a-z] | Representa cualquier carácter contenido en el intervalo definido por los corchetes. Este intervalo es dependiente de la configuración regional. |
 
-### .gitignore
+### <a name="gitignore">.gitignore</a> [&#8593;](#profundizando)
 
 Este archivo define los archivos que Git ignorará. **Archivos tracked no son afectados**. El archivo puede contener comentarios de una línea, los cuales inician con `#`. Para especificar archivos a ignorar, colocar un patrón glob por línea. Si se ignora un directorio, todos sus archivos y subdirectorios también son ignorados. Un repositorio puede tener más de un `.gitignore`, siendo sus patrones glob relativos a la ubicación del archivo.
 
@@ -253,7 +253,7 @@ Git permite definir un `.gitignore` de impacto global (afecta todos los reposito
 git config --global core.excludesFile <ruta-.gitignore>
 ```
 
-### Ignorar archivos tracked
+### <a name="ignorar-archivos-tracked">Ignorar archivos tracked</a> [&#8593;](#profundizando)
 
 Para ignorar archivos tracked (añadidos al staging environment o existentes en algún commit) primero deben ser olvidados por Git, es decir, cambiar su estado a untracked. Para conseguir esto se utiliza el comando siguiente, donde `<archivo>` acepta expresiones glob.
 
@@ -261,7 +261,7 @@ Para ignorar archivos tracked (añadidos al staging environment o existentes en 
 git rm --cached <archivo>
 ```
 
-## El confuso archivo `.gitkeep` y los directorios vacíos
+## <a name="el-confuso-archivo-gitkeep-y-los-directorios-vacíos">El confuso archivo `.gitkeep` y los directorios vacíos</a> [&#8593;](#profundizando)
 
 Consideremos el siguiente experimento.
 
@@ -294,9 +294,9 @@ nothing to commit (create/copy files and use "git add" to track)
 
  Para registrar directorios vacíos recomiendo utilizar un `readme.md` explicando la razón de la necesidad de hacer tracking de tal carpeta.
 
-## Correcciones avanzadas
+## <a name="correcciones-avanzadas">Correcciones avanzadas</a> [&#8593;](#profundizando)
 
-### Reset
+### <a name="reset">Reset</a> [&#8593;](#profundizando)
 
 > Resumen de <https://www.atlassian.com/git/tutorials/undoing-changes/git-reset>
 
@@ -322,7 +322,7 @@ Existen tres modalidades de reseteos, las cuales son elegibles por las banderas 
 | `--mixed`<br><br>*modo predeterminado* | Staging area<br><br>*Las modificaciones de los commits descendientes del commit seleccionado son **colocadas en el working tree** (unstaged).* |
 |`--hard`| Staging area y working tree<br><br>⚠️ ***Las modificaciones de los commits descendientes del commit seleccionado son ELIMINADAS***. |
 
-#### Uso del comando
+#### <a name="uso-de-git-reset">Uso de <code>git reset</code></a> [&#8593;](#profundizando)
 
 Retira del staging area los archivos especificados (1). Si alguno de los archivos inicia con un guión alto (`-`), añadir dos guiones altos antes del nombre del archivo (esto evita que Git intente procesar el archivo como una bandera). Para el reset discutido anteriormente, utilice (2). La sintaxis completa puede encontrarla en <https://git-scm.com/docs/git-reset>.
 
@@ -385,7 +385,7 @@ $ git commit --amend -m "Create foo.txt"
 
 ---
 
-#### Recuperación de un `git reset --hard` equivocado
+#### <a name="recuperación-de-un-git-reset---hard-equivocado">Recuperación de un <code>git reset --hard</code> equivocado</a> [&#8593;](#profundizando)
 
 Al realizar un reset duro, los commits descendientes del seleccionado se vuelven inaccesibles mediante `git log` y su contenido es eliminado del working tree y staging area. En la imagen inferior podemos notar que el commit 3 no es listado tras el reset duro.
 
@@ -395,7 +395,7 @@ Al realizar un reset duro, los commits descendientes del seleccionado se vuelven
 
 Esto no significa que el commit 3 sea inaccesible, tan sólo que recorriendo el árbol de commits a partir de `HEAD` (o cualquier `head`) no es posible llegar a él. El commit no ha sido eliminado. Para recuperase de este reset basta con hallar el hash SHA-1 del commit al que deseamos regresar y ejecutar un reset duro respecto al mismo. Para hallar el hash, se utiliza `git reflog`, que lista el historial de commits que ha visitado `HEAD`. Para el ejemplo presentado la solución es dada por `git reset --hard 3`.
 
-### Revert
+### <a name="revert">Revert</a> [&#8593;](#profundizando)
 
 > Resumen de <https://www.atlassian.com/git/tutorials/undoing-changes/git-revert>
 
@@ -405,7 +405,7 @@ Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por
  <img src="images/revert_1.png" width="600px" />
 </p>
 
-#### ¿Cuándo utilizar `git revert` sobre `git reset`?
+#### <a name="cuándo-utilizar-git-revert-sobre-git-reset">¿Cuándo utilizar <code>git revert</code> sobre <code>git reset</code>?</a> [&#8593;](#profundizando)
 
 Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás a partir de la punta de una rama. Revert siempre es seguro, pues no altera la la historia del repositorio, haciendo imposible reescribir la historia un repo remoto mediante revert. Por otra lado, reset sí puede reescribir la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
 
@@ -413,7 +413,7 @@ Revert permite deshacer los cambios introducidos por commits selectos (incluso c
  <img src="images/revert_2.png" width="400px" />
 </p>
 
-#### Uso del comando
+#### <a name="uso-de-git-revert">Uso de <code>git revert</code></a> [&#8593;](#profundizando)
 
 Crea un nuevo commit con la corrección, abriendo el editor de texto especificado en `core.editor` para ingresar el mensaje del commit.
 
@@ -516,7 +516,7 @@ Aquí se hace énfasis en la falta de secuencia de los commits pues esto no ser�
 
 ---
 
-### Rebase
+### <a name="rebase">Rebase</a> [&#8593;](#profundizando)
 
 ⚠️ Este comando reescribe la historia, vea [reescribiendo la historia](#reescribiendo-la-historia) para conocer por qué esto puede ser peligroso. A comparación con [`git reset`](#reset), restaurar el estado del árbol de commits después de un rebase podría resultar más complicado de razonar.
 
@@ -531,7 +531,7 @@ git rebase [-i | --interactive] (<padre> | --root)  (1)
 git rebase <nuevo-padre> [<rama>]                   (2)
 ```
 
-#### Rebase interactivo
+#### <a name="rebase-interactivo">Rebase interactivo</a> [&#8593;](#profundizando)
 
 Para ilustrar este modo, pensemos en la siguiente situación. Alguien acaba de iniciar un proyecto de documentación, teniendo como primer commit la creación del `README.md`. Después de unos cuantos commits observa que hay una falta de ortografía en el `README.md`, pero en lugar de crear un nuevo commit para resolverlo desea modificar el primer commit.
 
@@ -748,7 +748,7 @@ El árbol de commits final, incluyendo una visualización de los commits inacces
  <img src="images/rebase_4.png" width="500px" />
 </p>
 
-#### Rebase no interactivo
+#### <a name="rebase-no-interactivo">Rebase no interactivo</a> [&#8593;](#profundizando)
 
 Algunos workflows (flujos de trabajo) con Git utilizan `git rebase` para mantener, en su mayoría, una historia lineal (véase por ejemplo <https://dev.to/shosta/the-git-rebase-workflow-2g49>). En el árbol de *Antes* vemos que un merge de `master` con cualquier otra rama resultaría en Git utilizando la estrategia recursiva; por otro lado, un merge de `master` con cualquier otra rama en *Después* utilizaría la estrategia fast-forward, manteniendo la historia lineal. Veamos cómo ir de *Antes* a *Después*.
 
@@ -829,7 +829,7 @@ La respuesta a la muy conveniente omisión de commits duplicados puede encontrar
 
 > Recuperado de <https://git-scm.com/docs/git-rebase>
 
-## Reescribiendo la historia
+## <a name="reescribiendo-la-historia">Reescribiendo la historia</a> [&#8593;](#profundizando)
 
 Al colaborar en un repositorio visto y trabajado por otras personas, existe una regla de oro:
 
@@ -845,7 +845,7 @@ Al colaborar en un repositorio visto y trabajado por otras personas, existe una 
 
 Más que una regla, presento esto como una fuerte recomendación, pues es posible que los colaboradores acuerden reescribir parte de la historia y se haga de forma segura, pero lograr esto puede resultar complejo, muy confuso e innecesario. En general, se reescribe la historia pública por equivocación y no por una decisión meditada.
 
-### ¿Qué es *reescribir la historia*?
+### <a name="qué-es-reescribir-la-historia">¿Qué es <i>reescribir la historia</i>?</a> [&#8593;](#profundizando)
 
 Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
 
@@ -922,11 +922,11 @@ $ git log --oneline --all --graph
 
 De pronto `origin/master` y `master` apuntan a commits distintos a pesar que la versión de los archivos entre ellos es la misma. Esta divergencia, quizá no anticipada, puede ocasionar problemas y hacer la historia de commits confusa.
 
-### ¿Qué es la *historia pública*?
+### <a name="qué-es-la-historia-pública">¿Qué es la <i>historia pública</i>?</a> [&#8593;](#profundizando)
 
 Todo commit que exista en un repositorio remoto con colaboradores es parte de la historia pública. La regla de oro dice *no reescribir la historia **pública***, pues no existe ningún peligro en reescribir la historia local. Mientras los commits no hayan sido publicados (`git push`) a un repositorio remoto, siéntase libre de sustituirlos o eliminarlos utilizando `git commit --amend`, `git reset` o `git rebase`. Por esta razón es una excelente práctica sólo hacer `git push` de sus commits cuando esté totalmente satisfecho con ellos, pues una vez publicados es mejor considerarlos escritos en piedra.
 
-### ¿Cómo se corrigen commits públicos?
+### <a name="cómo-se-corrigen-commits-públicos">¿Cómo se corrigen commits públicos?</a> [&#8593;](#profundizando)
 
 A pesar que es posible reescribir la historia de forma segura si los colaboradores lo pueden manejar, es recomendable no hacerlo. En lugar de reescribir la historia, considere utilizar [`git revert`](#revert) para añadir commits con las correcciones.
 
