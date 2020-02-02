@@ -59,7 +59,7 @@ Cabe destacar que Git no es la única herramienta para el control de versiones, 
   </tr>
 </table>
 
-- La reversibilidad significa que **ningún cambio resulta fatal**, siempre es posible recuperar versiones pasadas. La reversibilidad es lograda mediante la generación automática de un árbol o estructura que almacena la cronología del proyecto. En Git esta estructura es el árbol de commits.
+- La reversibilidad implica que **ningún cambio resulta fatal**, siempre es posible recuperar versiones pasadas. Como se menciona en [The Pragmatic Programmer](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition), de David Thomas y Andrew Hunt, los sistemas de control de versiones de código son un gran botón de `undo`.
 - La simplicidad en la colaboración se logra mediante la trivialidad en el proceso de integración de las aportaciones de cada colaborador, resultando en **tiempos de desarrollo mucho menores**. En Git, la integración de cambios se logra mediante [fusión de ramas](#fusión-de-ramas) o cambios de base (rebases), examinados en [Parte 2: Profundizando](Parte2_Profundizando.md).
 
 ### <a name="por-qué-git-y-no-otro-vcs">¿Por qué Git y no otro VCS?</a> [&#8593;](#fundamentos)
