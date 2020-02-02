@@ -550,7 +550,6 @@ HEAD is now at 1c27aea Add more content to f1
 
 La primera vez que vi el mensaje **detached `HEAD` state** me confundí mucho, pero no es algo  de que alarmarse e incluso es sencillo entender la razón del mensaje. Hasta ahora, el apuntador `HEAD` siempre se ha visto en la siguiente posición: `HEAD -> <rama> -> <commit>`. Durante desarrollo siempre se tiene `HEAD` apuntando a una rama y nunca directamente a un commit.
 
-
 <table>
   <tr align="center">
     <td>
