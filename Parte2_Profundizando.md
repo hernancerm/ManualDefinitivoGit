@@ -924,7 +924,15 @@ De pronto `origin/master` y `master` apuntan a commits distintos a pesar que la 
 
 ### <a name="qué-es-la-historia-pública">¿Qué es la <i>historia pública</i>?</a> [&#8593;](#profundizando)
 
-Todo commit que exista en un repositorio remoto con colaboradores es parte de la historia pública. La regla de oro dice *no reescribir la historia **pública***, pues no existe ningún peligro en reescribir la historia local. Mientras los commits no hayan sido publicados (`git push`) a un repositorio remoto, siéntase libre de sustituirlos o eliminarlos utilizando `git commit --amend`, `git reset` o `git rebase`. Por esta razón es una excelente práctica sólo hacer `git push` de sus commits cuando esté totalmente satisfecho con ellos, pues una vez publicados es mejor considerarlos escritos en piedra.
+Todo commit que exista en un repositorio remoto público (al menos para un grupo selecto de personas) es parte de la historia pública.
+
+<p align="center">
+ <img src="images/rewriting_history_1.png" width="450px" />
+</p>
+
+Consideremos el diagrama superior que muestra un pequeño repositorio de ejemplo. Los commits marcados de azul existen en el repositorio identificado por `origin`, lo cual significa que otras personas con acceso a `origin` pueden ver estos commits y más aún, si son colaboradores, muy seguramente han basado su trabajo sobre estos commits.
+
+Observe que la regla de oro propone *no reescribir la historia **pública***, pues no existe ningún peligro en reescribir la historia local. Mientras los commits no hayan sido publicados (`git push`) a un repositorio remoto, siéntase libre de sustituirlos o eliminarlos utilizando `git commit --amend`, `git reset` o `git rebase`. Por esta razón es una excelente práctica sólo hacer `git push` de sus commits cuando esté totalmente satisfecho con ellos, pues una vez publicados es mejor considerarlos tallados en piedra.
 
 ### <a name="cómo-se-corrigen-commits-públicos">¿Cómo se corrigen commits públicos?</a> [&#8593;](#profundizando)
 
