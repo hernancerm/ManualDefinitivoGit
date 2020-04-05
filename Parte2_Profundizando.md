@@ -296,6 +296,32 @@ nothing to commit (create/copy files and use "git add" to track)
 
 ## Correcciones avanzadas
 
+### Cherry pick
+
+En [Parte 1: Fundamentos](Parte1_Fundamentos.md) en la sección de fusión de ramas, se habla que existen dos formas de integrar cambios de una rama a otra: `git merge` (tema central de tal sección) y [`git rebase`](#rebase) (comando no abarcado por la sección pero sí cubierto en esta parte 2 del manual). Existe una tercera forma: `git cherry-pick`. Este comando permite aplicar commits arbitrarios sobre la referencia `HEAD`. El caso de uso más popular de este comando requiere de dos ramas, cuando se desea aplicar un commit de una rama a la otra rama y un merge o rebase no es posible pues el trabajo en las ramas no ha sido concluido y por lo tanto no está listo para ser fusionado.
+
+<p align="center">
+ <img src="images/cherry-pick_1.png" width="820px" />
+</p>
+
+Tras ejecutar `git cherry-pick` se añade un nuevo commit después de `17f6816` que introduce los mismos cambios que `d794202`. Es importante señalar que los commits son diferentes (tienen un SHA-1 distinto), mas los cambios que introducen son idénticos. Los commits que introducen los mismos cambios son señalados con amarillo. Puede pensarse que `10ecede` es una copia de `d794202`.
+
+#### Uso del comando
+
+- (`-e`) Permite modificar el mensaje del commit antes de aplicar el nuevo commit.
+- (`-n`) En lugar de crear un commit con los cambios, añade los cambios al working tree e index.
+- (`<commit>`) Commit (referencia absoluta o relativa) que se copiará sobre `HEAD`.
+
+```bnf
+git cherry-pick  [-e | --edit] [-n | --no-commit] <commit>
+```
+
+#### Crítica de cherry pick
+
+Lo más importante a notar acerca de este comando es que su aplicación resulta en dos commits físicamente distintos (hashes SHA-1 diferentes, por lo tanto, commits diferentes) pero al mismo tiempo, dos commits lógicamente idénticos (pues ambos introducen los mismo cambios). Esto puede resultar en una historia confusa de leer merced la duplicación y longitud extra causada por los mismos commits duplicados. Es por esta razón que no se recomienda basar el medio de integración de cambios en cherry pick, se prefiere merge o rebase.
+
+Sin embargo, existen casos en los que realizar un cherry pick es una buena idea. En mi experiencia este comando resulta particularmente útil para recuperar commits extraviados en el reflog, caso en el cual se logra la recuperación del commit y no se genera una duplicación de commits lógicos en la historia.
+
 ### Reset
 
 > Resumen de <https://www.atlassian.com/git/tutorials/undoing-changes/git-reset>
