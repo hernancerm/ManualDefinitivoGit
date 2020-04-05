@@ -35,7 +35,7 @@
     - [Tags y ramas con el mismo nombre](#tags-y-ramas-con-el-mismo-nombre)
   - [Publicar y eliminar tags](#publicar-y-eliminar-tags)
 
-## <a name="qué-es-git">¿Qué es Git?</a> [&#8593;](#fundamentos)
+## ¿Qué es Git?
 
 > Git is my second big project which is only created for me to maintain my first big project [, the Linux kernel] - *Linus Torvalds*. Recuperado de una [entrevista de TED](https://www.youtube.com/watch?v=o8NPllzkFhE&t=919s).
 >
@@ -43,7 +43,7 @@
 
 Git es un sistema de control de versiones (*version control system* o VCS) open source desarrollado en 2005 por Linus Torvalds, el creador del kernel de Linux, quien se encontraba muy insatisfecho con las herramientas contemporáneas para versionar código, entre las cuales CVS era la más popular. En particular, **Git es un VCS distribuido (DVCS)**, lo cual significa que en lugar de destinar un lugar único para almacenar la historia de un proyecto, como lo hacían sus antecesores CVS o Subversion (SVN), cada desarrollador tiene una copia de la historia completa de los cambios de cada archivo.
 
-### <a name="ventajas-de-los-sistemas-de-control-de-versiones-vcs">Ventajas de los sistemas de control de versiones (VCS)</a> [&#8593;](#fundamentos)
+### Ventajas de los sistemas de control de versiones (VCS)
 
 > Resumen de <https://www.atlassian.com/git/tutorials/what-is-version-control>
 
@@ -62,7 +62,7 @@ Cabe destacar que Git no es la única herramienta para el control de versiones, 
 - La reversibilidad implica que **ningún cambio resulta fatal**, siempre es posible recuperar versiones pasadas. Como se menciona en [The Pragmatic Programmer](https://pragprog.com/book/tpp20/the-pragmatic-programmer-20th-anniversary-edition), de David Thomas y Andrew Hunt, los sistemas de control de versiones de código son un gran botón de `undo`.
 - La simplicidad en la colaboración se logra mediante la trivialidad en el proceso de integración de las aportaciones de cada colaborador, resultando en **tiempos de desarrollo mucho menores**. En Git, la integración de cambios se logra mediante [fusión de ramas](#fusión-de-ramas) o cambios de base (rebases), examinados en [Parte 2: Profundizando](Parte2_Profundizando.md).
 
-### <a name="por-qué-git-y-no-otro-vcs">¿Por qué Git y no otro VCS?</a> [&#8593;](#fundamentos)
+### ¿Por qué Git y no otro VCS?
 
 > Resumen de <https://www.atlassian.com/git/tutorials/what-is-git>
 
@@ -72,7 +72,7 @@ Un importante principio de diseño de Git es la flexibilidad. La herramienta pue
 
 **Git es, por mucho, el sistema de control de versiones estándar en la industria**. Git ha sido ampliamente adoptado, lo que implica que tiene soporte activo, amplia documentación, fuerte integración con muchas herramientas, como IDEs o editores de texto (p. ej.: NetBeans, IntelliJ, VSCode), sistemas de ticketing (p. ej.: Jira), etc.
 
-## <a name="instalación">Instalación</a> [&#8593;](#fundamentos)
+## Instalación
 
 | Sistema operativo                      | Proceso de instalación |
 |----------------------------------------|------------------------|
@@ -83,7 +83,7 @@ Un importante principio de diseño de Git es la flexibilidad. La herramienta pue
 
 🔍 **Tip.** En Windows, tras la instalación puede actualizar su versión de Git con el comando `git update-git-for-windows`. Para revisar su versión actual use el comando `git version`. Estos comandos los ingresa en Git Bash.
 
-## <a name="cómo-leer-la-sintaxis-de-los-comandos">Cómo leer la sintaxis de los comandos</a> [&#8593;](#fundamentos)
+## Cómo leer la sintaxis de los comandos
 
 Extended Backus-Naur Form o [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) es notación utilizada para describir la sintaxis de un lenguaje. En este manual es utilizada para describir las banderas y estructura de los comandos.
 
@@ -95,7 +95,7 @@ Extended Backus-Naur Form o [EBNF](https://en.wikipedia.org/wiki/Extended_Backus
 | `\|` | La barra vertical (`\|`) indica opciones exclusivas dentro de corchetes o paréntesis. |
 | `()` | El paréntesis (`()`) indica un grupo. Esto es útil al emplear la barra vertical dentro. |
 
-## <a name="configuración">Configuración</a> [&#8593;](#fundamentos)
+## Configuración
 
 > Resumen de <https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup>
 
@@ -134,7 +134,7 @@ Para visualizar toda la configuración disponible (incluso en `.git`), ingresar:
 git config --list
 ```
 
-## <a name="ambiente-de-desarrollo">Ambiente de desarrollo</a> [&#8593;](#fundamentos)
+## Ambiente de desarrollo
 
 > Now, pay attention. This is the main thing to remember about Git if you want the rest of your learning process to go smoothly.
 
@@ -158,13 +158,13 @@ El flujo de trabajo usual con Git es como sigue:
 2. Al estar satisfecho con las modificaciones, se añaden archivos selectos al staging area, definiendo así el contenido que esos archivos del proyecto tendrán en la siguiente versión.
 3. Se realiza un commit, el cual toma lo añadido en el staging area y genera una versión actualizada del proyecto, la cual es mostrada en el working tree y almacenada en el repositorio local.
 
-### <a name="estados-de-los-archivos">Estados de los archivos</a> [&#8593;](#fundamentos)
+### Estados de los archivos
 
 En particular, un archivo se considera **tracked** si existe una versión registrada de éste en el repositorio local, lo cual ocurre al añadirlo al staging area o al incorporarlo en un commit. Un archivo tracked podría ser marcado por Git como **modified** o **staged**. Si un archivo es añadido al staging area, entonces el archivo está staged. Si un archivo tracked ha sido modificado, pero no añadido al staging area, está modified. Los archivos que no han formado parte de algún commit y tampoco han sido añadidos al staging area se dice que están **untracked**. Todo archivo nuevo empieza con el status de untracked y Git no versiona estos archivos en ese estado.
 
 Existen casos en los que es deseable dejar ciertos archivos permanentemente untracked. Para este caso Git ofrece el estado *ignored*, el cual es discutido en [Parte 2: Profundizando](Parte2_Profundizando.md).
 
-## <a name="comandos-básicos-para-la-gestión-de-un-repositorio">Comandos básicos para la gestión de un repositorio</a> [&#8593;](#fundamentos)
+## Comandos básicos para la gestión de un repositorio
 
 > Para algunos de estos comandos se presentan también banderas u argumentos que me han resultado útiles, mas cabe mencionar que existen muchas más opciones. Git tiene integrado un sistema de ayuda; para cada comando se puede solicitar su documentación mediante las siguientes dos opciones de sintaxis.
 >
@@ -229,7 +229,7 @@ Lista cronológica inversa (se muestra primero lo más reciente) de los objetos 
 git reflog
 ```
 
-## <a name="correcciones-básicas">Correcciones básicas</a> [&#8593;](#fundamentos)
+## Correcciones básicas
 
 - (`--amend`) Añadir al último commit las modificaciones del staging area y permitir cambiar el mensaje del commit. ⚠️ Esta corrección reescribe la historia, sólo es recomendable utilizarlo sobre commits no publicados. Puede conocer más en [Parte 2: Profundizando](Parte2_Profundizando.md).
 - (`--no-edit`) Al utilizarse después de `--amend` omite el proceso de corregir el mensaje de commit.
@@ -258,7 +258,7 @@ Retira archivos del repositorio, pero los mantiene en el working tree. Esto es m
 git rm --cached <archivo>
 ```
 
-## <a name="concepto-de-rama">Concepto de rama</a> [&#8593;](#fundamentos)
+## Concepto de rama
 
 > A branch in Git is simply a lightweight movable pointer to a commit object.
 >
@@ -268,7 +268,7 @@ Para poder tener un sólido entendimiento de las ramas de Git, es necesario expl
 
 ---
 
-### <a name="objetos-de-git">Objetos de Git</a> [&#8593;](#fundamentos)
+### Objetos de Git
 
 <p align="center">
   <img src="images/branches_1.png" width="600px" />
@@ -338,7 +338,7 @@ Podemos observar que la referencia (rama) `buf-fix` avanzó al último commit tr
 
 Las ramas son parte fundamental de Git. A diferencia de otros sistemas de control de versiones, como CVS, el proceso de creación de ramas en Git es rápido, pues implica tan sólo cambiar una referencia de 160 bits. **Las ramas son el mecanismo principal por el cual se organiza la colaboración**.
 
-## <a name="comandos-básicos-para-ramas">Comandos básicos para ramas</a> [&#8593;](#fundamentos)
+## Comandos básicos para ramas
 
 Muestra todas las ramas del repositorio local.
 
@@ -363,7 +363,7 @@ Cambiar a una rama.
 git checkout [-b] <rama>
 ```
 
-## <a name="fusión-de-ramas">Fusión de ramas</a> [&#8593;](#fundamentos)
+## Fusión de ramas
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging>
 
@@ -395,7 +395,7 @@ En esta rama el desarrollador soluciona el bug con un único commit. Nótese que
   <img src="images/merge_3.png" width="300px" />
 </p>
 
-### <a name="fast-forward-merge">Fast-forward merge</a> [&#8593;](#fundamentos)
+### Fast-forward merge
 
 Juan ahora debe integrar su solución del bug a `master`. Es decir, `bug-fix` debe ser fusionada en `master`. Para incorporar los cambios de `bug-fix` a `master`, Juan usa los siguientes comandos:
 
@@ -420,7 +420,7 @@ Juan ya puede continuar trabajando en la característica que estaba implementand
   <img src="images/merge_5.png" width="350px" />
 </p>
 
-### <a name="recursive-merge">Recursive merge</a> [&#8593;](#fundamentos)
+### Recursive merge
 
 Puesto que la implementación de la nueva característica está terminada, Juan desea incorporar los cambios de `feature` en `master`. Puede notarse que el commit 6 no es descendiente directo del commit 5, por lo que un merge fast-forward no es posible. En estos casos Git utiliza la estrategia recursiva. Al fusionar `feature` en `master` con los siguientes comandos vemos el siguiente mensaje:
 
@@ -439,7 +439,7 @@ En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos 
   <img src="images/merge_6.png" width="400px" />
 </p>
 
-### <a name="comandos-básicos-para-merges">Comandos básicos para merges</a> [&#8593;](#fundamentos)
+### Comandos básicos para merges
 
 Si `HEAD` apunta a la rama A, incorpora los cambios de la rama B en la rama A (la estrategia del merge es seleccionada por Git).
 
@@ -458,7 +458,7 @@ Eliminar ramas.
 git branch (-d | -D) <rama>
 ```
 
-## <a name="navegando-entre-commits">Navegando entre commits</a> [&#8593;](#fundamentos)
+## Navegando entre commits
 
 > Véase <https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection>
 
@@ -488,7 +488,7 @@ En [Comandos básicos para ramas](#comandos-básicos-para-ramas) se introdujo el
 git checkout <referencia-resoluble-a-un-commit>
 ```
 
-### <a name="referencias-absolutas">Referencias absolutas</a> [&#8593;](#fundamentos)
+### Referencias absolutas
 
 Como se explica en [Objetos de Git](#objetos-de-git), el estándar para identificadores de objetos es SHA-1. Como argumento de `git checkout` es legal pasar un hash de este tipo o el nombre de una rama. Podemos hallar una versión corta, de 7 caracteres, del SHA-1 que identifica a un commit utilizando el comando `git log --oneline`. Para visualizar el árbol desde la terminal, puede utilizar la bandera adicional `--graph`.
 
@@ -622,7 +622,7 @@ do so (now or later) by using -b with the checkout command again. Example:
 HEAD is now at f2511b6 Create file-to-lose
 ```
 
-### <a name="referencias-relativas">Referencias relativas</a> [&#8593;](#fundamentos)
+### Referencias relativas
 
 Recordemos el estado inicial del árbol de commits. La dirección de las flechas de commit a commit es muy importante: **cada commit sólo conoce a sus padres; a sus hijos no**. De esta observación adquiere sentido que existen marcadores de ascendencia (`~`, `^`), pero no de descendencia. Es decir, la navegación relativa se refiere a recorrer la *ascendencia* de un commit.
 
@@ -658,7 +658,7 @@ Estos marcadores también pueden combinarse y tener como objeto una rama o inclu
 
 En ocasiones también encontrará referencias del formato `HEAD@{n}`, donde `n` es un número entero. Éstas son referencias a las entradas de `git reflog`.
 
-## <a name="conflictos-al-realizar-un-merge">Conflictos al realizar un merge</a> [&#8593;](#fundamentos)
+## Conflictos al realizar un merge
 
 En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos Git no puede ejecutar un merge de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró `App.java`, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
 
@@ -720,7 +720,7 @@ All conflicts fixed but you are still merging.
 
 Ahora sólo resta realizar un commit que representará el commit de merge que, como se ha estudiado, cuando no existe un conflicto y la estrategia de merge es recursivo, Git lo crea automáticamente. En este caso, lo realiza el programador. Ejecutar `git commit` o `git commit --continue` tienen el mismo resultado.
 
-## <a name="repositorios-remotos">Repositorios remotos</a> [&#8593;](#fundamentos)
+## Repositorios remotos
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes>
 
@@ -740,7 +740,7 @@ Nótese que el término *repositorio remoto* es popularmente asociado con reposi
   <img src="images/remote_repos.png" width="650px" />
 </p>
 
-### <a name="acceso-a-repositorios-remotos">Acceso a repositorios remotos</a> [&#8593;](#fundamentos)
+### Acceso a repositorios remotos
 
 Para crear un repositorio local que represente el mismo proyecto que un repositorio remoto se utiliza el comando `git clone` que efectivamente clona el `.git` de la fuente especificada.
 
@@ -813,7 +813,7 @@ From https://github.com/HerCerM/BatchScripts
 
 ---
 
-### <a name="operaciones-de-lectura-y-escritura-fetch-pull-y-push">Operaciones de lectura y escritura (fetch, pull y push)</a> [&#8593;](#fundamentos)
+### Operaciones de lectura y escritura (fetch, pull y push)
 
 Recuerdo que la sintaxis aquí presentada es simplificada, para la sintaxis completa revise la documentación oficial.
 
@@ -850,7 +850,7 @@ Actualizar la rama `<rama>` del repositorio remoto ubicado en `<alias>` con los 
 git push [<alias> <rama>]
 ```
 
-### <a name="obtener-información-detallada-de-un-repositorio-remoto">Obtener información detallada de un repositorio remoto</a> [&#8593;](#fundamentos)
+### Obtener información detallada de un repositorio remoto
 
 Inspecciona el repositorio remoto bajo el alias `<alias>` y muestra información de relación respecto al repo local: ramas en el remoto que existen en el local (al igual que las que aún no han sido recuperadas) y la configuración de push y pull predeterminada por rama.
 
@@ -884,7 +884,7 @@ $ git push
 Everything up-to-date
 ```
 
-### <a name="configurar-upstreams">Configurar upstreams</a> [&#8593;](#fundamentos)
+### Configurar upstreams
 
 Retomemos el ejemplo en el que se inicia el repositorio de scripts de Batch mediante la forma alterna a `git clone` (es decir, mediante `git init` seguido de `git remote add`). En este caso, veamos qué ocurre al intentar hacer pull o push sin especificar ni el alias ni la rama.
 
@@ -962,7 +962,7 @@ Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son inte
   <img src="images/remote_tracking.png" width="400px" />
 </p>
 
-## <a name="tagging">Tagging</a> [&#8593;](#fundamentos)
+## Tagging
 
 > Resumen de <https://git-scm.com/book/en/v2/Git-Basics-Tagging>
 
@@ -972,7 +972,7 @@ El propósito de un tag es marcar un commit importante en la historia de commits
 
 Existen dos tipos de tags: (1) ligeros y (2) anotados. Ambos son almacenados en `.git\refs\tags`.
 
-### <a name="tags-ligeros">Tags ligeros</a> [&#8593;](#fundamentos)
+### Tags ligeros
 
 Los tags ligeros son muy similares a una rama. Como se explica en [Objetos de Git](#objetos-de-git), una rama simplemente es una referencia a un objeto commit; de igual forma, un tag ligero no es más que una referencia a un objeto commit. Entonces la distinción entre ramas y tags es semántica. Una rama cumple el propósito de aislar un grupo de trabajo, lo cual tiene implicaciones funcionales distintas a las de un tag. Al hacer `git checkout` a un tag, [`HEAD` queda en estado detached](#referencias-absolutas), pues la intención de un tag no es aislar un grupo de commits, sino marcar uno en la historia para fácil revisión.
 
@@ -984,7 +984,7 @@ Crea un tag ligero con nombre `<nombre>` apuntando a `HEAD`.
 git tag <nombre> [<referencia-resoluble-a-un-commit>]
 ```
 
-### <a name="tags-anotados">Tags anotados</a> [&#8593;](#fundamentos)
+### Tags anotados
 
 Los tags anotados son almacenados como objetos de Git, no son sólo una referencia directa a un commit. El objeto brinda información adicional: nombre del autor del tag, email, fecha y mensaje.
 
@@ -997,7 +997,7 @@ Crea un tag anotado con nombre `<nombre>` apuntando a `HEAD`.
 git tag -a <nombre> [-m <mensaje>] [<referencia-resoluble-a-un-commit>]
 ```
 
-### <a name="visualizar-y-navegar-entre-tags">Visualizar y navegar entre tags</a> [&#8593;](#fundamentos)
+### Visualizar y navegar entre tags
 
 Listar tags.
 
@@ -1057,7 +1057,7 @@ Turn off this advice by setting config variable advice.detachedHead to false
 HEAD is now at 9deb702 Expand foo.txt
 ```
 
-#### <a name="tags-y-ramas-con-el-mismo-nombre">Tags y ramas con el mismo nombre</a> [&#8593;](#fundamentos)
+#### Tags y ramas con el mismo nombre
 
 Consideremos el extraño caso en el que existe un tag ligero de nombre `master`, que evidentemente tiene el mismo nombre que la rama `master`. **Antes de proseguir, debo aclarar que este ejemplo sirve únicamente propósitos ilustrativos y la colisión aquí mostrada no debería ocurrir si la nomenclatura de tags y ramas ha sido meditada y acordada entre los colaboradores.**
 
@@ -1105,7 +1105,7 @@ cac92bb (tag: master) Create foo.txt
 d932489 Create bar.txt
 ```
 
-### <a name="publicar-y-eliminar-tags">Publicar y eliminar tags</a> [&#8593;](#fundamentos)
+### Publicar y eliminar tags
 
 Al igual que las ramas, para transferir los tags a un [repositorio remoto](#repositorios-remotos) es necesario publicarlas explícitamente.
 
