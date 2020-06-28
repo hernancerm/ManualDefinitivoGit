@@ -691,6 +691,32 @@ En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas 
   <img src="images/merge_5.png" width="380px" />
 </p>
 
+---
+
+<p align="center"><b>¿Cuándo ocurre un conflicto de merge?</b></p>
+
+Consideremos la siguiente imagen, donde se muestra que se divide la historia en dos partes: la continuación de la rama `master`, y los cambios de la nueva rama `branch`.
+
+<p align="center">
+  <img src="images/merge_conflict_aside.png" width="430px" />
+</p>
+
+Es importante notar también que las dos partes de esta historia no necesariamente sólo tienen el commit al que apunta cada rama, sino que podrían haber más commits (por ello los puntos suspensivos).
+
+Entonces, ¿cuándo ocurre un conflicto?
+
+<table>
+  <tr>
+    <td>
+    Al realizar un merge, ocurre un conflicto cuando las ramas que se están fusionando ofrecen <b>cambios distintos</b> sobre la <b>misma parte de un mismo archivo</b>.
+    </td>
+  </tr>
+</table>
+
+Tomando en cuenta la imagen anterior, una forma intuitiva de pensarlo es la siguiente. Pensando en una archivo en particular que fue modificado en `master`, cuyo cambio es único para esa rama, nos preguntamos entonces: ¿existe algún cambio único en `branch` que ofrece una versión distinta para esa misma parte del mismo archivo? Si no, entonces no hay conflicto.
+
+---
+
 Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo `App.java`, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios en las mismas líneas de este archivo.
 
 ```shell
