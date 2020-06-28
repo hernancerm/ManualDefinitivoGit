@@ -287,7 +287,7 @@ Para poder tener un sólido entendimiento de las ramas de Git, es necesario expl
 ### Objetos de Git
 
 <p align="center">
-  <img src="images/branches_1.png" width="600px" />
+  <img src="images/branches_1.png" width="630px" />
 </p>
 
 A lo largo de esta sección se denota a la carpeta `.git/objects` por el nombre *directorio objects*. Recuérdese que `.git` está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
@@ -410,7 +410,7 @@ $ git checkout bug-fix
 En esta rama el desarrollador soluciona el bug con un único commit. Nótese que el progreso que Juan llevaba en la rama `feature` no existe en la rama `master`, pues se encuentra atrás en la historia. **Generalizando, al cambiar de rama, el working tree muestra los contenidos del snapshot del commit de la rama**. Ahora la relación de los commits luce como lo indica la figura siguiente.
 
 <p align="center">
-  <img src="images/merge_3.png" width="300px" />
+  <img src="images/merge_3.png" width="380px" />
 </p>
 
 <a id="markdown-fast-forward-merge" name="fast-forward-merge"></a>
@@ -430,13 +430,13 @@ Fast-forward
 La estrategia utilizada para el merge es fast-forward pues basta con adelantar la referencia `master` al commit 5 para incorporar los cambios de la rama `bug-fix`. Se elimina la rama `bug-fix` utilizando el comando `git branch -d bug-fix` pues no se necesita más y ahora las ramas y commits tienen la siguiente estructura y estado.
 
 <p align="center">
-  <img src="images/merge_4.png" width="300px" />
+  <img src="images/merge_4.png" width="380px" />
 </p>
 
 Juan ya puede continuar trabajando en la característica que estaba implementando en `feature`, para lo cual se cambia a esta rama y logra terminar la implementación en un commit más, como se muestra a continuación.
 
 <p align="center">
-  <img src="images/merge_5.png" width="350px" />
+  <img src="images/merge_5.png" width="380px" />
 </p>
 
 <a id="markdown-recursive-merge" name="recursive-merge"></a>
@@ -456,7 +456,7 @@ Merge made by the 'recursive' strategy.
 En este caso, Git utiliza tres snapshots para realizar la fusión de contenidos y **genera un nuevo commit** (asociado a un nuevo snapshot) que representa la fusión de las dos ramas. Los tres snapshots pertenecen a los dos últimos commits de las ramas `master` y `feature` y el tercero, al ancestro común, que en este caso es el commit 3. Los commits y sus relaciones están mostrados por la siguiente figura.
 
 <p align="center">
-  <img src="images/merge_6.png" width="400px" />
+  <img src="images/merge_6.png" width="450px" />
 </p>
 
 <a id="markdown-comandos-básicos-para-merges" name="comandos-básicos-para-merges"></a>
@@ -487,7 +487,7 @@ git branch (-d | -D) <rama>
 En ocasiones resulta necesario revisar versiones anteriores del proyecto, ya sea por estar en busca de un bug (commit que introduce una regresión), requerir demostrar la evolución de un módulo o al necesitar revertir las modificaciones introducidas por algunos commits. Para lograr cualquiera de estas tareas es importante conocer cómo navegar el árbol de commits. Con el fin de demostrar la navegación se toma como árbol de referencia el mostrado en la figura inferior.
 
 <p align="center">
-  <img src="images/navigation_1.png" width="500px" />
+  <img src="images/navigation_1.png" width="600px" />
 </p>
 
 Existen dos formas de navegación: por referencia **absoluta** o **relativa**. Recuerde de la sección [Objetos de Git](#objetos-de-git) que las versiones del proyecto son almacenadas en los snapshots asociados a cada objeto commit. Recorrer la historia del proyecto significa visitar commits pasados. También sabemos que una rama no es más que una referencia a un commit, por lo que la resolución de la rama (identificar el commit al que apunta), también representa una versión del proyecto. De forma similar, `HEAD` es una referencia que indica a Git la posición actual del usuario en el árbol de commits, apuntando siempre a un commit u objeto que pueda resolverse en un commit, como una rama.
@@ -540,7 +540,7 @@ Switched to branch 'feature'
 ```
 
 <p align="center">
-  <img src="images/navigation_2.png" width="550px" />
+  <img src="images/navigation_2.png" width="650px" />
 </p>
 
 ---
@@ -566,7 +566,7 @@ HEAD is now at 1c27aea Add more content to f1
 ```
 
 <p align="center">
-  <img src="images/navigation_3.png" width="500px" />
+  <img src="images/navigation_3.png" width="600px" />
 </p>
 
 ---
@@ -584,7 +584,7 @@ La primera vez que vi el mensaje **detached `HEAD` state** me confundí mucho, p
 El mensaje aparece pues indica que todo commit realizado en la posición actual de `HEAD` será perdido cuando `HEAD` apunte a otro commit. Veamos un ejemplo.
 
 <p align="center">
-  <img src="images/navigation_4.png" width="500px" />
+  <img src="images/navigation_4.png" width="600px" />
 </p>
 
 En la posición de detached `HEAD`, creé un archivo, lo agregué al staging area y realicé un commit. Al igual que en el caso cuando `HEAD` apunta a una rama, el apuntador se mueve junto con el nuevo commit. Sin embargo, ahora consideremos qué ocurre si se ejecuta `git checkout master`. O en general, si se hace checkout a cualquier otro commit.
@@ -605,7 +605,7 @@ Switched to branch 'master'
 ```
 
 <p align="center">
-  <img src="images/navigation_5.png" width="500px" />
+  <img src="images/navigation_5.png" width="600px" />
 </p>
 
 Podemos ver que ahora no es posible llegar al commit `f2511b6` mediante alguna rama.
@@ -651,7 +651,7 @@ HEAD is now at f2511b6 Create file-to-lose
 Recordemos el estado inicial del árbol de commits. La dirección de las flechas de commit a commit es muy importante: **cada commit sólo conoce a sus padres; a sus hijos no**. De esta observación adquiere sentido que existen marcadores de ascendencia (`~`, `^`), pero no de descendencia. Es decir, la navegación relativa se refiere a recorrer la *ascendencia* de un commit.
 
 <p align="center">
-  <img src="images/navigation_1.png" width="500px" />
+  <img src="images/navigation_1.png" width="600px" />
 </p>
 
 Individualmente, tanto el marcador `~` como el `^` se refieren al primer padre del commit especificado; no hay diferencia. En los snippets utilizo `-c advice.detachedHead=false` para evitar la extensa advertencia del estado detached de `HEAD`. Puede utilizar `-c` para asignar variables de configuración sólo para ese comando.
@@ -688,7 +688,7 @@ En ocasiones también encontrará referencias del formato `HEAD@{n}`, donde `n` 
 En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas en común de los mismos archivos. En estos casos Git no puede ejecutar un merge de forma automática; la intervención del programador es necesaria. Del ejemplo anterior, imaginemos que la característica agregada en `feature` alteró `App.java`, archivo que también fue modificado por la rama `bug-fix` y cuyos cambios ya se encuentran fusionados en `master`. En particular, del ejemplo anterior, nos ubicamos en este momento.
 
 <p align="center">
-  <img src="images/merge_5.png" width="300px" />
+  <img src="images/merge_5.png" width="380px" />
 </p>
 
 Al intentar fusionar `feature` en `master`, ocurrirá un conflicto sobre el archivo `App.java`, pues tanto el commit 6 (perteneciente a `feature`) como el 5 (perteneciente a `master`) tienen cambios en las mismas líneas de este archivo.
@@ -989,7 +989,7 @@ $ git branch -a
 Recordemos el comando `git fetch`. Al ejecutar un fetch, los cambios no son integrados a alguna rama local, sino que sólo son traídos al repo local para inspección y, si se desea, para integración mediante `git merge`. ¿En dónde son esos cambios almacenados para inspección? Los cambios son almacenados en una rama de nombre `<alias>/<rama>` que sirve como rama de enlace entre una local y su upstream asociada (conocida en inglés como tracking branch). Entonces, en el proceso de enlace entre una rama local y una remota intervienen tres ramas: la rama local, la rama remota y una intermediara local que permite traer cambios del repo remoto sin inmediatamente agregarlos al repositorio local.
 
 <p align="center">
-  <img src="images/remote_tracking.png" width="400px" />
+  <img src="images/remote_tracking.png" width="450px" />
 </p>
 
 <a id="markdown-tagging" name="tagging"></a>
