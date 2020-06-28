@@ -468,8 +468,10 @@ Al igual que `git reset`, `git revert` permite eliminar cambios introducidos por
 Revert permite deshacer los cambios introducidos por commits selectos (incluso commits no secuenciales o muy atrás en la historia), mientras que reset sólo puede deshacer hacia atrás a partir de la punta de una rama. Revert siempre es seguro, pues no altera la la historia del repositorio, haciendo imposible reescribir la historia un repo remoto mediante revert. Por otra lado, reset sí puede reescribir la historia de un repo remoto si es utilizado incorrectamente. **Sólo utilizar `git reset` sobre commits que aún no han sido publicados (push)**. A pesar de estas desventajas, recomiendo utilizar reset en los casos que es posible, ilustrado por el diagrama inferior, pues evita el commit extra de corrección.
 
 <p align="center">
- <img src="images/revert_2.png" width="400px" />
+ <img src="images/revert_2.png" width="750px" />
 </p>
+
+Los cambios de los commits no secuenciales también pueden ser eliminados con un rebase interactivo, evitando así commits extra por revert. Sin embargo, cualquiera de los dos comandos ofrecen el mismo estado final del proyecto.
 
 <a id="markdown-uso-del-comando-2" name="uso-del-comando-2"></a>
 #### Uso del comando
