@@ -20,6 +20,10 @@
     - [.gitignore](#gitignore)
     - [Ignorar archivos tracked](#ignorar-archivos-tracked)
 - [El confuso archivo `.gitkeep` y los directorios vacíos](#el-confuso-archivo-gitkeep-y-los-directorios-vacíos)
+- [Reescribiendo la historia](#reescribiendo-la-historia)
+    - [¿Qué es *reescribir la historia*?](#¿qué-es-reescribir-la-historia)
+    - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
+    - [¿Cómo se corrigen commits públicos?](#¿cómo-se-corrigen-commits-públicos)
 - [Correcciones avanzadas](#correcciones-avanzadas)
     - [Cherry pick](#cherry-pick)
         - [Uso del comando](#uso-del-comando)
@@ -33,10 +37,6 @@
     - [Rebase](#rebase)
         - [Rebase interactivo](#rebase-interactivo)
         - [Rebase no interactivo](#rebase-no-interactivo)
-- [Reescribiendo la historia](#reescribiendo-la-historia)
-    - [¿Qué es *reescribir la historia*?](#¿qué-es-reescribir-la-historia)
-    - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
-    - [¿Cómo se corrigen commits públicos?](#¿cómo-se-corrigen-commits-públicos)
 
 <!-- /TOC -->
 
@@ -316,6 +316,119 @@ nothing to commit (create/copy files and use "git add" to track)
  En algunas situaciones podría resultar deseable almacenar en los commits ciertos directorios vacíos. Existen varias recomendaciones respecto a cómo conseguir esto, siendo una de las más populares crear un archivo con nombre `.gitkeep` en el directorio en cuestión, para que ya no esté vacío y pueda ser registrado por Git. En mi opinión, esta convención es muy confusa y no la recomiendo. `.gitkeep` no es un archivo que Git trate de forma especial, como lo serían por ejemplo [`.gitignore`](#ignorar-archivos-(.gitignore)) o `.gitconfig`, por lo que no tiene documentación oficial su uso; el prefijo `git` sugiere que es un archivo de configuración, cuando en realidad no lo es.
 
  Para registrar directorios vacíos recomiendo utilizar un `readme.md` explicando la razón de la necesidad de hacer tracking de tal carpeta.
+
+<a id="markdown-reescribiendo-la-historia" name="reescribiendo-la-historia"></a>
+## Reescribiendo la historia
+
+Al colaborar en un repositorio visto y trabajado por otras personas, existe una regla de oro:
+
+<table>
+  <tr align="center">
+    <td>
+    <b>
+    No reescribir la historia pública.
+    </b>
+    </td>
+  </tr>
+</table>
+
+Más que una regla, presento esto como una fuerte recomendación, pues es posible que los colaboradores acuerden reescribir parte de la historia y se haga de forma segura, pero lograr esto puede resultar complejo, muy confuso e innecesario. En general, se reescribe la historia pública por equivocación y no por una decisión meditada.
+
+<a id="markdown-¿qué-es-reescribir-la-historia" name="¿qué-es-reescribir-la-historia"></a>
+### ¿Qué es *reescribir la historia*?
+
+Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
+
+<table>
+  <tr>
+    <td>
+    Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (<code>git commit --amend</code> o <code>git rebase</code>) o eliminación (<code>git reset</code> o <code>git rebase</code>). Agregar commits secuenciales (<code>git commit</code>) no reescribe la historia, pues no altera el pasado.
+    </td>
+  </tr>
+</table>
+
+Veamos un ejemplo sencillo utilizando `git commit --amend`.
+
+```bash
+$ git log --oneline --all --graph
+ # Observe que el hash del commit al que apunta HEAD es 1c0e104.
+*   1c0e104 (HEAD -> master, origin/master) Merge branch 'feature'
+|\
+| * 1c27aea (feature) Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+
+$ git commit --amend --no-edit
+[master 5b9a0ca] Merge branch 'feature'
+ Date: Sun Dec 22 12:20:44 2019 -0600
+
+$ git log --oneline --all --graph
+ # El hash ha cambiado de 1c0e104 a 5b9a0ca,
+ # no se trata del mismo objeto commit.
+*   5b9a0ca (HEAD -> master, origin/master) Merge branch 'feature'
+|\
+| * 1c27aea (feature) Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+```
+
+¿Por qué es importante que los hashes cambien si su contenido es el deseado (y en este ejemplo incluso es el mismo)? Esto sólo es importante en el contexto de repositorios remotos y colaboradores. Considere a un colaborador que trabajaba con la versión antigua y ejecuta un `git fetch origin` para revisar los cambios.
+
+```bash
+$ git fetch origin
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 2 (delta 0), reused 2 (delta 0), pack-reused 0
+Unpacking objects: 100% (2/2), done.
+From https://github.com/HerCerM/RewritingHistory
+ + 1c0e104...5b9a0ca master     -> origin/master  (forced update)
+
+$ git log --oneline --all --graph
+    # Después del amend
+*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature'
+|\      # Antes del amend
+| | *   1c0e104 (HEAD -> master) Merge branch 'feature'
+| | |\
+| |/ /
+|/| /
+| |/
+| * 1c27aea Add more content to f1
+| * 5a4b4dd Add content to f2
+* | 494804a Create f3
+|/
+* a9e3559 Create f2
+* 44b6f5d Modify f1
+* d04b4ee Start version control
+```
+
+De pronto `origin/master` y `master` apuntan a commits distintos a pesar que la versión de los archivos entre ellos es la misma. Esta divergencia, quizá no anticipada, puede ocasionar problemas y hacer la historia de commits confusa.
+
+<a id="markdown-¿qué-es-la-historia-pública" name="¿qué-es-la-historia-pública"></a>
+### ¿Qué es la *historia pública*?
+
+Todo commit que exista en un repositorio remoto público (al menos para un grupo selecto de personas) es parte de la historia pública.
+
+<p align="center">
+ <img src="images/rewriting_history_1.png" width="450px" />
+</p>
+
+Consideremos el diagrama superior que muestra un pequeño repositorio de ejemplo. Los commits marcados de azul existen en el repositorio identificado por `origin`, lo cual significa que otras personas con acceso a `origin` pueden ver estos commits y más aún, si son colaboradores, muy seguramente han basado su trabajo sobre estos commits.
+
+Observe que la regla de oro propone *no reescribir la historia **pública***, pues no existe ningún peligro en reescribir la historia local. Mientras los commits no hayan sido publicados (`git push`) a un repositorio remoto, siéntase libre de sustituirlos o eliminarlos utilizando `git commit --amend`, `git reset` o `git rebase`. Por esta razón es una excelente práctica sólo hacer `git push` de sus commits cuando esté totalmente satisfecho con ellos, pues una vez publicados es mejor considerarlos tallados en piedra.
+
+<a id="markdown-¿cómo-se-corrigen-commits-públicos" name="¿cómo-se-corrigen-commits-públicos"></a>
+### ¿Cómo se corrigen commits públicos?
+
+A pesar que es posible reescribir la historia de forma segura si los colaboradores lo pueden manejar, es recomendable no hacerlo. En lugar de reescribir la historia, considere utilizar [`git revert`](#revert) para añadir commits con las correcciones.
 
 <a id="markdown-correcciones-avanzadas" name="correcciones-avanzadas"></a>
 ## Correcciones avanzadas
@@ -892,118 +1005,5 @@ La respuesta a la muy conveniente omisión de commits duplicados puede encontrar
 </p>
 
 > Recuperado de <https://git-scm.com/docs/git-rebase>
-
-<a id="markdown-reescribiendo-la-historia" name="reescribiendo-la-historia"></a>
-## Reescribiendo la historia
-
-Al colaborar en un repositorio visto y trabajado por otras personas, existe una regla de oro:
-
-<table>
-  <tr align="center">
-    <td>
-    <b>
-    No reescribir la historia pública.
-    </b>
-    </td>
-  </tr>
-</table>
-
-Más que una regla, presento esto como una fuerte recomendación, pues es posible que los colaboradores acuerden reescribir parte de la historia y se haga de forma segura, pero lograr esto puede resultar complejo, muy confuso e innecesario. En general, se reescribe la historia pública por equivocación y no por una decisión meditada.
-
-<a id="markdown-¿qué-es-reescribir-la-historia" name="¿qué-es-reescribir-la-historia"></a>
-### ¿Qué es *reescribir la historia*?
-
-Primero hay que recordar que la historia de Git se compone por el árbol de commits, donde cada commit es identificado por un hash SHA-1. Cualquier sustitución o eliminación a esta secuencia de hashes se considera reescribir la historia.
-
-<table>
-  <tr>
-    <td>
-    Se dice que la historia es reescrita si la secuencia de hashes en el árbol de commits cambia por acción de sustitución (<code>git commit --amend</code> o <code>git rebase</code>) o eliminación (<code>git reset</code> o <code>git rebase</code>). Agregar commits secuenciales (<code>git commit</code>) no reescribe la historia, pues no altera el pasado.
-    </td>
-  </tr>
-</table>
-
-Veamos un ejemplo sencillo utilizando `git commit --amend`.
-
-```bash
-$ git log --oneline --all --graph
- # Observe que el hash del commit al que apunta HEAD es 1c0e104.
-*   1c0e104 (HEAD -> master, origin/master) Merge branch 'feature'
-|\
-| * 1c27aea (feature) Add more content to f1
-| * 5a4b4dd Add content to f2
-* | 494804a Create f3
-|/
-* a9e3559 Create f2
-* 44b6f5d Modify f1
-* d04b4ee Start version control
-
-$ git commit --amend --no-edit
-[master 5b9a0ca] Merge branch 'feature'
- Date: Sun Dec 22 12:20:44 2019 -0600
-
-$ git log --oneline --all --graph
- # El hash ha cambiado de 1c0e104 a 5b9a0ca,
- # no se trata del mismo objeto commit.
-*   5b9a0ca (HEAD -> master, origin/master) Merge branch 'feature'
-|\
-| * 1c27aea (feature) Add more content to f1
-| * 5a4b4dd Add content to f2
-* | 494804a Create f3
-|/
-* a9e3559 Create f2
-* 44b6f5d Modify f1
-* d04b4ee Start version control
-```
-
-¿Por qué es importante que los hashes cambien si su contenido es el deseado (y en este ejemplo incluso es el mismo)? Esto sólo es importante en el contexto de repositorios remotos y colaboradores. Considere a un colaborador que trabajaba con la versión antigua y ejecuta un `git fetch origin` para revisar los cambios.
-
-```bash
-$ git fetch origin
-remote: Enumerating objects: 4, done.
-remote: Counting objects: 100% (4/4), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 2 (delta 0), reused 2 (delta 0), pack-reused 0
-Unpacking objects: 100% (2/2), done.
-From https://github.com/HerCerM/RewritingHistory
- + 1c0e104...5b9a0ca master     -> origin/master  (forced update)
-
-$ git log --oneline --all --graph
-    # Después del amend
-*   5b9a0ca (origin/master, origin/HEAD) Merge branch 'feature'
-|\      # Antes del amend
-| | *   1c0e104 (HEAD -> master) Merge branch 'feature'
-| | |\
-| |/ /
-|/| /
-| |/
-| * 1c27aea Add more content to f1
-| * 5a4b4dd Add content to f2
-* | 494804a Create f3
-|/
-* a9e3559 Create f2
-* 44b6f5d Modify f1
-* d04b4ee Start version control
-```
-
-De pronto `origin/master` y `master` apuntan a commits distintos a pesar que la versión de los archivos entre ellos es la misma. Esta divergencia, quizá no anticipada, puede ocasionar problemas y hacer la historia de commits confusa.
-
-<a id="markdown-¿qué-es-la-historia-pública" name="¿qué-es-la-historia-pública"></a>
-### ¿Qué es la *historia pública*?
-
-Todo commit que exista en un repositorio remoto público (al menos para un grupo selecto de personas) es parte de la historia pública.
-
-<p align="center">
- <img src="images/rewriting_history_1.png" width="450px" />
-</p>
-
-Consideremos el diagrama superior que muestra un pequeño repositorio de ejemplo. Los commits marcados de azul existen en el repositorio identificado por `origin`, lo cual significa que otras personas con acceso a `origin` pueden ver estos commits y más aún, si son colaboradores, muy seguramente han basado su trabajo sobre estos commits.
-
-Observe que la regla de oro propone *no reescribir la historia **pública***, pues no existe ningún peligro en reescribir la historia local. Mientras los commits no hayan sido publicados (`git push`) a un repositorio remoto, siéntase libre de sustituirlos o eliminarlos utilizando `git commit --amend`, `git reset` o `git rebase`. Por esta razón es una excelente práctica sólo hacer `git push` de sus commits cuando esté totalmente satisfecho con ellos, pues una vez publicados es mejor considerarlos tallados en piedra.
-
-<a id="markdown-¿cómo-se-corrigen-commits-públicos" name="¿cómo-se-corrigen-commits-públicos"></a>
-### ¿Cómo se corrigen commits públicos?
-
-A pesar que es posible reescribir la historia de forma segura si los colaboradores lo pueden manejar, es recomendable no hacerlo. En lugar de reescribir la historia, considere utilizar [`git revert`](#revert) para añadir commits con las correcciones.
 
 [👈 Parte 1: Fundamentos](Parte1_Fundamentos.md)
