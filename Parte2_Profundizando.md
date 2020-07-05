@@ -37,6 +37,9 @@
     - [Rebase](#rebase)
         - [Rebase interactivo](#rebase-interactivo)
         - [Rebase no interactivo](#rebase-no-interactivo)
+- [Examinando el staging area, working tree y repositorio](#examinando-el-staging-area-working-tree-y-repositorio)
+    - [Inspección del staging area y working tree](#inspección-del-staging-area-y-working-tree)
+    - [Inspección del repositorio](#inspección-del-repositorio)
 
 <!-- /TOC -->
 
@@ -1005,5 +1008,107 @@ La respuesta a la muy conveniente omisión de commits duplicados puede encontrar
 </p>
 
 > Recuperado de <https://git-scm.com/docs/git-rebase>
+
+<a id="markdown-examinando-el-staging-area-working-tree-y-repositorio" name="examinando-el-staging-area-working-tree-y-repositorio"></a>
+## Examinando el staging area, working tree y repositorio
+
+Git ofrece comandos muy útiles para inspeccionar los contenidos de sus tres áreas; el working tree, staging area (index) y repositorio (directorio de Git). Esta sección pretende cubrirlos con casos de uso específicos.
+
+<a id="markdown-inspección-del-staging-area-y-working-tree" name="inspección-del-staging-area-y-working-tree"></a>
+### Inspección del staging area y working tree
+
+[Documentación oficial de `git ls-files`](https://git-scm.com/docs/git-ls-files).
+
+---
+
+**Caso de uso 1. Archivos ignorados untracked**
+
+```bash
+git ls-files --others --ignored --exclude-standard
+```
+
+---
+
+---
+
+**Caso de uso 2. Archivos ignorados versionados**
+
+```bash
+git ls-files --ignored --exclude-standard
+```
+
+---
+
+---
+
+**Caso de uso 3. Archivos untracked no ignorados**
+
+```bash
+git ls-files --others --exclude-standard
+```
+
+---
+
+---
+
+**Caso de uso 4. Archivos untracked**
+
+```bash
+git ls-files --others
+```
+
+---
+
+<a id="markdown-inspección-del-repositorio" name="inspección-del-repositorio"></a>
+### Inspección del repositorio
+
+Para la inspección de los contenidos del repositorio, existen dos comandos muy útiles:
+
+Muestra los contenidos de un objeto tree. [Documentación oficial](https://git-scm.com/docs/git-ls-tree).
+
+- (`<tree-ish>`) Referencia resoluble a un objeto tree. Por ejemplo, `HEAD`, un hash SHA-1 o una rama. En estos casos, el tree resuelto sería el snapshot del commit apuntado.
+- (`-r`) También lista contenidos de sub-árboles. Es decir, muestra todos los nombres de archivo de todos los blobs directos e indirectos del árbol resuelto.
+- (`--name-only`) No muestra datos extra como hashes y tipos de objetos, sólo lista los nombres de objeto (nombre de archivo).
+- (`--abbrev[=<n>]`) Forma corta del hash de los objetos listados. Si `[=<n>]` se omite, la longitud es de 7 caracteres, de otra forma, de `n` caracteres.
+
+```bnf
+git ls-tree [-r] [--name-only] [--abbrev[=<n>]] <tree-ish>
+```
+
+Muestra los contenidos de un objeto de Git, incluyendo tags, commits, trees o blobs. Para inspeccionar trees, recomiendo el comando anterior. [Documentación oficial](https://git-scm.com/docs/git-show).
+
+- (`<object>`) Referencia resoluble a un objeto (tag, commit, tree o blob).
+- (`--oneline`) Versión corta de una sola línea.
+- (`--name-status`) Muestra nombres y estados de archivos modificados.
+
+```bnf
+git show [--name-status] [--oneline] <object>
+```
+
+🔍 Los objetos de Git son explicados en Objetos de Git, en [Parte 1: Fundamentos](Parte1_Fundamentos.md).
+
+---
+
+**Caso de uso 1. Archivos versionados por Git**
+
+Archivos que existen en el repositorio de Git.
+
+```bash
+git ls-tree HEAD --name-only -r
+```
+
+---
+
+---
+
+**Caso de uso 2. Resumen de cambios realizados por un commit**
+
+Donde `<commit>` es cualquier referencia resoluble a un commit, p. ej.: `HEAD`.
+
+```bash
+git show <commit> --name-status --oneline
+```
+
+---
 
 [👈 Parte 1: Fundamentos](Parte1_Fundamentos.md)
