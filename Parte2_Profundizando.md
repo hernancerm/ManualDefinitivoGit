@@ -1021,37 +1021,25 @@ Git ofrece comandos muy útiles para inspeccionar los contenidos de sus tres ár
 
 ---
 
-**Caso de uso 1. Archivos ignorados untracked**
+**Archivos ignorados untracked**
 
 ```bash
 git ls-files --others --ignored --exclude-standard
 ```
 
----
-
----
-
-**Caso de uso 2. Archivos ignorados versionados**
+**Archivos ignorados versionados**
 
 ```bash
 git ls-files --ignored --exclude-standard
 ```
 
----
-
----
-
-**Caso de uso 3. Archivos untracked no ignorados**
+**Archivos untracked no ignorados**
 
 ```bash
 git ls-files --others --exclude-standard
 ```
 
----
-
----
-
-**Caso de uso 4. Archivos untracked**
+**Archivos untracked**
 
 ```bash
 git ls-files --others
@@ -1089,7 +1077,7 @@ git show [--name-status] [--oneline] <object>
 
 ---
 
-**Caso de uso 1. Archivos versionados por Git**
+**Archivos versionados por Git**
 
 Archivos que existen en el repositorio de Git.
 
@@ -1097,11 +1085,7 @@ Archivos que existen en el repositorio de Git.
 git ls-tree HEAD --name-only -r
 ```
 
----
-
----
-
-**Caso de uso 2. Resumen de cambios realizados por un commit**
+**Resumen de cambios realizados por un commit**
 
 Donde `<commit>` es cualquier referencia resoluble a un commit, p. ej.: `HEAD`.
 
