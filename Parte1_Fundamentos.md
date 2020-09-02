@@ -418,6 +418,16 @@ En esta rama el desarrollador soluciona el bug con un único commit. Nótese que
 <a id="markdown-fast-forward-merge" name="fast-forward-merge"></a>
 ### Fast-forward merge
 
+---
+
+Se dice que un merge es **fast-forward** cuando la fusión ocurre por un mero desplazamiento hacia delante de la rama apuntada por `HEAD`.
+
+<p align="center">
+  <img src="images/merge_ff.png" width="520px" />
+</p>
+
+---
+
 Juan ahora debe integrar su solución del bug a `master`. Es decir, `bug-fix` debe ser fusionada en `master`. Para incorporar los cambios de `bug-fix` a `master`, Juan usa los siguientes comandos:
 
 ```shell
@@ -443,6 +453,18 @@ Juan ya puede continuar trabajando en la característica que estaba implementand
 
 <a id="markdown-recursive-merge" name="recursive-merge"></a>
 ### Recursive merge
+
+---
+
+Se dice que un merge es **recursive** cuando la fusión ocurre en un nuevo commit, denominado _commit de merge_.
+
+<p align="center">
+  <img src="images/merge_recursive.png" width="650px" />
+</p>
+
+Esta estrategia es utilizada por Git cuando la rama apuntada por `HEAD` no puede simplemente moverse hacia delante (como en el caso de un merge fast-forward).
+
+---
 
 Puesto que la implementación de la nueva característica está terminada, Juan desea incorporar los cambios de `feature` en `master`. Puede notarse que el commit 6 no es descendiente directo del commit 5, por lo que un merge fast-forward no es posible. En estos casos Git utiliza la estrategia recursiva. Al fusionar `feature` en `master` con los siguientes comandos vemos el siguiente mensaje:
 
