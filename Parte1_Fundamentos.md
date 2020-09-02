@@ -5,37 +5,37 @@
 <!-- TOC -->
 
 - [¿Qué es Git?](#¿qué-es-git)
-    - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
-    - [¿Por qué Git y no otro VCS?](#¿por-qué-git-y-no-otro-vcs)
+  - [Ventajas de los sistemas de control de versiones (VCS)](#ventajas-de-los-sistemas-de-control-de-versiones-vcs)
+  - [¿Por qué Git y no otro VCS?](#¿por-qué-git-y-no-otro-vcs)
 - [Instalación](#instalación)
 - [Cómo leer la sintaxis de los comandos](#cómo-leer-la-sintaxis-de-los-comandos)
 - [Configuración](#configuración)
 - [Ambiente de desarrollo](#ambiente-de-desarrollo)
-    - [Estados de los archivos](#estados-de-los-archivos)
+  - [Estados de los archivos](#estados-de-los-archivos)
 - [Comandos básicos para la gestión de un repositorio](#comandos-básicos-para-la-gestión-de-un-repositorio)
 - [Correcciones básicas](#correcciones-básicas)
 - [Concepto de rama](#concepto-de-rama)
-    - [Objetos de Git](#objetos-de-git)
+  - [Objetos de Git](#objetos-de-git)
 - [Comandos básicos para ramas](#comandos-básicos-para-ramas)
 - [Fusión de ramas](#fusión-de-ramas)
-    - [Fast-forward merge](#fast-forward-merge)
-    - [Recursive merge](#recursive-merge)
-    - [Comandos básicos para merges](#comandos-básicos-para-merges)
+  - [Fast-forward merge](#fast-forward-merge)
+  - [Recursive merge](#recursive-merge)
+  - [Comandos básicos para merges](#comandos-básicos-para-merges)
 - [Navegando entre commits](#navegando-entre-commits)
-    - [Referencias absolutas](#referencias-absolutas)
-    - [Referencias relativas](#referencias-relativas)
+  - [Referencias absolutas](#referencias-absolutas)
+  - [Referencias relativas](#referencias-relativas)
 - [Conflictos al realizar un merge](#conflictos-al-realizar-un-merge)
 - [Repositorios remotos](#repositorios-remotos)
-    - [Acceso a repositorios remotos](#acceso-a-repositorios-remotos)
-    - [Operaciones de lectura y escritura (fetch, pull y push)](#operaciones-de-lectura-y-escritura-fetch-pull-y-push)
-    - [Obtener información detallada de un repositorio remoto](#obtener-información-detallada-de-un-repositorio-remoto)
-    - [Configurar upstreams](#configurar-upstreams)
+  - [Acceso a repositorios remotos](#acceso-a-repositorios-remotos)
+  - [Operaciones de lectura y escritura (fetch, pull y push)](#operaciones-de-lectura-y-escritura-fetch-pull-y-push)
+  - [Obtener información detallada de un repositorio remoto](#obtener-información-detallada-de-un-repositorio-remoto)
+  - [Configurar upstreams](#configurar-upstreams)
 - [Tagging](#tagging)
-    - [Tags ligeros](#tags-ligeros)
-    - [Tags anotados](#tags-anotados)
-    - [Visualizar y navegar entre tags](#visualizar-y-navegar-entre-tags)
-        - [Tags y ramas con el mismo nombre](#tags-y-ramas-con-el-mismo-nombre)
-    - [Publicar y eliminar tags](#publicar-y-eliminar-tags)
+  - [Tags ligeros](#tags-ligeros)
+  - [Tags anotados](#tags-anotados)
+  - [Visualizar y navegar entre tags](#visualizar-y-navegar-entre-tags)
+    - [Tags y ramas con el mismo nombre](#tags-y-ramas-con-el-mismo-nombre)
+  - [Publicar y eliminar tags](#publicar-y-eliminar-tags)
 
 <!-- /TOC -->
 
@@ -82,12 +82,13 @@ Un importante principio de diseño de Git es la flexibilidad. La herramienta pue
 <a id="markdown-instalación" name="instalación"></a>
 ## Instalación
 
-| Sistema operativo                      | Proceso de instalación |
-|----------------------------------------|------------------------|
-| (Linux) Fedora                         | `sudo dnf install git-all` |
+| Sistema operativo | Proceso de instalación |
+|---|---|
+| (Linux) Basados en Arch, como Manjaro | `sudo pacman -Syu git` |
 | (Linux) Basados en Debian, como Ubuntu | `sudo apt install git-all` |
-| MacOS                                  | Instalador: <https://git-scm.com/download/mac><br>Mavericks (10.9) o superior: `git --version` |
-| Windows                                | Instalador: <https://git-scm.com/download/win><br>Chocolatey: `choco install git` |
+| (Linux) Fedora | `sudo dnf install git-all` |
+| MacOS | Instalador: <https://git-scm.com/download/mac><br>Mavericks (10.9) o superior: `git --version` |
+| Windows | Instalador: <https://git-scm.com/download/win><br>Chocolatey: `choco install git` |
 
 🔍 **Tip.** En Windows, tras la instalación puede actualizar su versión de Git con el comando `git update-git-for-windows`. Para revisar su versión actual use el comando `git version`. Estos comandos los ingresa en Git Bash.
 
