@@ -156,7 +156,7 @@ Antes de abordar los comandos de Git, es muy importante conocer los fundamentos 
 ---
 
 <p align="center">
-  <img src="images/dev_env.png" width="500px" />
+  <img src="images/dev_env.png" width="530px" />
 </p>
 
 - El **local repository**, o simplemente repositorio, almacena metadatos y los estados de los archivos, actuando efectivamente como una base de datos para la gestión del proyecto. El repositorio también se conoce como *directorio de Git*, pues efectivamente se almacenan estos datos en un directorio; usualmente oculto, con el nombre `.git`.
@@ -289,7 +289,7 @@ Para poder tener un sólido entendimiento de las ramas de Git, es necesario expl
 ### Objetos de Git
 
 <p align="center">
-  <img src="images/branches_1.png" width="630px" />
+  <img src="images/branches_1.png" width="650px" />
 </p>
 
 A lo largo de esta sección se denota a la carpeta `.git/objects` por el nombre *directorio objects*. Recuérdese que `.git` está oculto por defecto, pues sus contenidos no deben modificarse directamente, mas para fines de estudio puede resultar provechoso inspeccionar los archivos.
@@ -319,7 +319,7 @@ El desarrollador desea realizar un commit con su progreso. Para lograr esto, **a
 Ahora bien, continuemos el ejemplo. El programador continua trabajando en su repositorio, añadiendo más archivos batch y actualizando su `README.md` y acaso algunos archivos antiguos. También puede que elimine algunos scripts. Tras dos commits más, se tiene una jerarquía unidireccional de objetos commit, tree y blob, en la que cada commit apunta a su padre (y cada commit no conoce a sus descendientes). Esta jerarquía puede ser representada como una secuencia de commits que apuntan a sus snapshots correspondientes.
 
 <p align="center">
-  <img src="images/branches_2.png" width="550px" />
+  <img src="images/branches_2.png" width="630px" />
 </p>
 
 Entendido este sistema, podemos ahora comprender con formalidad qué es una rama en Git.
@@ -392,13 +392,13 @@ Si las ramas son el mecanismo principal por el cual se organiza la colaboración
 Imagínese que Juan trabaja en un proyecto aún temprano en etapa de desarrollo; sólo se han realizado tres commits.
 
 <p align="center">
-  <img src="images/merge_1.png" width="210px" />
+  <img src="images/merge_1.png" width="230px" />
 </p>
 
 Ahora Juan decide dedicarse a implementar una característica nueva, para lo cual crea la rama `feature`, se cambia a ésta y comienza a trabajar. Realiza un commit.
 
 <p align="center">
-  <img src="images/merge_2.png" width="300px" />
+  <img src="images/merge_2.png" width="310px" />
 </p>
 
 En este momento Juan es informado que existe un bug en `master` cuyo patch debe ser priorizado sobre la característica que está implementando. Para realizar la corrección del bug, Juan crea la nueva rama `bug-fix` a partir de `master`. Es decir, el desarrollador requirió ejecutar los siguientes comandos justo después de haber realizado su commit:
