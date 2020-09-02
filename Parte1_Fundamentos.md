@@ -25,6 +25,7 @@
   - [Referencias absolutas](#referencias-absolutas)
   - [Referencias relativas](#referencias-relativas)
 - [Conflictos al realizar un merge](#conflictos-al-realizar-un-merge)
+  - [¿Cuándo ocurre un conflicto de merge?](#¿cuándo-ocurre-un-conflicto-de-merge)
 - [Repositorios remotos](#repositorios-remotos)
   - [Acceso a repositorios remotos](#acceso-a-repositorios-remotos)
   - [Operaciones de lectura y escritura (fetch, pull y push)](#operaciones-de-lectura-y-escritura-fetch-pull-y-push)
@@ -694,7 +695,8 @@ En ocasiones, las modificaciones de dos ramas distintas alteran algunas líneas 
 
 ---
 
-<p align="center"><b>¿Cuándo ocurre un conflicto de merge?</b></p>
+<a id="markdown-¿cuándo-ocurre-un-conflicto-de-merge" name="¿cuándo-ocurre-un-conflicto-de-merge"></a>
+### ¿Cuándo ocurre un conflicto de merge?
 
 Consideremos la siguiente imagen, donde se muestra que se divide la historia en dos partes: la continuación de la rama `master`, y los cambios de la nueva rama `branch`.
 
