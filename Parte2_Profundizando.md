@@ -5,41 +5,42 @@
 <!-- TOC -->
 
 - [Flujos de trabajo (workflows)](#flujos-de-trabajo-workflows)
-    - [¿Qué es un flujo de trabajo?](#¿qué-es-un-flujo-de-trabajo)
-    - [¿Cómo elegir un flujo de trabajo?](#¿cómo-elegir-un-flujo-de-trabajo)
-    - [Un buen punto de partida: GitHub Flow](#un-buen-punto-de-partida-github-flow)
-    - [Conociendo más flujos de trabajo](#conociendo-más-flujos-de-trabajo)
+  - [¿Qué es un flujo de trabajo?](#¿qué-es-un-flujo-de-trabajo)
+  - [¿Cómo elegir un flujo de trabajo?](#¿cómo-elegir-un-flujo-de-trabajo)
+  - [Un buen punto de partida: GitHub Flow](#un-buen-punto-de-partida-github-flow)
+  - [Conociendo más flujos de trabajo](#conociendo-más-flujos-de-trabajo)
 - [Stashing para evitar commits parciales](#stashing-para-evitar-commits-parciales)
-    - [¿Qué es un stash?](#¿qué-es-un-stash)
-    - [Comandos para administrar stashes](#comandos-para-administrar-stashes)
-    - [¿Cuándo puede cambiarse de rama sin hacer commit o stash de las modificaciones?](#¿cuándo-puede-cambiarse-de-rama-sin-hacer-commit-o-stash-de-las-modificaciones)
+  - [¿Qué es un stash?](#¿qué-es-un-stash)
+  - [Comandos para administrar stashes](#comandos-para-administrar-stashes)
+  - [¿Cuándo puede cambiarse de rama sin hacer commit o stash de las modificaciones?](#¿cuándo-puede-cambiarse-de-rama-sin-hacer-commit-o-stash-de-las-modificaciones)
 - [Eliminar archivos untracked](#eliminar-archivos-untracked)
 - [Ignorar archivos (.gitignore)](#ignorar-archivos-gitignore)
-    - [Expresiones glob vs regulares](#expresiones-glob-vs-regulares)
-    - [Notación de expresiones glob](#notación-de-expresiones-glob)
-    - [.gitignore](#gitignore)
-    - [Ignorar archivos tracked](#ignorar-archivos-tracked)
+  - [Expresiones glob vs regulares](#expresiones-glob-vs-regulares)
+  - [Notación de expresiones glob](#notación-de-expresiones-glob)
+  - [.gitignore](#gitignore)
+  - [Ignorar archivos tracked](#ignorar-archivos-tracked)
 - [El confuso archivo `.gitkeep` y los directorios vacíos](#el-confuso-archivo-gitkeep-y-los-directorios-vacíos)
 - [Reescribiendo la historia](#reescribiendo-la-historia)
-    - [¿Qué es *reescribir la historia*?](#¿qué-es-reescribir-la-historia)
-    - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
-    - [¿Cómo se corrigen commits públicos?](#¿cómo-se-corrigen-commits-públicos)
+  - [¿Qué es *reescribir la historia*?](#¿qué-es-reescribir-la-historia)
+  - [¿Qué es la *historia pública*?](#¿qué-es-la-historia-pública)
+  - [¿Cómo se corrigen commits públicos?](#¿cómo-se-corrigen-commits-públicos)
 - [Correcciones avanzadas](#correcciones-avanzadas)
-    - [Cherry pick](#cherry-pick)
-        - [Uso del comando](#uso-del-comando)
-        - [Crítica de cherry pick](#crítica-de-cherry-pick)
-    - [Reset](#reset)
-        - [Uso del comando](#uso-del-comando-1)
-        - [Recuperación de un `git reset --hard` equivocado](#recuperación-de-un-git-reset---hard-equivocado)
-    - [Revert](#revert)
-        - [¿Cuándo utilizar `git revert` sobre `git reset`?](#¿cuándo-utilizar-git-revert-sobre-git-reset)
-        - [Uso del comando](#uso-del-comando-2)
-    - [Rebase](#rebase)
-        - [Rebase interactivo](#rebase-interactivo)
-        - [Rebase no interactivo](#rebase-no-interactivo)
+  - [Cherry pick](#cherry-pick)
+    - [Uso del comando](#uso-del-comando)
+    - [Crítica de cherry pick](#crítica-de-cherry-pick)
+  - [Reset](#reset)
+    - [Uso del comando](#uso-del-comando-1)
+    - [Recuperación de un `git reset --hard` equivocado](#recuperación-de-un-git-reset---hard-equivocado)
+  - [Revert](#revert)
+    - [¿Cuándo utilizar `git revert` sobre `git reset`?](#¿cuándo-utilizar-git-revert-sobre-git-reset)
+    - [Uso del comando](#uso-del-comando-2)
+  - [Rebase](#rebase)
+    - [Rebase interactivo](#rebase-interactivo)
+    - [Rebase no interactivo simple](#rebase-no-interactivo-simple)
+    - [Rebase no interactivo con `--onto`](#rebase-no-interactivo-con---onto)
 - [Examinando el staging area, working tree y repositorio](#examinando-el-staging-area-working-tree-y-repositorio)
-    - [Inspección del staging area y working tree](#inspección-del-staging-area-y-working-tree)
-    - [Inspección del repositorio](#inspección-del-repositorio)
+  - [Inspección del staging area y working tree](#inspección-del-staging-area-y-working-tree)
+  - [Inspección del repositorio](#inspección-del-repositorio)
 
 <!-- /TOC -->
 
@@ -927,19 +928,19 @@ El árbol de commits final, incluyendo una visualización de los commits inacces
  <img src="images/rebase_4.png" width="500px" />
 </p>
 
-<a id="markdown-rebase-no-interactivo" name="rebase-no-interactivo"></a>
-#### Rebase no interactivo
+<a id="markdown-rebase-no-interactivo-simple" name="rebase-no-interactivo-simple"></a>
+#### Rebase no interactivo simple
 
-Algunos workflows (flujos de trabajo) con Git utilizan `git rebase` para mantener, en su mayoría, una historia lineal (véase por ejemplo <https://dev.to/shosta/the-git-rebase-workflow-2g49>). En el árbol de *Antes* vemos que un merge de `master` con cualquier otra rama resultaría en Git utilizando la estrategia recursiva; por otro lado, un merge de `master` con cualquier otra rama en *Después* utilizaría la estrategia fast-forward, manteniendo la historia lineal. Veamos cómo ir de *Antes* a *Después*.
+Algunos workflows (flujos de trabajo) con Git utilizan `git rebase` para mantener, en su mayoría, una historia lineal (véase por ejemplo [The Git Rebase Workflow](https://dev.to/shosta/the-git-rebase-workflow-2g49)). En el árbol de *Antes* vemos que un merge de `master` con cualquier otra rama resultaría en Git utilizando la estrategia recursiva; por otro lado, un merge de `master` con cualquier otra rama en *Después* utilizaría la estrategia fast-forward, manteniendo la historia lineal. Veamos cómo ir de *Antes* a *Después*.
 
 <p align="center">
- <img src="images/rebase_5.png" width="650px" />
+ <img src="images/rebase_5.png" width="685px" />
 </p>
 
 La tarea de reordenar el árbol se realiza con un rebase no interactivo. Antes de resolver el ejemplo, veamos con una imagen cómo funciona el comando `git rebase <nuevo-padre> [<rama>]`.
 
 <p align="center">
- <img src="images/rebase_6.png" width="850px" />
+ <img src="images/rebase_6.png" width="880px" />
 </p>
 
 Ahora bien, para resolver el ejemplo, el primer paso es ejecutar un rebase de `feature` respecto a `master`. Para identificar qué commits de `feature` serán basados en `master` puede usar `git log <upstream>..<rama>`, que muestra los commits en `<rama>` que no son accesibles por `<upstream>`. En este caso sería `git log --oneline master..feature`.
@@ -995,7 +996,7 @@ Falling back to patching base and 3-way merge...
 Auto-merging foo.txt
 ```
 
-Los nuevos commits introducidos por el segundo rebase son mostrados en naranja. ¿Nota algo inesperado? Al realizar el rebase de `twist` a `master`, la rama `twist` tenía cinco commits sólo accesibles a través de ella, pero después del rebase sólo existen tres. De alguna forma, después del rebase los commits duplicados fueron omitidos, ¡dejando el árbol de commits en el estado deseado!
+Los nuevos commits introducidos por el segundo rebase son mostrados en naranja. ¿Nota algo inesperado? Al realizar el rebase de `twist` a `master`, la rama `twist` tenía cinco commits sólo accesibles a través de ella, pero después del rebase, sólo existen tres. De alguna forma, después del rebase los commits duplicados fueron omitidos, ¡dejando el árbol de commits en el estado deseado!
 
 <p align="center">
  <img src="images/rebase_8.png" width="750px" />
@@ -1004,10 +1005,75 @@ Los nuevos commits introducidos por el segundo rebase son mostrados en naranja. 
 La respuesta a la muy conveniente omisión de commits duplicados puede encontrarse en la documentación oficial.
 
 <p align="center">
- <img src="images/rebase_9.png" width="750px" />
+ <img src="images/rebase_9.png" width="725px" />
 </p>
 
 > Recuperado de <https://git-scm.com/docs/git-rebase>
+
+<a id="markdown-rebase-no-interactivo-con---onto" name="rebase-no-interactivo-con---onto"></a>
+#### Rebase no interactivo con `--onto`
+
+Para algunos rebases, simplemente `git rebase <nuevo-padre> [<rama>]` no es suficiente.
+
+Considere la siguiente transformación, donde el estado de _Antes_ es igual a donde nos quedamos en el ejemplo previo. Por claridad, he omitido los commits inaccesibles y he mantenido los colores.
+
+<p align="center">
+ <img src="images/rebase_10.png" width="730px" />
+</p>
+
+Entonces, ¿cómo se llega de _Antes_ a _Después_? Un primer intento consiste en ejecutar lo siguiente:
+
+```shell
+$ git rebase master
+Current branch twist is up to date.
+```
+
+Estando en `twist`, el anterior comando debería, intuitivamente, dejarnos en el estado deseado, colocando los commits de `twist` directamente sobre `master`. Sin embargo, esto no ocurre.
+
+El comando anterior indica que no existen modificaciones por realizar, y esto es correcto. 
+
+Recuerde que un rebase mueve los commits que **no** son accesibles desde `<nuevo-padre>` pero sí desde la rama actual; en este caso, `<nuevo-padre>` es `master` y, la rama actual, `twist`. Veamos qué commits intentó mover `git rebase master` sobre la rama `master`:
+
+```shell
+$ git log --oneline master..twist
+6302feb (HEAD -> twist) Add another line to twist.md
+d17965c Add first line to twist.md
+3b9791f Create twist.md file
+9deb702 (feature) Add another line in feature.md
+2445071 Add first line feature.md
+27fa2d9 Create feature file
+```
+
+El log previo se lee así: "Muestra todos los commits que no son accesibles desde `master`, pero sí desde `twist`".
+
+En relación con la ilustración de _Antes_, el log muestra, de arriba a abajo, los commits naranjas seguidos de los amarillos. Lo puede comprobar comparando los hashes.
+
+<table>
+  <tr>
+    <td>
+    Entonces, el comando <code>git rebase master</code> no realizó ningún cambio puesto que la secuencia de commits que hubiera movido ya se encuentra basada en <code>master</code>.
+    </td>
+  </tr>
+</table>
+
+Lo que se requiere es explícitamente seleccionar un **rango** de commits a mover, y no depender de la selección predefinida de `git rebase`. Justamente para estos casos de uso existe la bandera `--onto`.
+
+Para obtener la transformación deseada de _Antes_ a _Después_, se ejecuta lo siguiente:
+
+```shell
+$ git rebase --onto master feature twist
+Successfully rebased and updated refs/heads/twist.
+```
+
+El rebase previo se lee así: "Mueve todos los commits que no sean accesibles por `feature`, pero sí por `twist`, sobre `master`". Donde _mover_ significa crear una copia de la secuencia de commits, y asignar una base distinta a esta secuencia copiada. En este caso, la base era `feature`, ahora es `master`.
+
+Re-enfatizo que Git **no elimina** los commits tras un rebase, sino que tan sólo crea una copia. Los commits antiguos ahora sólo son accesibles a través del `git reflog`.
+
+La siguiente ilustración muestra el estado final del árbol, incluyendo los commits inaccesibles producidos en esta sección (he omitido los commits inaccesibles de la sección anterior [Rebase no interactivo simple](#rebase-no-interactivo-simple)):
+
+<p align="center">
+ <img src="images/rebase_11.png" width="730px" />
+</p>
 
 <a id="markdown-examinando-el-staging-area-working-tree-y-repositorio" name="examinando-el-staging-area-working-tree-y-repositorio"></a>
 ## Examinando el staging area, working tree y repositorio
